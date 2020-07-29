@@ -1,0 +1,98 @@
+<style lang="less">
+ .home_view {
+    height: 100%;
+    overflow: hidden;
+  }
+ .row {
+    width: 90%;
+    margin: 80rpx auto 0;
+    height: 218rpx;
+    border-radius: 20rpx;
+   .col-1 {
+      width: 22%;
+      text-align: center;
+   }
+   .col-2 {
+    color: #141414;
+    line-height: 56rpx;
+  }
+   .row-icon {
+     width: 68rpx;
+     height: 69rpx;
+     margin: 0 auto;
+   }
+ }
+</style>
+<template>
+   <view class="home_view">
+      <repeat for="{{menus}}" wx:key="index">
+        <view class="weui-flex start row" style="background:{{item.background}}" @tap="routeView({{item}})">
+          <view class="col-1">
+            <image src="{{item.icon}}" mode="aspectFit"
+              class="row-icon">
+            </image>
+          </view>
+          <view class="col-2">
+            <view class="page_title">{{item.title}}</view>
+            <view class="page_subTitle">{{item.subTitle}}</view>
+          </view>
+         </view>
+      </repeat>
+   </view>
+</template>
+<script>
+import wepy from 'wepy'
+import {  wxNavigateTo } from '@/util'
+import { menus } from '@/base/base'
+import { $http } from '@/http.js'
+export default class home extends wepy.page {
+  data = {
+    menus,
+    submitFlag: true
+  }
+  config = {
+    navigationBarTitleText: '硕世健康',
+    enablePullDownRefresh: true
+  }
+  bindrefresherrefresh() {
+    this.getOpenId()
+  }
+  getSubmitFlag(sessionId) {
+    $http('sample/api/listSubmit',{} ,'Get', sessionId).then(res => {
+      let submitFlag
+      if (res.data.length) {
+        submitFlag = true
+        wx.setStorageSync('sampleList', JSON.stringify(res.data))
+      } else {
+        submitFlag = false
+      }
+      wx.setStorageSync('submitFlag', submitFlag)
+    })
+  }
+  getOpenId() {
+    wx.login({
+      success: res => {
+        if (res.code) {
+          $http('user/api/wechat/getSession', { code: res.code, type: 0 }, 'Get').then(res => {
+            console.log(res)
+            this.getSubmitFlag(res.data.sessionId)
+            wx.setStorageSync('sessionId', res.data.sessionId)
+          }).catch(error => {
+            console.log(error)
+          })
+        } else {
+          console.log('获取失败！' + res.errMsg)
+        }
+      }
+    })
+  }
+  onLoad() {
+    this.getOpenId()
+  }
+  methods = {
+    routeView(item) {
+      wxNavigateTo(item.path)
+    }
+  }
+}
+</script>

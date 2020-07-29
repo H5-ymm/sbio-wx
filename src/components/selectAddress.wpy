@@ -1,0 +1,175 @@
+<style lang="less">
+  .selectAddress {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    bottom: 0;
+    z-index: 20;
+    .selectAddress-content {
+      height: 60%;
+      background: #ffffff;
+      position: absolute;
+      bottom: 0;
+      z-index: 30;
+      left: 0;
+      width: 100%;
+      animation: find .4s linear;
+      .box {
+        height: 100%;
+        width: 100%;
+        text-align: center;
+        font-size: 32rpx;
+        overflow: hidden;
+        color: #808080;
+        >.box-content {
+          height: calc(100% - 50px);
+          > .weui-flex__item {
+            height: 100%;
+          }
+        }
+      }
+      .city-title {
+        color: #000000;
+        font-size: 36rpx;
+        padding: 40rpx 0 20rpx;
+      }
+      .city-subTitle {
+        border-top: 1px solid #D8D8D8;
+        border-bottom: 1px solid #D8D8D8;
+        padding: 20rpx 0;
+      }
+      .city-list {
+        padding: 20rpx 0;
+        overflow: auto;
+        line-height: 64rpx;
+        height: 60%;
+        .active {
+          color: #F36681;
+        }
+      }
+    }
+    .box-btn {
+      margin: 0 30rpx 10rpx;
+      .btn {
+        height: 80rpx;
+        border-radius:40rpx;
+        border:1px solid #979797;
+        margin: 0 30rpx;
+        color: #666666;
+        background: #ffffff;
+        font-size: 30rpx;
+        &.btn1 {
+          color: #ffffff;
+          background: #F36681;
+          border: 1px solid #F36681;
+        }
+      }
+    }
+  }
+  @keyframes find {
+    0% {
+      bottom: -100rpx;
+    }
+    50% {
+      bottom: -50rpx;
+    }
+    100% {
+      bottom: 0;
+    }
+  }
+  .mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:rgba(68,68,68,0.62);
+    z-index: 22;
+  }
+</style>
+<template>
+  <view class="selectAddress" hidden="{{isShow}}">
+    <view class="mask"></view>
+    <view class="selectAddress-content">
+      <view class="box">
+        <view class="weui-flex center box-content">
+          <view class="weui-flex__item">
+            <view class="city-title">省份</view>
+            <view class="city-subTitle">请选择</view>
+            <view class="city-list">
+              <repeat for="{{array[0]}}" key="index" index="index" item="item">
+                <view @tap="selectCity({{item}}, 1)" class="{{option[0]==item.cityNameZh ? 'active': '' }}">{{item.cityNameZh}}</view>
+              </repeat>
+            </view>
+          </view>
+          <view class="weui-flex__item">
+            <view class="city-title">城市</view>
+            <view class="city-subTitle">请选择</view>
+            <view class="city-list">
+              <repeat for="{{array[1]}}" key="index" index="index" item="item">
+                <view @tap="selectCity({{item}},2)" class="{{option[1]==item.cityNameZh ? 'active': '' }}">{{item.cityNameZh}}</view>
+              </repeat>
+            </view>
+          </view>
+           <view class="weui-flex__item">
+            <view class="city-title">区县</view>
+            <view class="city-subTitle">请选择</view>
+            <view class="city-list">
+              <repeat for="{{array[2]}}" key="index" index="index" item="item">
+                <view @tap="selectCity({{item}},3)" class="{{option[2]==item.cityNameZh ? 'active': '' }}">{{item.cityNameZh}}</view>
+              </repeat>
+            </view>
+          </view>
+        </view>
+        <view class="box-btn weui-flex center">
+           <button class="weui-flex__item btn weui-flex center">取消</button>
+           <button class="weui-flex__item btn btn1 weui-flex center" @tap="save">确定</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+export default class selectAddress extends wepy.component {
+  props = {
+    isShow: Boolean
+  }
+  data = {
+    array: [],
+    index: 0,
+    addressText: '',
+    option: []
+  }
+  getCity(cityParentId) {
+    $http('admin/api/getCity', { cityParentId }, 'Get').then(res => {
+      console.log(res)
+      this.array[this.index] = res.data
+      this.$apply()
+    })
+  }
+  onLoad() {
+    this.getCity(0)
+  }
+  methods = {
+    selectCity(item, index) {
+      this.index = index
+      if (index == 1) {
+        this.array[2] = []
+      }
+      this.option[index - 1]= item.cityNameZh
+      if (index <3) {
+        this.getCity(item.id)
+      } else {
+        console.log(item)
+      }
+    },
+    save() {
+      console.log( this.option)
+      this.$emit('save', this.option)
+    }
+  }
+}
+</script>

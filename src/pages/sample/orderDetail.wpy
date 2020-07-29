@@ -1,0 +1,289 @@
+<style lang="less">
+  .send_view {
+		height: 100%;
+		.right-icon {
+			width: 24rpx;
+			height: 24rpx;
+			margin-left: 20rpx;
+		}
+		.tip-content {
+			margin: -10rpx 60rpx 0;
+			line-height: 50rpx;
+			.text {
+				color: #000;
+				font-weight:300;
+				font-size: 28rpx;
+				position: relative;
+				&::before {
+					content: '.';
+					font-size: 70rpx;
+					color: #909090;
+					top: -22rpx;
+					left: -30rpx;
+					position: absolute;
+				}
+			}
+		}
+		.order-header {
+			margin: 36rpx;
+	  	.order-left {
+				width:110rpx;
+				height:110rpx;
+				border-radius: 50%;
+				font-size:36rpx;
+				font-weight:300;
+				color: #ffffff;
+				background:linear-gradient(270deg,rgba(255,89,121,1) 0%,rgba(255,135,135,1) 100%);
+			}
+			.order-right {
+				font-size: 32rpx;
+				font-weight:300;
+				color: #666;
+				margin-left: 48rpx;
+				&.order-right-info {
+					text {
+						font-weight: 400;
+						color: #000000;
+						margin-right: 20rpx;
+						display: inline-block;
+					}
+				}
+			}
+			&.order-header1 {
+				.order-left {
+					background: #eeeeee;
+					color: #333333;
+				}
+				.order-right { 
+					color: #333333;
+					flex: 1;		
+					line-height: 50rpx;
+					.order-address {
+            font-size: 28rpx;
+					}
+				}
+			}
+		}
+		.order_content {
+			border-top: 14rpx solid #F6F6F6;
+			padding-top: 20rpx;
+			.order-row {
+				color: #000000;
+				padding: 20rpx 36rpx;
+				font-size: 32rpx;
+				font-weight: 300;
+				.order-time {
+					font-weight: 400;
+					font-size: 30rpx;
+				}
+			}
+		}
+		.bind-info {
+			margin: 56rpx 36rpx 36rpx;
+			.tip-icon {
+				width: 26rpx;
+				height: 26rpx;
+			}
+			.sample-text {
+				font-size: 28rpx;
+				font-weight: 300;
+				color: #000000;
+				margin-left: 20rpx;
+				text {
+					color: #F36681;
+				}
+			}
+		}
+  	.footer-btn {
+      width: 70%;
+      margin: 60rpx auto 132rpx;
+      button {
+        height:80rpx;
+        background:#F8C1C7;
+        border-radius:40rpx;
+        color: #ffffff;
+        font-size: 30rpx;
+        &.btn {
+          background: #F36681;
+        }
+      }
+    }
+  }
+</style>
+<template>
+  <view class="send_view">
+		<view class="order-header weui-flex between">
+			<view class="order-col1 weui-flex between">
+				<view class="order-left  weui-flex center">寄</view>
+				<view class="order-right" wx:if="{{!addressInfo}}">寄件人信息</view>
+				<view wx:else class="order-right order-right-info  weui-flex__auto">
+          <view><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
+					<view>{{addressInfo.startStationAddress}}</view>
+				</view>
+			</view>
+			<view class="order-col2 weui-flex end weui-flex__auto" @tap="setAddress">
+				<text wx:if="{{!addressInfo}}">请填写</text>
+				<image src="../../images/right.png" mode="aspectFit"
+					class="right-icon">
+				</image>
+			</view>
+		</view>
+		<view class="order-header weui-flex between order-header1">
+			<view class="order-col1 weui-flex between">
+				<view class="order-left  weui-flex center">收</view>
+				<view class="order-right">
+					<view>泰州硕世医学检验实验室</view>
+					<view class="order-address">江苏省泰州市海陵区中国医药城G25栋9</view>
+				</view>
+			</view>
+		</view>
+		<view class="order_content">
+			<view class="order-row weui-flex between" wx:if="{{sampleList.length>2}}">
+				<view>你有两份待回寄样本，是否一起回寄 ?</view>
+				<view class="order-time weui-flex between" @tap="selectAll">
+					<view>{{isSingleMailing?'否':'是'}}</view>
+					<image src="../../images/right.png" mode="aspectFit" class="right-icon"></image>
+				</view>
+			</view>
+			 <view class="tip-content" wx:if="{{!isSingleMailing&&sampleList.length>2}}">
+				<repeat for="{{sampleList}}" key="index">
+					<view class="text">{{item.productName}} - {{item.name}}</view>
+				</repeat>
+			</view>
+			<view class="order-row weui-flex between">
+				<view>上门取件时间</view>
+				<view class="order-time weui-flex between" @tap="selectOrderTime">
+				  <view>{{orderEtd?orderEtd:'请选择'}}</view>
+					<image src="../../images/right.png" mode="aspectFit"
+					class="right-icon">
+				</image></view>
+			</view>
+			<view class="order-row weui-flex between">
+				<view>邮寄物品</view>
+				<view>检测样本</view>
+			</view>
+			<view class="order-row weui-flex between">
+				<view>付费方式</view>
+				<view>到付</view>
+			</view>
+			<view class="weui-flex start bind-info">
+				<image src="../../images/selected.png" mode="scaleToFill" class="tip-icon">
+				</image>
+				<view class="sample-text"> 我同意 <text>《快件运单契约条款》</text></view>
+			</view>	
+ 		</view>
+  	<view class="footer-btn">
+			<button class="weui-flex center {{isCheck?'btn':''}}" @tap="overbooking">下单</button>
+		</view>
+		<selectTime :isShow.sync="isShow" @cancel="cancel" @seletOrderTime="seletOrderTime"></selectTime>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import {  wxNavigateTo, wxToast } from '@/util'
+import selectTime from '@/components/selectTime'
+import { $http } from '@/http.js'
+export default class orderDetail extends wepy.page {
+	components  = {
+    selectTime: selectTime
+  }
+  data = {
+		isShow: true,
+		form: {
+			sampleIds: '',
+			orderEtd: '',
+			startContactName: '',
+      startContactPhone: '',
+      startStationAddress: ''
+		},
+		addressInfo: null,
+		sampleList: [],
+		orderEtd: '',
+		isSingleMailing: false,
+		isCheck: false
+  }
+  config = {
+    navigationBarTitleText: '样本回寄'
+	}
+	watch = {
+    // 判断表单按钮是否置灰
+    form(val) {
+      let flag = false
+      for(let key in val) {
+        if(!val[key]) {
+          flag = true
+        }
+			}
+			this.isCheck = flag
+    }
+  }
+  onLoad(options) {
+		if (options.query) {
+      this.addressInfo = JSON.parse(options.query)
+		}
+		this.getSubmitFlag()
+	}
+	events = {
+		seletOrderTime: data => {
+			this.form.orderEtd = data.date
+			this.orderEtd = data.time
+			this.isShow = !this.isShow
+			this.$apply()
+		},
+		cancel: () => {
+			this.isShow = !this.isShow
+			this.$apply()
+		}
+	}
+	getSubmitFlag() {
+    $http('sample/api/listSubmit',{} ,'Get').then(res => {
+			this.sampleList = res.data
+			wx.setStorageSync('sampleList', JSON.stringify(res.data))
+			this.$apply() 
+    })
+  }
+	// 下单
+  saveSample() {
+		let arr = this.sampleList.map(item => { return item.sampleId})
+		this.form.sampleIds = arr.join(',') 
+		let params = Object.assign(this.form, this.addressInfo)
+    $http('sample/api/logistics/createOrder', params).then(res => {
+      if (res.code === 0) {
+				wxToast('保存成功')
+				wxNavigateTo('/pages/sample/detail?logisticsId=' + res.data.logisticsId)
+      } else {
+        wxToast('保存失败')
+      }
+    })
+  }
+  methods = {
+		selectAll() {
+			wx.showActionSheet({
+			itemList: ['是', '否'],
+				success: res => {
+					if (res.tapIndex == 0 ) {
+						this.isSingleMailing = false
+					} else {
+						this.isSingleMailing = true
+					}
+					this.$apply()
+				},
+				fail (res) {
+					console.log(res.errMsg)
+				}
+			})
+		},
+		selectOrderTime() {
+			this.isShow = !this.isShow
+			this.$apply()
+		},
+		setAddress() {
+			wxNavigateTo('/pages/sample/address')
+		},
+		overbooking() {
+			if (!this.isCheck) return
+			this.saveSample()
+		}
+  }
+}
+</script>

@@ -1,0 +1,126 @@
+
+@import "fn";
+html {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  line-height: 1.6;
+}
+a img {
+  border: 0;
+}
+a {
+  text-decoration: none;
+  .setTapColor();
+}
+input,textarea{
+  caret-color:@weuiColorPrimary;
+  font-family:PingFangSC-Medium;
+}
+::-webkit-input-placeholder{
+  color:@weuiTextColorTips;
+}
+
+html, body {
+  height: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+body{
+  font-family:PingFangSC-Medium;
+}
+ul {
+  list-style: none;
+}
+.page{
+  box-sizing:border-box;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.login_page {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  z-index: 1; // fix 滑动几次后可滚动区域会卡住的问题
+}
+[class^="form_"], [class*=" form_"]{
+    &.page{
+      padding:0;
+    }
+}
+
+.page.picker{
+  background-color: #FFFFFF;
+  overflow: hidden;
+}
+.weui-half-screen-dialog{
+  transition:transform .3s;
+  transform:translateY(100%);
+}
+.weui-half-screen-dialog_show{
+  transform:translateY(0);
+}
+
+/* animation */
+
+@keyframes slideIn {
+  from {
+    transform: translate3d(100%, 0, 0);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+    to {
+        transform: translate3d(100%, 0, 0);
+        opacity: 0;
+    }
+}
+
+.slideIn {
+    animation: slideIn .2s forwards;
+}
+.slideOut {
+    animation: slideOut .2s forwards;
+}
+
+// iphone x
+@supports (top: constant(safe-area-inset-top)){
+    .page{
+        padding:constant(safe-area-inset-top) constant(safe-area-inset-right) constant(safe-area-inset-bottom) constant(safe-area-inset-left);
+        &.tabbar,&.navbar{
+            padding-left:0;
+            padding-right:0;
+        }
+    }
+    .weui-tab__panel{
+        padding-left:constant(safe-area-inset-left);
+        padding-right:constant(safe-area-inset-right);
+    }
+}
+@supports (top: env(safe-area-inset-top)){
+    .page{
+        padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        &.tabbar,&.navbar,&.msg_success,&.msg_warn,&.msg_text,&.msg_text_primary,&.article{
+            padding:0;
+        }
+    }
+}
+.text-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

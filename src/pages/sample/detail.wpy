@@ -1,0 +1,179 @@
+<style lang="less">
+  .send_view {
+		height: 100%;
+		.order-header {
+			margin: 0;
+			.order-col1 {
+				margin: 36rpx;
+			}
+			.order-address-name {
+				font-size: 30rpx;
+			}
+	  	.order-left {
+				border-radius: 50%;
+				color: #ffffff;
+				background:linear-gradient(270deg,rgba(255,89,121,1) 0%,rgba(255,135,135,1) 100%);
+				&.order-left-reduce {
+					width: 68rpx;
+					height: 68rpx;
+					font-size: 28rpx;
+					font-weight:400;
+				}
+			}
+			.order-right {
+				font-size: 26rpx;
+				font-weight:300;
+				color: #666;
+				margin-left: 48rpx;
+				&.order-right-info {
+					line-height: 50rpx;
+					text {
+						font-weight: 400;
+						color: #000000;
+						margin-right: 20rpx;
+						font-size: 30rpx;
+						display: inline-block;
+					}
+				}
+			}
+			&.order-header1 {
+				border-top: 1px solid #EAEAEA;
+				.order-left {
+					background: #eeeeee;
+					color: #333333;
+				}
+				.order-right { 
+					color: #333333;
+					flex: 1;
+					font-size: 26rpx;
+					line-height: 50rpx;
+				}
+			}
+		}
+		.order_content {
+			padding-top: 0;
+			.order-row {
+				color: #000000;
+				padding: 20rpx 36rpx;
+				font-size: 32rpx;
+				font-weight: 300;
+				.order-time {
+					font-weight: 400;
+					font-size: 30rpx;
+				}
+			}
+		}
+  }
+</style>
+<template>
+  <view class="send_view">
+		<timeCard @cancalOrder="cancalOrder" :timeInfo.sync="timeInfo"></timeCard>
+		<view class="order-header weui-flex between">
+			<view class="order-col1 weui-flex between">
+				<view class="order-left  weui-flex center order-left-reduce">寄</view>
+				<view class="order-right order-right-info  weui-flex__auto">
+          <view><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
+					<view>{{addressInfo.startStationAddress}}</view>
+				</view>
+			</view>
+		</view>
+		<view class="order-header weui-flex between order-header1">
+			<view class="order-col1 weui-flex between">
+				<view class="order-left  weui-flex center order-left-reduce">收</view>
+				<view class="order-right">
+					<view class="order-address-name">泰州硕世医学检验实验室</view>
+					<view>江苏省泰州市海陵区中国医药城G25栋9</view>
+				</view>
+			</view>
+		</view>
+		<view class="order_content">
+			<view class="order-row weui-flex between">
+				<view>邮寄物品</view>
+				<view>检测样本</view>
+			</view>
+			<view class="order-row weui-flex between">
+				<view>付费方式</view>
+				<view>到付</view>
+			</view>
+			<view class="order-row weui-flex between" wx:if="{{addressInfo.skuCount>1}}">
+				<view>样本数量</view>
+				<view>{{addressInfo.skuCount}}</view>
+			</view>
+ 		</view>
+		<tipTeamplte></tipTeamplte>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { wxRedirectTo, wxToast } from '@/util'
+import tipTeamplte from '@/components/tipTeamplte'
+import timeCard from '@/components/timeCard'
+import { $http } from '@/http.js'
+import $moment from 'moment'
+export default class detail extends wepy.page {
+	components  = {
+		tipTeamplte: tipTeamplte,
+		timeCard: timeCard
+  }
+  data = {
+		addressInfo: {},
+		logisticsId: '',
+		timeInfo: {}
+  }
+  config = {
+    navigationBarTitleText: '样本回寄'
+  }
+  onLoad(options) {
+		if (options.logisticsId) {
+			this.logisticsId = options.logisticsId
+		  this.getLogistics(this.logisticsId)
+		}
+	}
+	events = {
+		// 取消订单
+		cancalOrder: () => {
+      this.checkIsCancelOrder()
+		}
+	}
+	getLogistics(logisticsId) {
+		$http('sample/api/logistics/getLogistics', { logisticsId }, 'Get').then(res => {
+			this.addressInfo = res.data
+			this.getSampleDate(res.data.orderEtd)
+			this.$apply()
+    })
+	}
+	getSampleDate(orderEtd) {
+		let date = $moment.unix(orderEtd).format('HH')
+		let type
+		if ($moment.unix(this.orderEtd).format('YYYY-MM-DD') == $moment().format('YYYY-MM-DD')) {
+			type = '今天'
+		} else {
+			type = '明天'
+		}
+		let startTime = Number(date) - 1
+		this.timeInfo = {
+			startTime: startTime < 10 ? '0' + startTime + ':00' : startTime + ':00',
+			endTime: date +':00',
+			type
+		}
+	}
+	checkIsCancelOrder() {
+		$http('sample/api/logistics/getCancelFlag', { logisticsId: this.logisticsId }, 'Get').then(res => {
+			if (res.data.cancelFlag) {
+				this.cancelSamplorder()
+			} else {
+				wxToast(res.data.msg || '该订单不能取消')
+			}
+    })
+	}
+	// 取消订单
+  cancelSamplorder() {
+    $http('sample/api/logistics/cancel?logisticsId=' + this.logisticsId, {}, 'Put').then(res => {
+			console.log(res)
+			if (res.code === 0) {
+				wxRedirectTo('/pages/sample/cancelOrder?logisticsId=' + this.logisticsId)
+			}
+    })
+  }
+}
+</script>

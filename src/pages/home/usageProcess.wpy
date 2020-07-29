@@ -1,0 +1,121 @@
+<style lang="less">
+  .home_view {
+    height: 100%;
+    overflow: hidden;
+    width: 90%;
+    margin: 0 auto;
+    .header {
+      margin: 46rpx 18rpx;
+      .icon-smiling {
+        width: 36rpx;
+        height: 36rpx;
+      }
+      .tip {
+        margin-left: 18rpx;
+        color: #000;
+        font-size:28rpx;
+        font-weight: 300;
+      }
+    }
+    .flow-card {
+      width:100%;
+      height: 856rpx;
+      box-shadow: 0px 0px 30rpx 0px rgba(216,216,216,0.43);
+      border-radius:20rpx;
+      padding: 73rpx 10rpx 0;
+      .card-row {
+        position: relative;
+        height: 33%;
+        &::after {
+          width:4rpx;
+          height:182rpx;
+          background:linear-gradient(180deg,rgba(255,208,202,1) 0%,rgba(255,240,238,1) 100%);
+          border-radius:4rpx;
+          content: '';
+          position: absolute;
+          bottom: 10%;
+          left: 20rpx;
+        } 
+        &:nth-last-of-type(1) {
+          &::after {
+            z-index: -1;
+            display: none;
+          }
+        }
+        .card-1 {
+          width: 41rpx;
+          height: 41rpx;
+          border: 2rpx solid #F04D6F;
+          border-radius: 50%;
+          font-size: 26rpx;
+          font-weight: 500;
+          margin-top: 6rpx;
+          color: #F04D6F;
+        }
+        .card-2 {
+          width: 62%;
+          margin: 0 20rpx;
+          .page_title {
+            margin-bottom: 16rpx;
+          }
+        }
+        .card-3 {
+          width:162rpx;
+          height:60rpx;
+          background:#F36681;
+          border-radius:30rpx;
+          color: #fff;
+          font-size: 26rpx;
+          &.card-disabled-3 {
+            background:#C5C5C5;
+          }
+        }
+      }
+    }
+  }
+</style>
+<template>
+   <view class="home_view">
+      <view class="header weui-flex start">
+        <image src="../../images/smiling.png" mode="scaleToFill"
+          class="icon-smiling">
+        </image>
+        <view class="tip">温馨提示：请按流程操作解锁每一步哦！</view>
+      </view>
+      <view class="flow-card">
+        <repeat for="{{flowList}}" wx:key="index">
+          <view class="weui-flex start-start card-row" style="background:{{item.background}}" >
+            <view class="card-1 weui-flex center">{{index+1}}</view>
+            <view class="card-2">
+              <view class="page_title">{{item.title}}</view>
+              <view class="page_subTitle">{{item.subTitle}}</view>
+            </view>
+            <view class="card-3 weui-flex center {{!submitFlag&&index==2?'card-disabled-3':''}}" @tap="routeView({{item}})">{{item.btnText}}</view>
+          </view>
+        </repeat>
+      </view>
+   </view>
+</template>
+<script>
+import wepy from 'wepy'
+import {  wxNavigateTo } from '@/util'
+import { flowList } from '@/base/base'
+export default class usageProcess extends wepy.page {
+  data = {
+    flowList,
+    submitFlag: false
+  }
+  config = {
+    navigationBarTitleText: '使用流程'
+  }
+  onLoad() {
+    this.submitFlag = wx.getStorageSync('submitFlag')
+    this.$apply()
+  }
+  methods = {
+    routeView(item) {
+      wxNavigateTo(item.path)
+    }
+  }
+}
+</script>

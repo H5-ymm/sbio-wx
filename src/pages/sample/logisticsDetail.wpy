@@ -1,0 +1,48 @@
+<style lang="less">
+  .send_view {
+		height: 100%;
+  }
+</style>
+<template>
+  <view class="send_view">
+    <logisticsTemplate :list.sync="newList"></logisticsTemplate>
+		<tipTeamplte></tipTeamplte>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import tipTeamplte from '@/components/tipTeamplte'
+import logisticsTemplate from '@/components/logisticsTemplate'
+import { $http } from '@/http.js'
+import $moment from 'moment'
+export default class logisticsDetail extends wepy.page {
+	components  = {
+    tipTeamplte: tipTeamplte,
+    logisticsTemplate: logisticsTemplate
+  }
+  data = {
+		list: []
+  }
+  config = {
+    navigationBarTitleText: '样本回寄'
+  }
+  computed = {
+    newList() {
+      return this.list.map(item => {
+        item.operatorTime = $moment.unix(item.operatorTime).format('YYYY-MM-DD HH:mm')
+        return item
+      })
+    }
+  }
+	onLoad() {
+    this.getLogisticsInfo()
+  }
+  // 获取物流路由
+  getLogisticsInfo() {
+    $http('sample/api/logistics/getRoute', { logisticsId: 68 }, 'Get').then(res => {
+      this.list = res.data
+      this.$apply()
+    })
+  }
+}
+</script>

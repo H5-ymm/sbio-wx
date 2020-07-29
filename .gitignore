@@ -1,0 +1,12 @@
+node_modules/
+lib/
+dist/
+web/style
+sftp-config.json
+log
+npm-debug.log
+.vscode
+coverage
+lerna-debug.log
+.DS_Store
+.wepycache

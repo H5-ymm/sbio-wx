@@ -1,0 +1,50 @@
+<style lang="less">
+	.tip-box {
+    margin-top: 30rpx;
+    border-top: 14rpx solid #F6F6F6;
+    .bind-info {
+       margin: 36rpx 36rpx 20rpx;
+      .tip-icon {
+        width: 30rpx;
+        height: 30rpx;
+      }
+      .sample-text {
+        font-size: 32rpx;
+        font-weight: 300;
+        color: #000000;
+        margin-left: 20rpx;
+        text {
+          color: #F36681;
+        }
+			}
+    }
+    .tip-box-text {
+      padding:  0 36rpx;
+      font-size: 28rpx;
+      font-weight: 300;
+      line-height: 50rpx;
+      color: #000000;
+      > view {
+        margin-bottom: 20rpx;
+      }
+    }
+  }
+</style>
+<template>
+  <view class="tip-box">
+    <view class="weui-flex start bind-info">
+      <image src="../images/tip1.png" mode="scaleToFill" class="tip-icon">
+      </image>
+      <view class="sample-text">温馨提示</view>
+    </view>
+    <view class="tip-box-text">
+      <view>您可在【硕世健康】公众号-【我的报告】菜单查看样本状态。</view>
+      <view>您的报告将在样本抵达检测中心3-5个工作日内完成， 当收到短信提示后，可进入【硕世健康】公众号-【我 的报告】菜单查看检测报告。</view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class tipTeamplte extends wepy.component {
+}
+</script>

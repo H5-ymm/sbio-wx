@@ -1,0 +1,178 @@
+<style lang="less">
+  .send_view {
+		height: 100%;
+		.send-header {
+			margin: 36rpx;
+			// width: 100%;
+			height: 312rpx;
+			background:#fff;
+			box-shadow: 0px 4rpx 20rpx 0px rgba(188,188,188,0.37);
+			border-radius: 20rpx;
+			position: relative;
+			.waterdrop1 {
+				width: 36rpx;
+				height: 48rpx;
+				position: absolute;
+				bottom: 20rpx;
+				left: 20rpx;
+			}
+			.waterdrop2 {
+				width: 61rpx;
+				height: 68rpx;
+				position: absolute;
+				top: 20rpx;
+				right: 20rpx;
+			}
+			.car-icon {
+				height: 130rpx;
+				width: 160rpx;
+			}
+			.send-tip {
+				line-height: 60rpx;
+				color: #000000;
+				text {
+					font-size: 36rpx;
+					margin-right: 30rpx;
+					font-weight: 400;
+				}
+				.tip-text {
+					font-weight:300;
+					font-size: 30rpx;
+				}
+			}
+		}
+		.send-goods {
+			color: #000000;
+			padding: 42rpx 36rpx;
+			border-bottom: 1px solid #E4E4E4;
+			&.send-goods1{
+				border-bottom: none;
+				.subTitle {
+					text-align: right;
+					line-height: 50rpx;
+				}
+			}
+			.title {
+        font-size: 32rpx;
+			}
+			.subTitle {
+	      font-size: 28rpx;
+				font-weight:300;
+				line-height: 40rpx;
+			}
+			.send-goods-col1 {
+				width: 40%;
+			}
+			.send-goods-col2 {
+				width: 60%;
+			}
+		}
+		.bind-info {
+			margin: 36rpx;
+			.tip-icon {
+				width: 26rpx;
+				height: 26rpx;
+			}
+			.sample-text {
+				font-size: 28rpx;
+				font-weight: 300;
+				color: #000000;
+				margin-left: 20rpx;
+			}
+		}
+	  .footer-btn {
+      width: 70%;
+      margin: 60rpx auto 132rpx;
+      button {
+        height:80rpx;
+        background: #F36681;
+        border-radius:40rpx;
+        color: #ffffff;
+        font-size: 30rpx;
+      }
+		}
+		.noData-box {
+			text-align: center;
+			height: 100%;
+			.noData-text {
+				color: #000000;
+				font-weight: 300;
+				font-size: 32rpx;
+				margin: 102rpx 0;
+			}
+			.noData-icon {
+				width: 90%;
+				height: 90%;
+			}
+		}
+  }
+</style>
+<template>
+  <view class="send_view">
+		<view class="send_content" wx:if="{{submitFlag}}">
+			<view class="send-header weui-flex around">
+				<image src="../../images/sample/car.png" mode="aspectFit"
+					class="car-icon">
+				</image>
+				<view class="send-tip">
+					<view><text>顺丰包邮</text> <text>顺丰包邮</text></view>
+					<view class="tip-text">建议取样后24小时内回寄</view>
+				</view>
+				<image src="../../images/sample/waterdrop1.png" mode="aspectFit"
+					class="waterdrop1">
+				</image>
+				<image src="../../images/sample/waterdrop2.png" mode="aspectFit"
+					class="waterdrop2">
+				</image>
+			</view>
+			<view class="send-goods weui-flex start-start">
+				<view class="send-goods-col1 title">邮寄物品</view>
+				<view class="send-goods-col2 subTitle">请将样本保存管放到原内衬中， 并装入外包装盒进行回寄</view>
+			</view>
+			<view class="send-goods send-goods1 weui-flex start-start">
+				<view class="weui-flex__auto title">收件信息</view>
+				<view class="subTitle weui-flex__auto">
+					<view>泰州硕世医学检验实验室</view>
+					<view>0523-86201500</view>
+					<view>江苏省泰州市海陵区中国医药城G25栋9楼</view>
+				</view>
+			</view>
+			<view class="weui-flex start bind-info">
+				<image src="../../images/tip.png" mode="scaleToFill"
+					class="tip-icon">
+				</image>
+				<view class="sample-text">如果顺丰不可到，其他快递请邮费自理</view>
+			</view>
+			<view class="footer-btn">
+				<button class="weui-flex center" @tap="order">预约顺丰上门取件</button>
+			</view>
+		</view>
+		<view wx:else class="noData-box">
+			<view class="noData-text">完成样本绑定及采集后，才能预约快递哦！</view>
+			<image src="../../images/sample/noData.png" mode="widthFix"
+				class="noData-icon">
+			</image>
+		</view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import {  wxNavigateTo } from '@/util'
+export default class send extends wepy.page {
+  data = {
+    submitFlag: true
+  }
+  config = {
+    navigationBarTitleText: '样本回寄'
+  }
+  onLoad() {
+    this.submitFlag = wx.getStorageSync('submitFlag')
+    this.$apply()
+  }
+  methods = {
+    order() {
+      wxNavigateTo('/pages/sample/orderDetail')
+    }
+  }
+}
+</script>

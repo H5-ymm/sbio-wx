@@ -1,0 +1,373 @@
+<style lang="less">
+  .home_view {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    margin: 0 auto;
+    .bind_box {
+      margin: 24rpx 20rpx;
+      .line-icon {
+        width: 8rpx;
+        height: 28rpx;
+      }
+      .title_icon {
+        max-height: 32rpx;
+        width: 192rpx;
+        margin-left: 22rpx;
+      }
+    }
+    .bind-box-1 {
+      margin: 0 0 0 30rpx;
+      .sample-header {
+        margin: 30rpx 0;
+        .sample-title {
+          font-size:30rpx;
+          color: #000;
+          font-weight:400;
+        }
+        .sample-num {
+          color: #E0283C;
+          font-size: 28rpx;
+        }
+        .scan-icon {
+          width: 30rpx;
+          height: 30rpx;
+          margin-right: 18rpx;
+        }
+      }
+      .sample-input {
+        height:76rpx;
+        background:#f2f2f2;
+        border-radius:20rpx;
+        color: #333333;
+        font-size: 30rpx;
+        padding-left: 32rpx;
+      }
+      .sample-text {
+        color: #000;
+        font-weight: 300;
+        font-size: 24rpx;
+        width: 52%;
+        text-align: center;
+      }
+      .sample-tip {
+        height:248rpx;
+        border-radius: 20rpx;
+        border:1px solid #E5E5E5;
+        margin: 56rpx 0;
+        .qrcode_icon {
+          width: 60rpx;
+          height: 108rpx;
+          margin: 0 20rpx;
+        }
+        .arrow_icon {
+          width: 124rpx;
+          height: 2rpx;
+          margin: 0 20rpx;
+        }
+      }
+      &.bind-info {
+        .tip-icon {
+          width: 26rpx;
+          height: 26rpx;
+        }
+        .sample-text {
+          text-align: left;
+          width: 83%;
+          padding: 36rpx 20rpx;
+          line-height: 40rpx;
+          &.sample-text1 {
+            padding: 0 0 0 20rpx;
+            width: 100%;
+            line-height: 36rpx;
+            margin-top: -6rpx;
+            font-size: 28rpx;
+          }
+        }
+      }
+    }
+    .bind-info-form {
+      .weui-flex {
+        margin-bottom: 40rpx;
+      }
+      .label {
+        width: 120rpx;
+        text-align: justify;
+        font-size: 30rpx;
+        overflow:hidden;
+        height: 20px;
+        color: #000000;
+        display: inline-block;
+        line-height: 20px;
+        &:after{
+          content:"";
+          display:inline-block;
+          width:100%;
+        }
+      }
+      .sample-input {
+        height:80rpx;
+        border-radius:20rpx;
+        border: 1px solid #C9C9C9;
+        margin-left: 20rpx;
+        background: #ffffff;
+        padding-left: 20rpx;
+        color: #333333;
+      }
+      .code-box {
+        .sample-input {
+          width: 50%;
+        }
+        .code-text {
+          color: #E0283C;
+          font-size: 26rpx;
+          margin-left: 28rpx;
+          width: 140rpx;
+        }
+      }
+      .rule {
+        color: #000000;
+        font-size: 30rpx;
+        border-bottom: 1px solid #333333;
+        padding-bottom: 4rpx;
+        width: 58%;
+      }
+    }
+    .sample-footer-info {
+      margin-top: 40rpx;
+      .selected-icon {
+        width: 24rpx;
+        height: 24rpx;
+      }
+    }
+    .footer-btn {
+      width: 70%;
+      margin: 60rpx auto 132rpx;
+      button {
+        height:80rpx;
+        background:#F8C1C7;
+        border-radius:40rpx;
+        color: #ffffff;
+        font-size: 30rpx;
+        &.btn {
+          background: #F36681;
+        }
+      }
+    }
+  }
+</style>
+<template>
+  <view class="home_view">
+    <view class="bind_box">
+      <view class="weui-flex start">
+        <image src="../../images/line.png" mode="scaleToFill"
+          class="line-icon">
+        </image>
+         <image src="../../images/text1.png" mode="scaleToFill"
+          class="title_icon" />
+      </view>
+      <view class="bind-box-1">
+        <view class="weui-flex between sample-header">
+          <view class="sample-title">样本编号</view>
+          <view class="sample-num weui-flex start" @tap="getQRCode">
+            <image src="../../images/scan.png" mode="scaleToFill"
+              class="scan-icon">
+            </image>
+            扫描样本编号
+          </view>
+        </view>
+        <input type="text" class="sample-input" readonly value="{{form.barCode}}" disabled data-name="barCode">
+        <view class="sample-tip weui-flex center">
+          <image src="../../images/qrcode.png" mode="scaleToFill"
+            class="qrcode_icon">
+          </image>
+          <image src="../../images/arrow.png" mode="widthFix"
+            class="arrow_icon">
+          </image>
+          <view class="sample-text">
+            扫描样本保存管上的二维码， 如已扫描则不重复扫描
+          </view>
+        </view>
+      </view>
+      <view class="weui-flex start">
+        <image src="../../images/line.png" mode="scaleToFill"
+          class="line-icon">
+        </image>
+         <image src="../../images/text2.png" mode="scaleToFill"
+          class="title_icon" />
+      </view>
+      <view class="bind-box-1 bind-info">
+        <view class="weui-flex start">
+          <image src="../../images/tip.png" mode="scaleToFill"
+            class="tip-icon">
+          </image>
+          <view class="sample-text">身份信息是您获取检测结果的唯一凭证，请如实填写，我们将严格保密</view>
+        </view>
+        <view class="bind-info-form">
+          <view class="weui-flex start">
+            <view class="label">姓名</view>
+            <input type="text" class="sample-input weui-flex__item" value="{{form.name}}" data-name="name" @change="changeForm">
+          </view>
+          <view class="weui-flex start">
+            <view class="label">手机号</view>
+            <input type="text" class="sample-input weui-flex__item" value="{{form.phone}}" data-name="phone" @change="changeForm">
+          </view>
+          <view class="weui-flex start code-box">
+            <view class="label">验证码</view>
+            <input type="text" class="sample-input weui-flex__item" value="{{form.veriCode}}" data-name="veriCode" @change="changeForm">
+            <view class="code-text" @tap="getCode">{{sendAuthCode?'获取验证码':auth_time+'s'}}</view>
+          </view>
+          <view class="weui-flex start">
+            <view class="label">身份证号</view>
+            <input type="text" class="sample-input weui-flex__item" placeholder="我们会根据国家法律法规保护你的隐私" value="{{form.cardNo}}" data-name="cardNo" @change="changeForm">
+          </view>
+          <view class="rule">HPV分型基因检测知情同意书</view>
+        </view>
+        <view class="weui-flex start-start sample-footer-info">
+          <image src="../../images/selected.png" mode="scaleToFill"
+            class="selected-icon">
+          </image>
+          <view class="sample-text sample-text1">本人已详细阅读HPV分型基因检测知情同意书，并同意使用电子同意的方式代替书面签名同意</view>
+        </view>
+      </view>
+    </view>
+    <view class="footer-btn">
+      <button class="weui-flex center {{isCheck?'btn':''}}" @tap="save">核对无误，提交</button>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import $moment from 'moment'
+import { $http } from '@/http.js'
+import { wxToast, checkMobile, validateIdCard, wxNavigateTo } from '@/util'
+import { encode } from '@/base64'
+export default class bindSample extends wepy.page {
+  data = {
+    form: {
+      barCode: '',
+      name: '',
+      phone: '',
+      veriCode: '',
+      cardNo: ''
+    },
+    auth_time: 60, // 倒计时
+    sendAuthCode: true, // 控制
+    auth_timetimer: null,
+    barCode: '',
+    codeError: true
+  }
+  config = {
+    navigationBarTitleText: '绑定样本'
+  }
+  computed = {
+    // 判断表单按钮是否置灰
+    isCheck() {
+      let flag = true
+      for(let key in this.form) {
+        if(!this.form[key]) {
+          flag = false
+        }
+      }
+      return flag
+    }
+  }
+  getCodeApi () {
+    $http('sample/api/getVeriCode', { phone: this.form.phone, sessionId: wx.getStorageSync('sessionId') }, 'Get')
+    .then(res => {
+      console.log(res)
+    })
+  }
+  // 保存样本
+  saveSample() {
+    // let barCode = encode(this.form.barCode)
+    // let params = Object.assign(this.form, { barCode })
+    if (!this.codeError) return
+    $http('sample/api/save', this.form).then(res => {
+      if (res.code === 0) {
+        wxToast('保存成功')
+        wx.setStorageSync('submitFlag', true)
+        wxNavigateTo('/pages/sample/send')
+      } else {
+        wxToast('保存失败')
+      }
+    })
+  }
+  getTime () {
+    if (!this.sendAuthCode) return
+    this.sendAuthCode = false
+    this.auth_timetimer = setInterval(() => {
+      this.auth_time--
+      this.$apply()
+      if (this.auth_time <= 0) {
+        this.sendAuthCode = true
+        this.auth_time = 60
+        this.$apply()
+        clearInterval(this.auth_timetimer)
+      }
+    }, 1000)
+  }
+  // 检验条形码是否有效
+  isCheckCode() {
+    $http('unicode/api/verification', { uniCode: this.form.barCode }, 'Get').then(res => {
+      if (res.code !== 0) {
+        this.codeError = false
+        wxToast(res.data.msg)
+      } else {
+        this.codeError = true
+      }
+      this.$apply()
+    })
+  }
+  methods = {
+    getQRCode: function(){
+      wx.scanCode({   
+        success: res => {
+          console.log(res)   //输出回调信息
+          this.form.barCode = res.rawData
+          this.isCheckCode()
+        }
+      })
+    },
+    // input输入值
+    changeForm(e) {
+      let key = e.currentTarget.dataset.name
+      this.form[key] = e.detail.value
+      this.$apply()
+    },
+    getCode () {
+      if (!this.form.phone) {
+        wxToast('手机号不能为空')
+      } else if (!checkMobile(this.form.phone)) {
+        wxToast('手机号格式不正确')
+      } else {
+        this.getCodeApi()
+        this.getTime()
+      }
+    },
+    // 保存按钮
+    save () {
+      this.form.collectionTime = $moment().unix()
+      if (!this.form.barCode) {
+        wxToast('样本编码不能为空')
+      } else if (!this.form.name) {
+        wxToast('姓名不能为空')
+      } else if (!this.form.name.length>50) {
+        wxToast('姓名不能超过50个字符')
+      } else if (!this.form.phone) {
+        wxToast('手机号不能为空')
+      } else if (!checkMobile(this.form.phone)) {
+        wxToast('手机号格式不正确')
+      } else if (!this.form.veriCode) {
+        wxToast('验证码不能为空')
+      } else if (!this.form.cardNo) {
+        wxToast('身份证号不能为空')
+      } else if (!validateIdCard(this.form.cardNo)) {
+        wxToast('身份证号格式不正确')
+      } else {
+        this.saveSample()
+      }
+    }
+  }
+}
+</script>
