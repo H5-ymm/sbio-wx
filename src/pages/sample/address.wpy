@@ -86,7 +86,7 @@
     <view class="footer-btn">
       <button class="weui-flex center {{isCheck?'btn':''}}" @tap="save">确定</button>
     </view>
-    <selectAddress :isShow.sync="isShow" @save="save"></selectAddress>
+    <selectAddress :isShow.sync="isShow" @save="save" @cancel="cancel"></selectAddress>
   </view>
 </template>
 <script>
@@ -120,13 +120,22 @@ export default class address extends wepy.page {
           flag = false
         }
       }
-      console.log(flag)
       return flag
+    }
+  }
+  onLoad(options) {
+    if(options.query) {
+      this.form = JSON.parse(options.query)
+      this.addressText = this.form.addressText
     }
   }
   events = {
     save: data => {
       this.addressText = data.join('')
+      this.isShow = !this.isShow
+      this.$apply()
+    },
+    cancel: () => {
       this.isShow = !this.isShow
       this.$apply()
     }
@@ -157,10 +166,8 @@ export default class address extends wepy.page {
       } else if (!this.form.address) {
         wxToast('详细地址不能为空')
       } else {
-         let startStationAddress = this.addressText + this.form.address
-         delete this.form.address
-         let params = Object.assign(this.form, { startStationAddress })
-         wxNavigateTo('/pages/sample/orderDetail?query='+JSON.stringify(params))
+        let params = Object.assign(this.form, { addressText: this.addressText })
+        wxNavigateTo('/pages/sample/orderDetail?query='+JSON.stringify(params))
       }
     }
   }

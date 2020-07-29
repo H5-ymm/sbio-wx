@@ -123,7 +123,7 @@
           </view>
         </view>
         <view class="box-btn weui-flex center">
-           <button class="weui-flex__item btn weui-flex center">取消</button>
+           <button class="weui-flex__item btn weui-flex center" @tap="cancel">取消</button>
            <button class="weui-flex__item btn btn1 weui-flex center" @tap="save">确定</button>
         </view>
       </view>
@@ -154,6 +154,9 @@ export default class selectAddress extends wepy.component {
     this.getCity(0)
   }
   methods = {
+    cancel() {
+      this.$emit('cancel')
+    },
     selectCity(item, index) {
       this.index = index
       if (index == 1) {

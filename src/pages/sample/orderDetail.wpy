@@ -118,7 +118,7 @@
 				<view class="order-right" wx:if="{{!addressInfo}}">寄件人信息</view>
 				<view wx:else class="order-right order-right-info  weui-flex__auto">
           <view><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
-					<view>{{addressInfo.startStationAddress}}</view>
+					<view>{{form.startStationAddress}}</view>
 				</view>
 			</view>
 			<view class="order-col2 weui-flex end weui-flex__auto" @tap="setAddress">
@@ -180,17 +180,16 @@
 </template>
 <script>
 import wepy from 'wepy'
-import {  wxNavigateTo, wxToast } from '@/util'
+import { wxNavigateTo, wxToast } from '@/util'
 import selectTime from '@/components/selectTime'
 import { $http } from '@/http.js'
 export default class orderDetail extends wepy.page {
-	components  = {
+	components = {
     selectTime: selectTime
   }
   data = {
 		isShow: true,
 		form: {
-			sampleIds: '',
 			orderEtd: '',
 			startContactName: '',
       startContactPhone: '',
@@ -199,30 +198,33 @@ export default class orderDetail extends wepy.page {
 		addressInfo: null,
 		sampleList: [],
 		orderEtd: '',
-		isSingleMailing: false,
-		isCheck: false
+		isSingleMailing: false
   }
   config = {
     navigationBarTitleText: '样本回寄'
 	}
-	watch = {
-    // 判断表单按钮是否置灰
-    form(val) {
-      let flag = false
-      for(let key in val) {
-        if(!val[key]) {
-          flag = true
-        }
-			}
-			this.isCheck = flag
-    }
-  }
   onLoad(options) {
 		if (options.query) {
-      this.addressInfo = JSON.parse(options.query)
+			this.addressInfo = JSON.parse(options.query)
+			this.form.startContactName = this.addressInfo.startContactName
+			this.form.startContactPhone = this.addressInfo.startContactPhone
+			this.form.startStationAddress = this.addressInfo.addressText + this.addressInfo.address
+			this.$apply()
 		}
 		this.getSubmitFlag()
 	}
+	computed = {
+    // 判断表单按钮是否置灰
+    isCheck() {
+      let flag = true
+      for (let key in this.form) {
+        if (!this.form[key]) {
+          flag = false
+        }
+			}
+      return flag
+    }
+  }
 	events = {
 		seletOrderTime: data => {
 			this.form.orderEtd = data.date
@@ -236,18 +238,21 @@ export default class orderDetail extends wepy.page {
 		}
 	}
 	getSubmitFlag() {
-    $http('sample/api/listSubmit',{} ,'Get').then(res => {
+    $http('sample/api/listSubmit', {}, 'Get').then(res => {
 			this.sampleList = res.data
 			wx.setStorageSync('sampleList', JSON.stringify(res.data))
-			this.$apply() 
+			this.$apply()
     })
   }
 	// 下单
   saveSample() {
-		let arr = this.sampleList.map(item => { return item.sampleId})
-		this.form.sampleIds = arr.join(',') 
-		let params = Object.assign(this.form, this.addressInfo)
-    $http('sample/api/logistics/createOrder', params).then(res => {
+		let arr = this.sampleList.map(item => { return item.sampleId })
+		if (this.isSingleMailing && arr.length > 1) {
+      this.form.sampleIds = arr[0]
+		} else {
+			this.form.sampleIds = arr.join(',')
+		}
+    $http('sample/api/logistics/createOrder', this.form).then(res => {
       if (res.code === 0) {
 				wxToast('保存成功')
 				wxNavigateTo('/pages/sample/detail?logisticsId=' + res.data.logisticsId)
@@ -259,9 +264,9 @@ export default class orderDetail extends wepy.page {
   methods = {
 		selectAll() {
 			wx.showActionSheet({
-			itemList: ['是', '否'],
+		  	itemList: ['是', '否'],
 				success: res => {
-					if (res.tapIndex == 0 ) {
+					if (res.tapIndex === 0) {
 						this.isSingleMailing = false
 					} else {
 						this.isSingleMailing = true
@@ -278,11 +283,19 @@ export default class orderDetail extends wepy.page {
 			this.$apply()
 		},
 		setAddress() {
-			wxNavigateTo('/pages/sample/address')
+			if (!this.addressInfo) {
+				wxNavigateTo('/pages/sample/address')
+			} else {
+				wxNavigateTo('/pages/sample/address?query=' + JSON.stringify(this.addressInfo))
+			}
 		},
 		overbooking() {
 			if (!this.isCheck) return
-			this.saveSample()
+			if (!this.form.orderEtd) {
+        wxToast('请选择预约时间')
+			} else {
+				this.saveSample()
+			}
 		}
   }
 }
