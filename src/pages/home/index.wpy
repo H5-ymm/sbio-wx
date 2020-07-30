@@ -42,7 +42,7 @@
 </template>
 <script>
 import wepy from 'wepy'
-import {  wxNavigateTo } from '@/util'
+import {  wxNavigateTo, throttle } from '@/util'
 import { menus } from '@/base/base'
 import { $http } from '@/http.js'
 export default class home extends wepy.page {
@@ -54,7 +54,7 @@ export default class home extends wepy.page {
     navigationBarTitleText: '硕世健康',
     enablePullDownRefresh: true
   }
-  bindrefresherrefresh() {
+  onPullDownRefresh() {
     this.getOpenId()
   }
   getSubmitFlag(sessionId) {
@@ -73,10 +73,15 @@ export default class home extends wepy.page {
     wx.login({
       success: res => {
         if (res.code) {
+          console.log(res.code)
+          // return
           $http('user/api/wechat/getSession', { code: res.code, type: 0 }, 'Get').then(res => {
             console.log(res)
-            this.getSubmitFlag(res.data.sessionId)
             wx.setStorageSync('sessionId', res.data.sessionId)
+            wx.setStorageSync('authFlag', !res.data.authFlag?true:false)
+            if (!res.data.authFlag) {
+              this.getSubmitFlag(res.data.sessionId)
+            }
           }).catch(error => {
             console.log(error)
           })
@@ -86,13 +91,18 @@ export default class home extends wepy.page {
       }
     })
   }
-  onLoad() {
+  onShow() {
     this.getOpenId()
   }
   methods = {
     routeView(item) {
-      wxNavigateTo(item.path)
+      let fn = (item) => {
+        console.log(item)
+        wxNavigateTo(item.path)
+      }
+      throttle(fn(item), 1000)
     }
+    
   }
 }
 </script>

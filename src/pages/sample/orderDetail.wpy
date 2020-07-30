@@ -24,6 +24,9 @@
 				}
 			}
 		}
+		// .startStationAddress {
+		// 	padding-right: 36rpx;
+		// }
 		.order-header {
 			margin: 36rpx;
 	  	.order-left {
@@ -115,10 +118,10 @@
 		<view class="order-header weui-flex between">
 			<view class="order-col1 weui-flex between">
 				<view class="order-left  weui-flex center">寄</view>
-				<view class="order-right" wx:if="{{!addressInfo}}">寄件人信息</view>
-				<view wx:else class="order-right order-right-info  weui-flex__auto">
+				<view class="order-right" wx:if="{{!addressInfo}}" @tap="setAddress">寄件人信息</view>
+				<view wx:else class="order-right order-right-info  weui-flex__item" @tap="setAddress">
           <view><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
-					<view>{{form.startStationAddress}}</view>
+					<view class="startStationAddress">{{form.startStationAddress}}</view>
 				</view>
 			</view>
 			<view class="order-col2 weui-flex end weui-flex__auto" @tap="setAddress">
@@ -133,19 +136,19 @@
 				<view class="order-left  weui-flex center">收</view>
 				<view class="order-right">
 					<view>泰州硕世医学检验实验室</view>
-					<view class="order-address">江苏省泰州市海陵区中国医药城G25栋9</view>
+					<view class="order-address">江苏省泰州市海陵区中国医药城G25栋9楼</view>
 				</view>
 			</view>
 		</view>
 		<view class="order_content">
-			<view class="order-row weui-flex between" wx:if="{{sampleList.length>2}}">
-				<view>你有两份待回寄样本，是否一起回寄 ?</view>
+			<view class="order-row weui-flex between" wx:if="{{sampleList.length>1}}">
+				<view>你有{{sampleList.length}}份待回寄样本，是否一起回寄 ?</view>
 				<view class="order-time weui-flex between" @tap="selectAll">
 					<view>{{isSingleMailing?'否':'是'}}</view>
 					<image src="../../images/right.png" mode="aspectFit" class="right-icon"></image>
 				</view>
 			</view>
-			 <view class="tip-content" wx:if="{{!isSingleMailing&&sampleList.length>2}}">
+			 <view class="tip-content" wx:if="{{!isSingleMailing&&sampleList.length>1}}">
 				<repeat for="{{sampleList}}" key="index">
 					<view class="text">{{item.productName}} - {{item.name}}</view>
 				</repeat>
@@ -153,7 +156,7 @@
 			<view class="order-row weui-flex between">
 				<view>上门取件时间</view>
 				<view class="order-time weui-flex between" @tap="selectOrderTime">
-				  <view>{{orderEtd?orderEtd:'请选择'}}</view>
+				  <view>{{orderEtd?(activeIndex ? '明天 ': '今天 ') + orderEtd:'请选择'}}</view>
 					<image src="../../images/right.png" mode="aspectFit"
 					class="right-icon">
 				</image></view>
@@ -180,7 +183,7 @@
 </template>
 <script>
 import wepy from 'wepy'
-import { wxNavigateTo, wxToast } from '@/util'
+import { wxNavigateTo, wxToast, wxReLaunch } from '@/util'
 import selectTime from '@/components/selectTime'
 import { $http } from '@/http.js'
 export default class orderDetail extends wepy.page {
@@ -198,7 +201,8 @@ export default class orderDetail extends wepy.page {
 		addressInfo: null,
 		sampleList: [],
 		orderEtd: '',
-		isSingleMailing: false
+		isSingleMailing: false,
+		activeIndex: 0
   }
   config = {
     navigationBarTitleText: '样本回寄'
@@ -212,6 +216,18 @@ export default class orderDetail extends wepy.page {
 			this.$apply()
 		}
 		this.getSubmitFlag()
+	}
+	onShow() {
+		if(wx.getStorageSync('changeTime')) {
+			let data = JSON.parse(wx.getStorageSync('changeTime'))
+			this.showTime(data)
+		}
+	}
+	showTime(data) {
+  	this.form.orderEtd = data.date
+		this.orderEtd = data.time
+		this.activeIndex = data.activeIndex
+		this.$apply()
 	}
 	computed = {
     // 判断表单按钮是否置灰
@@ -227,10 +243,9 @@ export default class orderDetail extends wepy.page {
   }
 	events = {
 		seletOrderTime: data => {
-			this.form.orderEtd = data.date
-			this.orderEtd = data.time
 			this.isShow = !this.isShow
-			this.$apply()
+	  	this.showTime(data)
+			wx.setStorageSync('changeTime', JSON.stringify(data))
 		},
 		cancel: () => {
 			this.isShow = !this.isShow
@@ -255,7 +270,8 @@ export default class orderDetail extends wepy.page {
     $http('sample/api/logistics/createOrder', this.form).then(res => {
       if (res.code === 0) {
 				wxToast('保存成功')
-				wxNavigateTo('/pages/sample/detail?logisticsId=' + res.data.logisticsId)
+				wx.setStorageSync('addressInfo', JSON.stringify(this.addressInfo))
+				wxReLaunch('/pages/sample/detail?logisticsId=' + res.data.logisticsId)
       } else {
         wxToast('保存失败')
       }

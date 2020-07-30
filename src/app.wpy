@@ -49,6 +49,9 @@ export default class extends wepy.app {
   }
   removeData() {
     wx.removeStorageSync('sessionId')
+    wx.removeStorageSync('addressInfo')
+    wx.removeStorageSync('authFlag')
+    wx.removeStorageSync('changeTime')
   }
   autoUpdate() {
     var self = this

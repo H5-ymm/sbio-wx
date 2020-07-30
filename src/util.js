@@ -42,11 +42,6 @@ const checkNum = num => {
     }
     return flag;
 };
-const getImgUrl = imgUrl => {
-    const baseUrl = 'https://d.rsd123.com/'
-    // const baseUrl = 'http://www.ttxsg.com.cn:39009/'
-    return baseUrl + imgUrl;
-};
 const compressImg = (photoSrc, ratio = 2) => {
     let obj = {
         url: '',
@@ -97,7 +92,7 @@ const wxToast = title => {
     return wx.showToast({
         title: title,
         icon: 'none',
-        duration: 2000
+        duration: 3000
     })
 }
 const wxNavigateTo = url => {
@@ -175,19 +170,33 @@ const getList = (list, key, formatType) => {
 }
 const isJSON = (str) => {
     if (typeof str === 'string') {
-      try {
+        try {
         let obj = JSON.parse(str)
         return !!(typeof obj === 'object' && obj)
-      } catch (e) {
+        } catch (e) {
         return false
-      }
+        }
     }
-  }
+}
+const throttle = (fn, gapTime) => {
+    if (gapTime == null || gapTime == undefined) {
+        gapTime = 1500
+    }
+    let _lastTime = null
+    return function () {
+        let _nowTime = + new Date()
+        console.log(_nowTime)
+        console.log(_nowTime - _lastTime)
+        if (_nowTime - _lastTime > gapTime || !_lastTime) {
+            fn.apply(this, arguments)
+            _lastTime = _nowTime
+        }
+    }
+}
 module.exports = {
     manglingFormatCardNumber: manglingFormatCardNumber,
     validateIdCard: validateIdCard,
     checkMobile: checkMobile,
-    getImgUrl: getImgUrl,
     wxToast: wxToast,
     compressImg: compressImg,
     wxNavigateTo: wxNavigateTo,
@@ -199,5 +208,6 @@ module.exports = {
     wxShowModal: wxShowModal,
     getList: getList,
     isJSON: isJSON,
-    checkNum: checkNum
+    checkNum: checkNum,
+    throttle: throttle
 };

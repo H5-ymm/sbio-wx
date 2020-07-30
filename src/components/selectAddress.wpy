@@ -14,7 +14,7 @@
       z-index: 30;
       left: 0;
       width: 100%;
-      animation: find .4s linear;
+      animation: find .5s linear;
       .box {
         height: 100%;
         width: 100%;
@@ -71,8 +71,14 @@
     0% {
       bottom: -100rpx;
     }
+    20% {
+      bottom: -80rpx;
+    }
     50% {
       bottom: -50rpx;
+    }
+    50% {
+      bottom: -30rpx;
     }
     100% {
       bottom: 0;

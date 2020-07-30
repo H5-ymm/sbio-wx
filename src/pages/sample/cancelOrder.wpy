@@ -80,7 +80,7 @@
     	<view class="order-header weui-flex between">
 			<view class="order-col1 weui-flex between">
 				<view class="order-left  weui-flex center order-left-reduce">寄</view>
-				<view class="order-right order-right-info  weui-flex__auto">
+				<view class="order-right order-right-info weui-flex__item">
           <view><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
 					<view>{{addressInfo.startStationAddress}}</view>
 				</view>
@@ -91,7 +91,7 @@
 				<view class="order-left  weui-flex center order-left-reduce">收</view>
 				<view class="order-right">
 					<view class="order-address-name">泰州硕世医学检验实验室</view>
-					<view>江苏省泰州市海陵区中国医药城G25栋9</view>
+					<view>江苏省泰州市海陵区中国医药城G25栋9楼</view>
 				</view>
 			</view>
 		</view>
@@ -119,23 +119,20 @@ import wepy from 'wepy'
 import { wxNavigateTo } from '@/util'
 export default class cancelOrder extends wepy.page {
   data = {
-    addressInfo: {}
+		addressInfo: {}
   }
   config = {
     navigationBarTitleText: '样本回寄'
   }
-  onload(options) {
-		this.getLogistics(options.logisticsId)
-	}
-	getLogistics(logisticsId) {
-		$http('sample/api/logistics/getLogistics', { logisticsId }, 'Get').then(res => {
-			this.addressInfo = res.data
-			this.$apply()
-    })
+  onLoad(options) {
+		this.addressInfo = JSON.parse(options.addressInfo)
+		console.log(this.addressInfo)
+		this.$apply()	
 	}
   methods = {
     order() {
-      wxNavigateTo('/pages/sample/orderDetail')
+			let query = wx.getStorageSync('addressInfo')
+      wxNavigateTo('/pages/sample/orderDetail?query=' + query)
     }
   }
 }

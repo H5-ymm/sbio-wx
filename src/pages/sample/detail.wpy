@@ -71,7 +71,7 @@
 		<view class="order-header weui-flex between">
 			<view class="order-col1 weui-flex between">
 				<view class="order-left  weui-flex center order-left-reduce">寄</view>
-				<view class="order-right order-right-info  weui-flex__auto">
+				<view class="order-right order-right-info weui-flex__item">
           <view><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
 					<view>{{addressInfo.startStationAddress}}</view>
 				</view>
@@ -82,7 +82,7 @@
 				<view class="order-left  weui-flex center order-left-reduce">收</view>
 				<view class="order-right">
 					<view class="order-address-name">泰州硕世医学检验实验室</view>
-					<view>江苏省泰州市海陵区中国医药城G25栋9</view>
+					<view>江苏省泰州市海陵区中国医药城G25栋9楼</view>
 				</view>
 			</view>
 		</view>
@@ -105,7 +105,7 @@
 </template>
 <script>
 import wepy from 'wepy'
-import { wxRedirectTo, wxToast } from '@/util'
+import { wxReLaunch, wxToast } from '@/util'
 import tipTeamplte from '@/components/tipTeamplte'
 import timeCard from '@/components/timeCard'
 import { $http } from '@/http.js'
@@ -145,7 +145,9 @@ export default class detail extends wepy.page {
 	getSampleDate(orderEtd) {
 		let date = $moment.unix(orderEtd).format('HH')
 		let type
-		if ($moment.unix(this.orderEtd).format('YYYY-MM-DD') == $moment().format('YYYY-MM-DD')) {
+		console.log($moment.unix(orderEtd).format('YYYY-MM-DD'))
+		console.log($moment().format('YYYY-MM-DD'))
+		if ($moment.unix(orderEtd).format('YYYY-MM-DD') == $moment().format('YYYY-MM-DD')) {
 			type = '今天'
 		} else {
 			type = '明天'
@@ -171,7 +173,7 @@ export default class detail extends wepy.page {
     $http('sample/api/logistics/cancel?logisticsId=' + this.logisticsId, {}, 'Put').then(res => {
 			console.log(res)
 			if (res.code === 0) {
-				wxRedirectTo('/pages/sample/cancelOrder?logisticsId=' + this.logisticsId)
+				wxReLaunch('/pages/sample/cancelOrder?addressInfo=' + JSON.stringify(this.addressInfo))
 			}
     })
   }

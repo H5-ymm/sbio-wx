@@ -115,7 +115,7 @@
 					class="car-icon">
 				</image>
 				<view class="send-tip">
-					<view><text>顺丰包邮</text> <text>顺丰包邮</text></view>
+					<view><text>顺丰包邮</text> <text>保密发货</text></view>
 					<view class="tip-text">建议取样后24小时内回寄</view>
 				</view>
 				<image src="../../images/sample/waterdrop1.png" mode="aspectFit"

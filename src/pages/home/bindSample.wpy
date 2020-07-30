@@ -2,7 +2,7 @@
   .home_view {
     height: 100%;
     width: 100%;
-    overflow: auto;
+    overflow: scroll;
     margin: 0 auto;
     .bind_box {
       margin: 24rpx 20rpx;
@@ -157,7 +157,7 @@
   }
 </style>
 <template>
-  <view class="home_view">
+  <scroll-view scroll-y="{{sysScroll}}"  scroll-top="{{scrollTop}}" class="home_view">
     <view class="bind_box">
       <view class="weui-flex start">
         <image src="../../images/line.png" mode="scaleToFill"
@@ -176,7 +176,7 @@
             扫描样本编号
           </view>
         </view>
-        <input type="text" class="sample-input" readonly value="{{form.barCode}}" disabled data-name="barCode">
+        <input type="text" class="sample-input" readonly value="{{barCode}}" disabled>
         <view class="sample-tip weui-flex center">
           <image src="../../images/qrcode.png" mode="scaleToFill"
             class="qrcode_icon">
@@ -193,8 +193,8 @@
         <image src="../../images/line.png" mode="scaleToFill"
           class="line-icon">
         </image>
-         <image src="../../images/text2.png" mode="scaleToFill"
-          class="title_icon" />
+        <image src="../../images/text2.png" mode="scaleToFill"
+        class="title_icon" />
       </view>
       <view class="bind-box-1 bind-info">
         <view class="weui-flex start">
@@ -206,20 +206,20 @@
         <view class="bind-info-form">
           <view class="weui-flex start">
             <view class="label">姓名</view>
-            <input type="text" class="sample-input weui-flex__item" value="{{form.name}}" data-name="name" @change="changeForm">
+            <input type="text" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" value="{{form.name}}" data-name="name" @input="changeForm">
           </view>
           <view class="weui-flex start">
             <view class="label">手机号</view>
-            <input type="text" class="sample-input weui-flex__item" value="{{form.phone}}" data-name="phone" @change="changeForm">
+            <input type="text" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" value="{{form.phone}}" data-name="phone" @input="changeForm">
           </view>
           <view class="weui-flex start code-box">
             <view class="label">验证码</view>
-            <input type="text" class="sample-input weui-flex__item" value="{{form.veriCode}}" data-name="veriCode" @change="changeForm">
+            <input type="text" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" value="{{form.veriCode}}" data-name="veriCode" @input="changeForm">
             <view class="code-text" @tap="getCode">{{sendAuthCode?'获取验证码':auth_time+'s'}}</view>
           </view>
           <view class="weui-flex start">
             <view class="label">身份证号</view>
-            <input type="text" class="sample-input weui-flex__item" placeholder="我们会根据国家法律法规保护你的隐私" value="{{form.cardNo}}" data-name="cardNo" @change="changeForm">
+            <input type="text" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" placeholder="我们会根据国家法律法规保护你的隐私" value="{{form.cardNo}}" data-name="cardNo" @input="changeForm">
           </view>
           <view class="rule">HPV分型基因检测知情同意书</view>
         </view>
@@ -234,14 +234,14 @@
     <view class="footer-btn">
       <button class="weui-flex center {{isCheck?'btn':''}}" @tap="save">核对无误，提交</button>
     </view>
-  </view>
+  </scroll-view>
 </template>
 <script>
 import wepy from 'wepy'
 import $moment from 'moment'
 import { $http } from '@/http.js'
-import { wxToast, checkMobile, validateIdCard, wxNavigateTo } from '@/util'
-import { encode } from '@/base64'
+import { wxToast, checkMobile, validateIdCard, wxNavigateTo, wxReLaunch } from '@/util'
+import { encode, decode } from '@/base64'
 export default class bindSample extends wepy.page {
   data = {
     form: {
@@ -255,7 +255,8 @@ export default class bindSample extends wepy.page {
     sendAuthCode: true, // 控制
     auth_timetimer: null,
     barCode: '',
-    codeError: true
+    codeError: true,
+    sysScroll: true
   }
   config = {
     navigationBarTitleText: '绑定样本'
@@ -285,11 +286,11 @@ export default class bindSample extends wepy.page {
     if (!this.codeError) return
     $http('sample/api/save', this.form).then(res => {
       if (res.code === 0) {
-        wxToast('保存成功')
+        wxToast('绑定成功，请尽快完成取样、回寄样本')
         wx.setStorageSync('submitFlag', true)
-        wxNavigateTo('/pages/sample/send')
+        wxReLaunch('/pages/home/usageProcess')
       } else {
-        wxToast('保存失败')
+        wxToast('绑定失败')
       }
     })
   }
@@ -310,32 +311,46 @@ export default class bindSample extends wepy.page {
   // 检验条形码是否有效
   isCheckCode() {
     $http('unicode/api/verification', { uniCode: this.form.barCode }, 'Get').then(res => {
-      if (res.code !== 0) {
+      if (!res.data.uniCodeFlag) {
         this.codeError = false
-        wxToast(res.data.msg)
+        this.form.barCode = ''
+        this.barCode = ''
+        wxToast(res.data.msg || '请扫描正确的样本编号')
       } else {
         this.codeError = true
       }
       this.$apply()
     })
   }
-  methods = {
+  methods = {   
     getQRCode: function(){
       wx.scanCode({   
         success: res => {
-          console.log(res)   //输出回调信息
           this.form.barCode = res.rawData
+          this.barCode = decode(res.rawData)
           this.isCheckCode()
         }
       })
+    },
+    onfocus() {
+      this.sysScroll = false
+      this.$apply()
+    },
+    bindblur() {
+      this.sysScroll = true
+      this.$apply()
     },
     // input输入值
     changeForm(e) {
       let key = e.currentTarget.dataset.name
       this.form[key] = e.detail.value
+      wx.pageScrollTo({
+        scrollTop:999,
+      })
       this.$apply()
     },
     getCode () {
+      if (!this.sendAuthCode) return
       if (!this.form.phone) {
         wxToast('手机号不能为空')
       } else if (!checkMobile(this.form.phone)) {
@@ -349,7 +364,7 @@ export default class bindSample extends wepy.page {
     save () {
       this.form.collectionTime = $moment().unix()
       if (!this.form.barCode) {
-        wxToast('样本编码不能为空')
+        wxToast('样本编号不能为空')
       } else if (!this.form.name) {
         wxToast('姓名不能为空')
       } else if (!this.form.name.length>50) {

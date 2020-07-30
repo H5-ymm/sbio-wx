@@ -157,7 +157,7 @@ export default class selectTime extends wepy.component {
     index: 0,
     addressText: '',
     option: [],
-    typeList: ['今天', '明天'],
+    typeList: [],
     activeIndex: 0,
     timeIndex: -1,
     nowTime: '',
@@ -165,8 +165,16 @@ export default class selectTime extends wepy.component {
   }
   onLoad() {
     this.array = this.getTimeList()
+    this.nowTime = $moment().format('HH:mm')
+    if (Number(this.splitArr(this.nowTime))>=19&&Number(this.splitArr(this.nowTime), 1)>0) {
+      this.typeList = ['明天']
+      this.changeTime(1)
+    } else {
+      this.typeList = ['今天', '明天']
+      this.changeTime(0)
+    }
     this.$apply()
-    this.changeTime(0)
+  
   }
   add0(num) {
     return num < 10 ? '0' + num : num
@@ -180,23 +188,22 @@ export default class selectTime extends wepy.component {
     }
     return arr
   }
-  splitArr(str) {
-    return Number(str.split(':')[0])
+  splitArr(str, index) {
+    let i = index || 0
+    return Number(str.split(':')[i])
   }
   getNewTimeList() {
     let arr = []
     this.array.forEach((item, index) => {
       let str = item.split('-')
-      if (this.splitArr(this.nowTime)- this.splitArr(str[0]) >= 0 && this.splitArr(this.nowTime)- this.splitArr(str[1]) < 0) {
+      if (this.splitArr(this.nowTime) - this.splitArr(str[0]) >= 0 && this.splitArr(this.nowTime) - this.splitArr(str[1]) < 0) {
         arr = this.array.splice(index, this.array.length - index)
       }
     })
-    console.log(arr)
     return arr
   }
   changeTime(index) { 
     if (index == 0) {
-      this.nowTime = $moment().format('HH:mm')
       this.array = this.getNewTimeList()
     } else {
       this.array = this.getTimeList()
@@ -232,7 +239,8 @@ export default class selectTime extends wepy.component {
       let date = this.getNewDate(this.activeIndex, this.date)
       let params = {
         date,
-        time: this.date
+        time: this.date,
+        activeIndex: this.activeIndex
       }
       this.$emit('seletOrderTime', params)
     }
