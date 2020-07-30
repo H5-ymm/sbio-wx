@@ -174,7 +174,6 @@ export default class selectTime extends wepy.component {
       this.changeTime(0)
     }
     this.$apply()
-  
   }
   add0(num) {
     return num < 10 ? '0' + num : num
@@ -198,6 +197,9 @@ export default class selectTime extends wepy.component {
       let str = item.split('-')
       if (this.splitArr(this.nowTime) - this.splitArr(str[0]) >= 0 && this.splitArr(this.nowTime) - this.splitArr(str[1]) < 0) {
         arr = this.array.splice(index, this.array.length - index)
+      }
+      if (this.splitArr(this.nowTime) - this.splitArr(str[0]) < 0) {
+        arr = this.array
       }
     })
     return arr

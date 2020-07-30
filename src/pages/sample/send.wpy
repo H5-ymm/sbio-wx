@@ -153,25 +153,63 @@
 				class="noData-icon">
 			</image>
 		</view>
+		<popup :isShow.sync="isShow" @bindWx="bindWx"></popup>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
-import {  wxNavigateTo } from '@/util'
+import { wxNavigateTo } from '@/util'
+import popup from '@/components/popup'
+import { $http } from '@/http.js'
+import { debounce } from "@/debounce.js"
 export default class send extends wepy.page {
   data = {
-    submitFlag: true
+		submitFlag: true,
+		isShow: true
+	}
+	components = {
+    popup: popup
   }
   config = {
     navigationBarTitleText: '样本回寄'
   }
   onLoad() {
-    this.submitFlag = wx.getStorageSync('submitFlag')
+		this.isShow = wx.getStorageSync('authFlag')
+		if (!this.isShow) {
+			this.submitFlag = false
+			this.isShow = false
+		} else {
+			this.isShow = true
+			this.submitFlag = wx.getStorageSync('submitFlag')
+		}
     this.$apply()
+	}
+	// 判断是否绑定样本
+	getSubmitFlag(sessionId) {
+    $http('sample/api/listSubmit',{} ,'Get', sessionId).then(res => {
+      if (res.data.length) {
+        this.submitFlag = true
+        wx.setStorageSync('sampleList', JSON.stringify(res.data))
+      } else {
+        this.submitFlag = false
+			}
+			this.isShow = true
+			wx.setStorageSync('authFlag', true)
+			wx.setStorageSync('submitFlag', this.submitFlag)
+			this.$apply()
+    })
   }
+	events = {
+		bindWx: sessionId => {
+			this.getSubmitFlag(sessionId)
+		}
+	}
   methods = {
     order() {
-      wxNavigateTo('/pages/sample/orderDetail')
+			let fun = () => {
+        wxNavigateTo('/pages/sample/orderDetail')
+			}
+			debounce(fun(), 1000, true)   
     }
   }
 }

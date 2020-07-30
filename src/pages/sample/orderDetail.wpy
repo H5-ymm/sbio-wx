@@ -186,6 +186,7 @@ import wepy from 'wepy'
 import { wxNavigateTo, wxToast, wxReLaunch } from '@/util'
 import selectTime from '@/components/selectTime'
 import { $http } from '@/http.js'
+import { debounce } from "@/debounce.js"
 export default class orderDetail extends wepy.page {
 	components = {
     selectTime: selectTime
@@ -271,7 +272,10 @@ export default class orderDetail extends wepy.page {
       if (res.code === 0) {
 				wxToast('保存成功')
 				wx.setStorageSync('addressInfo', JSON.stringify(this.addressInfo))
-				wxReLaunch('/pages/sample/detail?logisticsId=' + res.data.logisticsId)
+				let fun = () => {
+          wxReLaunch('/pages/sample/detail?logisticsId=' + res.data.logisticsId)
+				}
+				debounce(fun(), 1000, true)		
       } else {
         wxToast('保存失败')
       }
@@ -300,9 +304,15 @@ export default class orderDetail extends wepy.page {
 		},
 		setAddress() {
 			if (!this.addressInfo) {
-				wxNavigateTo('/pages/sample/address')
+				let fun1 = () => {
+          wxNavigateTo('/pages/sample/address')
+				}
+				debounce(fun1(), 1000, true)		
 			} else {
-				wxNavigateTo('/pages/sample/address?query=' + JSON.stringify(this.addressInfo))
+				let fun2 = () => {
+          wxNavigateTo('/pages/sample/address?query=' + JSON.stringify(this.addressInfo))
+				}
+				debounce(fun2(), 1000, true)		
 			}
 		},
 		overbooking() {

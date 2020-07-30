@@ -5,13 +5,14 @@
     overflow: hidden;
     position: absolute;
     bottom: 0;
+    left: 0;
     z-index: 20;
     .selectAddress-content {
       background: #ffffff;
       position: absolute;
       bottom: 20%;
       z-index: 30;
-      left: 0;
+      left: 5%;
       width: 100%;
       animation: findIn.3s linear;
       &.popup-content {
@@ -151,7 +152,7 @@ export default class popup extends wepy.component {
     $http('user/api/wechat/decryptData', params).then(res => {
       if (res.code == 0) {
         wx.setStorageSync('sessionId', res.data.sessionId)
-        this.$emit('bindWx')
+        this.$emit('bindWx', res.data.sessionId)
       }
     })
   }

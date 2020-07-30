@@ -45,6 +45,7 @@ import wepy from 'wepy'
 import {  wxNavigateTo, throttle } from '@/util'
 import { menus } from '@/base/base'
 import { $http } from '@/http.js'
+import { debounce } from "@/debounce.js"
 export default class home extends wepy.page {
   data = {
     menus,
@@ -97,12 +98,10 @@ export default class home extends wepy.page {
   methods = {
     routeView(item) {
       let fn = (item) => {
-        console.log(item)
         wxNavigateTo(item.path)
       }
-      throttle(fn(item), 1000)
+      debounce(fn(item), 1000, true)
     }
-    
   }
 }
 </script>

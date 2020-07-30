@@ -93,6 +93,7 @@
 import wepy from 'wepy'
 import { tipList } from '@/base/base'
 import {  wxNavigateTo } from '@/util'
+import { debounce } from "@/debounce.js"
 export default class intendedFor extends wepy.page {
   data = {
     tipList
@@ -107,7 +108,10 @@ export default class intendedFor extends wepy.page {
       })
     },
     next() {
-      wxNavigateTo('/pages/home/bindSample')
+      let fn = () => {
+        wxNavigateTo('/pages/home/bindSample')
+      }
+      debounce(fn(), 1000, true)
     }
   }
 }

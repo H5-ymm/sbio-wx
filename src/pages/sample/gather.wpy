@@ -125,6 +125,7 @@
 import wepy from 'wepy'
 import { gatherList } from '@/base/base'
 import {  wxNavigateTo } from '@/util'
+import { debounce } from "@/debounce.js"
 export default class gather extends wepy.page {
   data = {
     gatherList,
@@ -140,12 +141,14 @@ export default class gather extends wepy.page {
       })
     },
     bindplay() {
-      console.log(1)
       this.autoplay = true
       this.$apply()
     },
     next() {
-      wxNavigateTo('/pages/sample/send')
+      let fn = () => {
+        wxNavigateTo('/pages/sample/send')
+      }
+      debounce(fn(), 1000, true)
     }
   }
 }

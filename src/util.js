@@ -1,4 +1,5 @@
-import $moment from 'moment';
+import $moment from 'moment'
+let canNavigateTo = true
 const manglingFormatCardNumber = (cardNumber) => {
     if (cardNumber && cardNumber.length > 8) {
         return `${cardNumber.substring(0, 4)} ${'*'
@@ -96,11 +97,9 @@ const wxToast = title => {
     })
 }
 const wxNavigateTo = url => {
-    setTimeout(() => {
-        wx.navigateTo({
-            url: url // 页面 A
-        })
-    }, 300)
+    wx.navigateTo({
+        url
+    })
 }
 const wxRedirectTo = url => {
     setTimeout(() => {

@@ -95,6 +95,7 @@ import $moment from 'moment'
 import { $http } from '@/http.js'
 import { wxToast, checkMobile, wxNavigateTo } from '@/util'
 import selectAddress from '@/components/selectAddress'
+import { debounce } from "@/debounce.js"
 export default class address extends wepy.page {
   components  = {
     selectAddress: selectAddress
@@ -143,10 +144,8 @@ export default class address extends wepy.page {
   methods = {
     // input输入值
     changeForm(e) {
-      console.log(e)
       let key = e.currentTarget.dataset.name
       this.form[key] = e.detail.value
-      console.log(this.form)
       this.$apply()
     },
     selectCity() {
@@ -167,7 +166,10 @@ export default class address extends wepy.page {
         wxToast('详细地址不能为空')
       } else {
         let params = Object.assign(this.form, { addressText: this.addressText })
-        wxNavigateTo('/pages/sample/orderDetail?query='+JSON.stringify(params))
+        let fn = (params) => {
+          wxNavigateTo('/pages/sample/orderDetail?query='+JSON.stringify(params))
+        }
+        debounce(fn(params), 1000, true) 
       }
     }
   }

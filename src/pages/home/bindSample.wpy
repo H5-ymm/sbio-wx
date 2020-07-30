@@ -240,7 +240,8 @@
 import wepy from 'wepy'
 import $moment from 'moment'
 import { $http } from '@/http.js'
-import { wxToast, checkMobile, validateIdCard, wxNavigateTo, wxReLaunch } from '@/util'
+import { wxToast, checkMobile, validateIdCard, wxReLaunch } from '@/util'
+import { debounce } from "@/debounce.js"
 import { encode, decode } from '@/base64'
 export default class bindSample extends wepy.page {
   data = {
@@ -288,7 +289,10 @@ export default class bindSample extends wepy.page {
       if (res.code === 0) {
         wxToast('绑定成功，请尽快完成取样、回寄样本')
         wx.setStorageSync('submitFlag', true)
-        wxReLaunch('/pages/home/usageProcess')
+        let fn = () => {
+          wxReLaunch('/pages/home/usageProcess')
+        }
+        debounce(fn(), 1000, true)
       } else {
         wxToast('绑定失败')
       }

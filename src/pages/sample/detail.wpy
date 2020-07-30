@@ -110,6 +110,7 @@ import tipTeamplte from '@/components/tipTeamplte'
 import timeCard from '@/components/timeCard'
 import { $http } from '@/http.js'
 import $moment from 'moment'
+import { debounce } from "@/debounce.js"
 export default class detail extends wepy.page {
 	components  = {
 		tipTeamplte: tipTeamplte,
@@ -145,8 +146,6 @@ export default class detail extends wepy.page {
 	getSampleDate(orderEtd) {
 		let date = $moment.unix(orderEtd).format('HH')
 		let type
-		console.log($moment.unix(orderEtd).format('YYYY-MM-DD'))
-		console.log($moment().format('YYYY-MM-DD'))
 		if ($moment.unix(orderEtd).format('YYYY-MM-DD') == $moment().format('YYYY-MM-DD')) {
 			type = '今天'
 		} else {
@@ -171,9 +170,11 @@ export default class detail extends wepy.page {
 	// 取消订单
   cancelSamplorder() {
     $http('sample/api/logistics/cancel?logisticsId=' + this.logisticsId, {}, 'Put').then(res => {
-			console.log(res)
 			if (res.code === 0) {
-				wxReLaunch('/pages/sample/cancelOrder?addressInfo=' + JSON.stringify(this.addressInfo))
+				let fn = () => {
+          wxReLaunch('/pages/sample/cancelOrder?addressInfo=' + JSON.stringify(this.addressInfo))
+        }
+        debounce(fn(), 1000, true) 
 			}
     })
   }
