@@ -1,0 +1,11 @@
+<template>
+  <view class="page-body">
+    <web-view src="https://testapi.s-sbio.com/index.html"></web-view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class webView extends wepy.page {
+
+}
+</script>

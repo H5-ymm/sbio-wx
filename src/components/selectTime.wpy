@@ -124,7 +124,7 @@
           <view class="weui-flex__auto time-col-1">
             <view class="city-list">
               <repeat for="{{typeList}}" key="index" index="index" item="item">
-                <view @tap="selectType({{index}})" class="item weui-flex center {{index==activeIndex?'item-active': '' }}">{{item}}</view>
+                <view @tap="selectType({{index}}, {{item}})" class="item weui-flex center {{index==activeIndex?'item-active': '' }}">{{item}}</view>
               </repeat>
             </view>
           </view>
@@ -159,19 +159,25 @@ export default class selectTime extends wepy.component {
     option: [],
     typeList: [],
     activeIndex: 0,
-    timeIndex: -1,
+    timeIndex: 0,
     nowTime: '',
-    date: ''
+    date: '',
+    timeText: ''
   }
   onLoad() {
     this.array = this.getTimeList()
     this.nowTime = $moment().format('HH:mm')
+    let hour = $moment().format('HH')
     if (Number(this.splitArr(this.nowTime))>=19&&Number(this.splitArr(this.nowTime), 1)>0) {
       this.typeList = ['明天']
-      this.changeTime(1)
+      this.date = '08:00-09:00'
+      this.timeText = '明天'
+      this.changeTime('明天')
     } else {
       this.typeList = ['今天', '明天']
-      this.changeTime(0)
+      this.date =this.add0(Number(hour)+ 1) + ':00' + '-' + this.add0(Number(hour)+ 2) + ':00'
+      this.timeText = '今天'
+      this.changeTime('今天')
     }
     this.$apply()
   }
@@ -196,7 +202,7 @@ export default class selectTime extends wepy.component {
     this.array.forEach((item, index) => {
       let str = item.split('-')
       if (this.splitArr(this.nowTime) - this.splitArr(str[0]) >= 0 && this.splitArr(this.nowTime) - this.splitArr(str[1]) < 0) {
-        arr = this.array.splice(index, this.array.length - index)
+        arr = this.array.splice(index + 1, this.array.length - index)
       }
       if (this.splitArr(this.nowTime) - this.splitArr(str[0]) < 0) {
         arr = this.array
@@ -204,19 +210,19 @@ export default class selectTime extends wepy.component {
     })
     return arr
   }
-  changeTime(index) { 
-    if (index == 0) {
+  changeTime(text) { 
+    if (text == '今天') {
       this.array = this.getNewTimeList()
     } else {
       this.array = this.getTimeList()
     }
     this.$apply()
   }
-  getNewDate(index, item) {
+  getNewDate(timeText, item) {
     let time = $moment().format('YYYY-MM-DD')
     let str = item.split('-')[1]
     let newTime = time + ' ' + str
-    if (index == 1) {
+    if (timeText == '明天') {
       newTime = $moment(newTime).add(1, 'days').format("YYYY-MM-DD HH:mm")
     }
     return $moment(newTime).unix()
@@ -228,9 +234,10 @@ export default class selectTime extends wepy.component {
     cancel() {
       this.$emit('cancel')
     },
-    selectType(index) {
+    selectType(index, item) {
      this.activeIndex = index
-     this.changeTime(index)
+     this.timeText = item
+     this.changeTime(item)
     },
     selectTime(index, item) {
       this.timeIndex = index
@@ -238,11 +245,12 @@ export default class selectTime extends wepy.component {
       this.$apply()    
     },
     save() {
-      let date = this.getNewDate(this.activeIndex, this.date)
+      let date = this.getNewDate(this.timeText, this.date)
       let params = {
         date,
         time: this.date,
-        activeIndex: this.activeIndex
+        activeIndex: this.activeIndex,
+        timeText: this.timeText
       }
       this.$emit('seletOrderTime', params)
     }

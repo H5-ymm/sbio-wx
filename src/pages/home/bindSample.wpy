@@ -1,9 +1,8 @@
 <style lang="less">
   .home_view {
-    height: 100%;
     width: 100%;
     overflow: scroll;
-    margin: 0 auto;
+    margin: 0 auto 30rpx;
     .bind_box {
       margin: 24rpx 20rpx;
       .line-icon {
@@ -223,10 +222,9 @@
           </view>
           <view class="rule">HPV分型基因检测知情同意书</view>
         </view>
-        <view class="weui-flex start-start sample-footer-info">
-          <image src="../../images/selected.png" mode="scaleToFill"
-            class="selected-icon">
-          </image>
+        <view class="weui-flex start-start sample-footer-info" @tap="checkRead({{isRead}})">
+          <image src="../../images/selected.png" class="selected-icon" wx:if="{{isRead}}"/>
+          <image src="../../images/no-select.png" class="selected-icon" wx:else/>
           <view class="sample-text sample-text1">本人已详细阅读HPV分型基因检测知情同意书，并同意使用电子同意的方式代替书面签名同意</view>
         </view>
       </view>
@@ -240,7 +238,7 @@
 import wepy from 'wepy'
 import $moment from 'moment'
 import { $http } from '@/http.js'
-import { wxToast, checkMobile, validateIdCard, wxReLaunch } from '@/util'
+import { wxToast, checkMobile, validateIdCard, wxReLaunch, filterSpace } from '@/util'
 import { debounce } from "@/debounce.js"
 import { encode, decode } from '@/base64'
 export default class bindSample extends wepy.page {
@@ -257,10 +255,19 @@ export default class bindSample extends wepy.page {
     auth_timetimer: null,
     barCode: '',
     codeError: true,
-    sysScroll: true
+    sysScroll: true,
+    isRead: true
   }
   config = {
     navigationBarTitleText: '绑定样本'
+  }
+  onLoad() {
+    if (wx.getStorageSync('shuoshibarCode')) {
+      this.form.barCode = encode(wx.getStorageSync('shuoshibarCode'))
+      this.barCode = wx.getStorageSync('shuoshibarCode')
+      this.isCheckCode()
+    }
+    this.getUserInfo()
   }
   computed = {
     // 判断表单按钮是否置灰
@@ -274,30 +281,50 @@ export default class bindSample extends wepy.page {
       return flag
     }
   }
+  // 获取验证码code
   getCodeApi () {
     $http('sample/api/getVeriCode', { phone: this.form.phone, sessionId: wx.getStorageSync('sessionId') }, 'Get')
     .then(res => {
+      wxToast('验证码发送成功')
       console.log(res)
+    }).catch(()=>{
+      wx.removeStorageSync('shuoshibarCode')
+      this.form.barCode = ''
+      this.barCode = ''
+      this.$apply()
+    })
+  }
+  // 获取最新的用户信息
+  getUserInfo() {
+    $http('sample/api/getLatelySample', {}, 'Get').then(res => {
+      if (res.data) {
+        this.form.name = res.data.patientName
+        this.form.phone = res.data.phone
+        this.form.cardNo = res.data.cardNo
+        this.$apply()
+      }
     })
   }
   // 保存样本
   saveSample() {
-    // let barCode = encode(this.form.barCode)
-    // let params = Object.assign(this.form, { barCode })
     if (!this.codeError) return
     $http('sample/api/save', this.form).then(res => {
       if (res.code === 0) {
         wxToast('绑定成功，请尽快完成取样、回寄样本')
         wx.setStorageSync('submitFlag', true)
-        let fn = () => {
-          wxReLaunch('/pages/home/usageProcess')
-        }
-        debounce(fn(), 1000, true)
+        wx.removeStorageSync('shuoshibarCode')
+        setTimeout(() => {
+          let fn = () => {
+            wxReLaunch('/pages/home/usageProcess')
+          }
+          debounce(fn(), 1000, true)
+        }, 2000) 
       } else {
         wxToast('绑定失败')
       }
     })
   }
+  // 倒计时时间定时器
   getTime () {
     if (!this.sendAuthCode) return
     this.sendAuthCode = false
@@ -327,19 +354,23 @@ export default class bindSample extends wepy.page {
     })
   }
   methods = {   
+    // 扫描二维码
     getQRCode: function(){
       wx.scanCode({   
         success: res => {
+          wxToast('扫码成功')
           this.form.barCode = res.rawData
           this.barCode = decode(res.rawData)
           this.isCheckCode()
         }
       })
     },
+    // 获取焦点
     onfocus() {
       this.sysScroll = false
       this.$apply()
     },
+    // 失去焦点
     bindblur() {
       this.sysScroll = true
       this.$apply()
@@ -347,12 +378,13 @@ export default class bindSample extends wepy.page {
     // input输入值
     changeForm(e) {
       let key = e.currentTarget.dataset.name
-      this.form[key] = e.detail.value
+      this.form[key] = filterSpace(e.detail.value)
       wx.pageScrollTo({
         scrollTop:999,
       })
       this.$apply()
     },
+    // 点击获取code
     getCode () {
       if (!this.sendAuthCode) return
       if (!this.form.phone) {
@@ -363,6 +395,10 @@ export default class bindSample extends wepy.page {
         this.getCodeApi()
         this.getTime()
       }
+    },
+    checkRead(flag) {
+      this.isRead = !flag
+      this.$apply()
     },
     // 保存按钮
     save () {
@@ -383,6 +419,8 @@ export default class bindSample extends wepy.page {
         wxToast('身份证号不能为空')
       } else if (!validateIdCard(this.form.cardNo)) {
         wxToast('身份证号格式不正确')
+      } else if (!this.isRead) {
+        wxToast('未同意知情同意书,不能绑定样本')
       } else {
         this.saveSample()
       }

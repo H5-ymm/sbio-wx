@@ -20,7 +20,7 @@
     .flow-card {
       // width:100%;
       height: 856rpx;
-      box-shadow: 0px 0px 30rpx 0px #D8D8D8;
+      box-shadow: 0px 0px 30rpx 0px rgba(216,216,216,0.43);
       border-radius:20rpx;
       padding: 73rpx 10rpx 0;
       .card-row {
@@ -29,7 +29,7 @@
         &::after {
           width:4rpx;
           height:182rpx;
-          background:linear-gradient(180deg,rgba(255,208,202,1) 0%,rgba(255,240,238,1) 100%);
+          background: linear-gradient(180deg,rgba(255,208,202,1) 0%,rgba(255,240,238,1) 100%);
           border-radius:4rpx;
           content: '';
           position: absolute;
@@ -114,15 +114,35 @@ export default class usageProcess extends wepy.page {
   data = {
     flowList,
     submitFlag: false,
-    isShow: true
+    isShow: true,
+    code_ticket: '',
+    sessionId: '',
+    barCode: ''
   }
   config = {
     navigationBarTitleText: '使用流程'
   }
-  onLoad() {
-    this.isShow = wx.getStorageSync('authFlag')
+  onLoad(options) {
+    this.isShow = false
+    
+    console.log(this.isShow + '是否授权')
     this.submitFlag = wx.getStorageSync('submitFlag')
     this.$apply()
+    console.log(this.submitFlag + '是否寄回')
+    if (options.code_ticket) {
+      this.code_ticket = options.code_ticket
+      if (this.isShow) {
+        this.getCodeTicket(this.code_ticket)
+      }
+    }
+    this.$apply()
+  }
+  // 获取一物一码的codeTicket
+  getCodeTicket(codeTicket, sessionId) {
+    $http('unicode/api/get', { codeTicket }, 'Get', sessionId).then(res => {
+      this.barCode = res.data
+      wx.setStorageSync('shuoshibarCode', res.data)
+    })
   }
   // 判断是否绑定样本
 	getSubmitFlag(sessionId) {
@@ -132,14 +152,18 @@ export default class usageProcess extends wepy.page {
         wx.setStorageSync('sampleList', JSON.stringify(res.data))
       } else {
         this.submitFlag = false
-			}
+      }
       this.isShow = true
       wx.setStorageSync('authFlag', true)
 			wx.setStorageSync('submitFlag', this.submitFlag)
 			this.$apply()
+      if (this.code_ticket) {
+        this.getCodeTicket(this.code_ticket, sessionId)
+      }
     })
   }
 	events = {
+    // 绑定小程序
 		bindWx: sessionId => {
 			this.getSubmitFlag(sessionId)
 		}

@@ -1,5 +1,4 @@
 import $moment from 'moment'
-let canNavigateTo = true
 const manglingFormatCardNumber = (cardNumber) => {
     if (cardNumber && cardNumber.length > 8) {
         return `${cardNumber.substring(0, 4)} ${'*'
@@ -102,25 +101,19 @@ const wxNavigateTo = url => {
     })
 }
 const wxRedirectTo = url => {
-    setTimeout(() => {
-        wx.redirectTo({
-            url: url // 页面 A
-        })
-    }, 300)
+    wx.redirectTo({
+        url // 页面 A
+    })
 }
 const wxSwitchTab = url => {
-    setTimeout(() => {
-        wx.switchTab({
-            url: url // 页面 A
-        })
-    }, 300)
+    wx.switchTab({
+        url// 页面 A
+    })
 }
 const wxReLaunch = url => {
-    setTimeout(() => {
-        wx.reLaunch({
-            url: url // 页面 A
-        })
-    }, 300)
+    wx.reLaunch({
+        url // 页面 A
+    })
 }
 const getArray = obj => {
     let arr = []
@@ -137,14 +130,15 @@ const getKeyValue = obj => {
     }
     return obj
 }
-const wxShowModal = (title, content, confirmText) => {
+const wxShowModal = (content, title, confirmText) => {
     return new Promise((resove, rejcet) => {
         wx.showModal({
             title: title || '操作提示',
             content: content,
             confirmText: confirmText || '确定',
             cancelColor: '#666666',
-            confirmColor: '#1890FF',
+            confirmColor: '#F36681',
+            showCancel: false,
             success (res) {
                 if (res.confirm) {
                     resove()
@@ -177,20 +171,12 @@ const isJSON = (str) => {
         }
     }
 }
-const throttle = (fn, gapTime) => {
-    if (gapTime == null || gapTime == undefined) {
-        gapTime = 1500
-    }
-    let _lastTime = null
-    return function () {
-        let _nowTime = + new Date()
-        console.log(_nowTime)
-        console.log(_nowTime - _lastTime)
-        if (_nowTime - _lastTime > gapTime || !_lastTime) {
-            fn.apply(this, arguments)
-            _lastTime = _nowTime
-        }
-    }
+const  filterSpace = name =>{
+
+    var str = name.replace(/\s+/g, '');
+
+    return str
+
 }
 module.exports = {
     manglingFormatCardNumber: manglingFormatCardNumber,
@@ -208,5 +194,5 @@ module.exports = {
     getList: getList,
     isJSON: isJSON,
     checkNum: checkNum,
-    throttle: throttle
-};
+    filterSpace: filterSpace
+}

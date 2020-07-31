@@ -1,0 +1,20 @@
+<template>
+  <view class="order-header weui-flex between order-header1">
+    <view class="order-col1 weui-flex between">
+      <view class="order-left weui-flex center">收</view>
+      <view class="order-right">
+        <view>{{recipientsInfo.name}}</view>
+        <view class="order-address">{{recipientsInfo.address}}</view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { recipientsInfo } from '@/base/base'
+export default class recipients extends wepy.component {
+  data = {
+    recipientsInfo
+  }
+}
+</script>

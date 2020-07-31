@@ -70,7 +70,7 @@
 		<timeCard @cancalOrder="cancalOrder" :timeInfo.sync="timeInfo"></timeCard>
 		<view class="order-header weui-flex between">
 			<view class="order-col1 weui-flex between">
-				<view class="order-left  weui-flex center order-left-reduce">寄</view>
+				<view class="order-left weui-flex center order-left-reduce">寄</view>
 				<view class="order-right order-right-info weui-flex__item">
           <view><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
 					<view>{{addressInfo.startStationAddress}}</view>
@@ -79,7 +79,7 @@
 		</view>
 		<view class="order-header weui-flex between order-header1">
 			<view class="order-col1 weui-flex between">
-				<view class="order-left  weui-flex center order-left-reduce">收</view>
+				<view class="order-left weui-flex center order-left-reduce">收</view>
 				<view class="order-right">
 					<view class="order-address-name">泰州硕世医学检验实验室</view>
 					<view>江苏省泰州市海陵区中国医药城G25栋9楼</view>
@@ -136,6 +136,7 @@ export default class detail extends wepy.page {
       this.checkIsCancelOrder()
 		}
 	}
+	// 获取物流信息
 	getLogistics(logisticsId) {
 		$http('sample/api/logistics/getLogistics', { logisticsId }, 'Get').then(res => {
 			this.addressInfo = res.data
@@ -143,6 +144,7 @@ export default class detail extends wepy.page {
 			this.$apply()
     })
 	}
+  // 处理预约时间
 	getSampleDate(orderEtd) {
 		let date = $moment.unix(orderEtd).format('HH')
 		let type
@@ -158,6 +160,7 @@ export default class detail extends wepy.page {
 			type
 		}
 	}
+	// 验证订单是否可以取消
 	checkIsCancelOrder() {
 		$http('sample/api/logistics/getCancelFlag', { logisticsId: this.logisticsId }, 'Get').then(res => {
 			if (res.data.cancelFlag) {
@@ -172,7 +175,10 @@ export default class detail extends wepy.page {
     $http('sample/api/logistics/cancel?logisticsId=' + this.logisticsId, {}, 'Put').then(res => {
 			if (res.code === 0) {
 				let fn = () => {
-          wxReLaunch('/pages/sample/cancelOrder?addressInfo=' + JSON.stringify(this.addressInfo))
+					wxToast('取消成功')
+					setTimeout(() =>{
+						wxReLaunch('/pages/sample/cancelOrder?addressInfo=' + JSON.stringify(this.addressInfo))
+					}, 1500)
         }
         debounce(fn(), 1000, true) 
 			}

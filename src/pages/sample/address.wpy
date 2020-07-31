@@ -36,7 +36,11 @@
         padding: 0 30rpx;
         color: #333333;
         font-size: 26rpx;
-      } 
+      }
+      .sample-input1 {
+        color: #333333;
+        font-size: 26rpx;
+      }
     }
     .footer-btn {
       width: 70%;
@@ -72,7 +76,7 @@
        <view class="weui-flex start">
         <view class="label">所在地区</view>
         <view class="sample-input weui-flex__item weui-flex between" @tap="selectCity">
-          <view class="{{addressText?'':'placeholder'}}">{{addressText?addressText:'请选择地区'}}</view>
+          <view class="sample-input1 {{addressText?'':'placeholder'}}">{{addressText?addressText:'请选择地区'}}</view>
           <image src="../../images/right.png" mode="aspectFit"
             class="right-icon">
           </image>
@@ -80,13 +84,13 @@
       </view>
       <view class="weui-flex start">
         <view class="label">详细地址</view>
-        <input type="text" class="sample-input weui-flex__item" placeholder-class="placeholder" placeholder="请输入详细地址、门牌号" value="{{form.address}}" data-name="address" @input="changeForm">
+        <input type="text" class="sample-input weui-flex__item" placeholder-class="placeholder" placeholder="请输入详细地址、门牌号" value="{{form.startStationAddress}}" data-name="startStationAddress" @input="changeForm">
       </view>
     </view>
     <view class="footer-btn">
       <button class="weui-flex center {{isCheck?'btn':''}}" @tap="save">确定</button>
     </view>
-    <selectAddress :isShow.sync="isShow" @save="save" @cancel="cancel"></selectAddress>
+    <selectAddress :isShow.sync="isShow" @save="save" :addressCode.sync="addressCode" @cancel="cancel"></selectAddress>
   </view>
 </template>
 <script>
@@ -104,10 +108,17 @@ export default class address extends wepy.page {
     form: {
       startContactName: '',
       startContactPhone: '',
-      address: ''
+      startStationAddress: '',
+      startProvinceText: '',
+      startCityText: '',
+      startAreaText: '',
+      startProvinceId: '',
+      startCityId: '',
+      startAreaId: ''
     },
     isShow: true,
-    addressText: ''
+    addressText: '',
+    addressCode: []
   }
   config = {
     navigationBarTitleText: '样本回寄'
@@ -122,17 +133,25 @@ export default class address extends wepy.page {
         }
       }
       return flag
+    },
+    addressText() {
+      return `${this.form.startProvinceText}${this.form.startCityText}${this.form.startAreaText}`
     }
   }
   onLoad(options) {
     if(options.query) {
       this.form = JSON.parse(options.query)
-      this.addressText = this.form.addressText
+      this.addressCode = [options.query.startProvinceId, options.query.startCityId, options.query.startAreaId]
     }
   }
   events = {
     save: data => {
-      this.addressText = data.join('')
+      this.form.startProvinceText = data.option[0]
+      this.form.startCityText = data.option[1]
+      this.form.startAreaText = data.option[2]
+      this.form.startProvinceId = data.optionCode[0]
+      this.form.startCityId = data.optionCode[1]
+      this.form.startAreaId = data.optionCode[2]   
       this.isShow = !this.isShow
       this.$apply()
     },
@@ -162,14 +181,13 @@ export default class address extends wepy.page {
         wxToast('手机号格式不正确')
       } else if (!this.addressText) {
         wxToast('请选择地址')
-      } else if (!this.form.address) {
+      } else if (!this.form.startStationAddress) {
         wxToast('详细地址不能为空')
       } else {
-        let params = Object.assign(this.form, { addressText: this.addressText })
-        let fn = (params) => {
-          wxNavigateTo('/pages/sample/orderDetail?query='+JSON.stringify(params))
+        let fn = () => {
+          wxNavigateTo('/pages/sample/orderDetail?query='+JSON.stringify(this.form))
         }
-        debounce(fn(params), 1000, true) 
+        debounce(fn(), 1000, true) 
       }
     }
   }

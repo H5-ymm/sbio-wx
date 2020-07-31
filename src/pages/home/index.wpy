@@ -42,7 +42,7 @@
 </template>
 <script>
 import wepy from 'wepy'
-import {  wxNavigateTo, throttle } from '@/util'
+import { wxNavigateTo } from '@/util'
 import { menus } from '@/base/base'
 import { $http } from '@/http.js'
 import { debounce } from "@/debounce.js"
@@ -56,10 +56,11 @@ export default class home extends wepy.page {
     enablePullDownRefresh: true
   }
   onPullDownRefresh() {
-    this.getOpenId()
+    this.getSession()
   }
+  // 是否有回寄样本
   getSubmitFlag(sessionId) {
-    $http('sample/api/listSubmit',{} ,'Get', sessionId).then(res => {
+    $http('sample/api/listSubmit', {},'Get', sessionId).then(res => {
       let submitFlag
       if (res.data.length) {
         submitFlag = true
@@ -70,14 +71,13 @@ export default class home extends wepy.page {
       wx.setStorageSync('submitFlag', submitFlag)
     })
   }
-  getOpenId() {
+  // 获取sessionId
+  getSession() {
     wx.login({
       success: res => {
         if (res.code) {
           console.log(res.code)
-          // return
           $http('user/api/wechat/getSession', { code: res.code, type: 0 }, 'Get').then(res => {
-            console.log(res)
             wx.setStorageSync('sessionId', res.data.sessionId)
             wx.setStorageSync('authFlag', !res.data.authFlag?true:false)
             if (!res.data.authFlag) {
@@ -93,7 +93,7 @@ export default class home extends wepy.page {
     })
   }
   onShow() {
-    this.getOpenId()
+    this.getSession()
   }
   methods = {
     routeView(item) {

@@ -6,6 +6,10 @@
 			height: 24rpx;
 			margin-left: 20rpx;
 		}
+		.order-time1 {
+			color: #000;
+			font-weight: bold;
+		}
 		.tip-content {
 			margin: -10rpx 60rpx 0;
 			line-height: 50rpx;
@@ -24,9 +28,6 @@
 				}
 			}
 		}
-		// .startStationAddress {
-		// 	padding-right: 36rpx;
-		// }
 		.order-header {
 			margin: 36rpx;
 	  	.order-left {
@@ -45,10 +46,14 @@
 				margin-left: 48rpx;
 				&.order-right-info {
 					text {
-						font-weight: 400;
+						font-weight: bolder;
 						color: #000000;
 						margin-right: 20rpx;
 						display: inline-block;
+					}
+					.order-time1 {
+						color: #000;
+						font-weight: bold;
 					}
 				}
 			}
@@ -75,9 +80,17 @@
 				padding: 20rpx 36rpx;
 				font-size: 32rpx;
 				font-weight: 300;
+				.order-time1 {
+					color: #000;
+					font-weight: bold;
+				}
 				.order-time {
 					font-weight: 400;
 					font-size: 30rpx;
+					.order-time1 {
+						color: #000;
+						font-weight: bold;
+					}
 				}
 			}
 		}
@@ -119,32 +132,24 @@
 			<view class="order-col1 weui-flex between">
 				<view class="order-left  weui-flex center">寄</view>
 				<view class="order-right" wx:if="{{!addressInfo}}" @tap="setAddress">寄件人信息</view>
-				<view wx:else class="order-right order-right-info  weui-flex__item" @tap="setAddress">
-          <view><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
-					<view class="startStationAddress">{{form.startStationAddress}}</view>
+				<view wx:else class="order-right order-right-info weui-flex__item" @tap="setAddress">
+          <view class="order-time1"><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
+					<view class="startStationAddress">{{addressText}}</view>
 				</view>
 			</view>
 			<view class="order-col2 weui-flex end weui-flex__auto" @tap="setAddress">
-				<text wx:if="{{!addressInfo}}">请填写</text>
+				<text class="order-time1" wx:if="{{!addressInfo}}">请填写</text>
 				<image src="../../images/right.png" mode="aspectFit"
 					class="right-icon">
 				</image>
 			</view>
 		</view>
-		<view class="order-header weui-flex between order-header1">
-			<view class="order-col1 weui-flex between">
-				<view class="order-left  weui-flex center">收</view>
-				<view class="order-right">
-					<view>泰州硕世医学检验实验室</view>
-					<view class="order-address">江苏省泰州市海陵区中国医药城G25栋9楼</view>
-				</view>
-			</view>
-		</view>
+		<recipients></recipients>
 		<view class="order_content">
 			<view class="order-row weui-flex between" wx:if="{{sampleList.length>1}}">
 				<view>你有{{sampleList.length}}份待回寄样本，是否一起回寄 ?</view>
 				<view class="order-time weui-flex between" @tap="selectAll">
-					<view>{{isSingleMailing?'否':'是'}}</view>
+					<view class="order-time1">{{isSingleMailing?'否':'是'}}</view>
 					<image src="../../images/right.png" mode="aspectFit" class="right-icon"></image>
 				</view>
 			</view>
@@ -156,10 +161,11 @@
 			<view class="order-row weui-flex between">
 				<view>上门取件时间</view>
 				<view class="order-time weui-flex between" @tap="selectOrderTime">
-				  <view>{{orderEtd?(activeIndex ? '明天 ': '今天 ') + orderEtd:'请选择'}}</view>
+				  <view class="order-time1">{{orderEtd?timeText + orderEtd:'请选择'}}</view>
 					<image src="../../images/right.png" mode="aspectFit"
 					class="right-icon">
-				</image></view>
+				  </image>
+				</view>
 			</view>
 			<view class="order-row weui-flex between">
 				<view>邮寄物品</view>
@@ -169,10 +175,10 @@
 				<view>付费方式</view>
 				<view>到付</view>
 			</view>
-			<view class="weui-flex start bind-info">
-				<image src="../../images/selected.png" mode="scaleToFill" class="tip-icon">
-				</image>
-				<view class="sample-text"> 我同意 <text>《快件运单契约条款》</text></view>
+			<view class="weui-flex start bind-info" @tap="checkRead({{isRead}})">
+				<image src="../../images/selected.png" class="tip-icon" wx:if="{{isRead}}" />
+				<image src="../../images/no-select.png" class="tip-icon" wx:else/>
+				<view class="sample-text">我同意 <text>《快件运单契约条款》</text></view>
 			</view>	
  		</view>
   	<view class="footer-btn">
@@ -185,11 +191,13 @@
 import wepy from 'wepy'
 import { wxNavigateTo, wxToast, wxReLaunch } from '@/util'
 import selectTime from '@/components/selectTime'
+import recipients from '@/components/recipients'
 import { $http } from '@/http.js'
 import { debounce } from "@/debounce.js"
 export default class orderDetail extends wepy.page {
 	components = {
-    selectTime: selectTime
+		selectTime: selectTime,
+		recipients: recipients
   }
   data = {
 		isShow: true,
@@ -197,13 +205,24 @@ export default class orderDetail extends wepy.page {
 			orderEtd: '',
 			startContactName: '',
       startContactPhone: '',
-      startStationAddress: ''
+      startStationAddress: '',
+      startProvinceText: '',
+      startCityText: '',
+      startAreaText: '',
+      startProvinceId: '',
+      startCityId: '',
+      startAreaId: ''
 		},
 		addressInfo: null,
 		sampleList: [],
 		orderEtd: '',
 		isSingleMailing: false,
-		activeIndex: 0
+		activeIndex: 0,
+		timeText: '',
+		startStreetAddress: '',
+		isRead: true,
+		array: [],
+		startStationAddress: ''
   }
   config = {
     navigationBarTitleText: '样本回寄'
@@ -211,10 +230,12 @@ export default class orderDetail extends wepy.page {
   onLoad(options) {
 		if (options.query) {
 			this.addressInfo = JSON.parse(options.query)
-			this.form.startContactName = this.addressInfo.startContactName
-			this.form.startContactPhone = this.addressInfo.startContactPhone
-			this.form.startStationAddress = this.addressInfo.addressText + this.addressInfo.address
+			this.startStationAddress = ''
+			this.form = this.changeNewObj(this.addressInfo, this.form)
+			this.startStreetAddress = this.form.startStationAddress
 			this.$apply()
+		} else {
+			this.getLatelyLogistics()
 		}
 		this.getSubmitFlag()
 	}
@@ -224,22 +245,34 @@ export default class orderDetail extends wepy.page {
 			this.showTime(data)
 		}
 	}
+	onHide() {
+		console.log(2)
+		wx.removeStorageSync('changeTime')
+	}
+	onUnload() {
+		console.log(3)
+    wx.removeStorageSync('changeTime')
+	}
 	showTime(data) {
   	this.form.orderEtd = data.date
 		this.orderEtd = data.time
+		this.timeText = data.timeText
 		this.activeIndex = data.activeIndex
 		this.$apply()
 	}
 	computed = {
     // 判断表单按钮是否置灰
     isCheck() {
-      let flag = true
+			let flag = true
       for (let key in this.form) {
         if (!this.form[key]) {
           flag = false
         }
 			}
       return flag
+		},
+		addressText() {
+      return this.startStationAddress ? this.startStationAddress : `${this.form.startProvinceText}${this.form.startCityText}${this.form.startAreaText}${this.form.startStationAddress}`
     }
   }
 	events = {
@@ -252,6 +285,61 @@ export default class orderDetail extends wepy.page {
 			this.isShow = !this.isShow
 			this.$apply()
 		}
+	}
+	getAddressText() {
+		this.getCity(0, 0)
+		this.getCity(this.form.startProvinceId, 1)
+		this.getCity(this.form.startCityId, 2)
+	}
+	getAddress(id, arr) {
+		let text
+		arr.forEach(item => {
+			if (id == item.id) {
+				text = item.cityNameZh
+			}
+		})
+		return text
+	}
+	getCity(cityParentId, index) {
+    $http('admin/api/getCity', { cityParentId }, 'Get').then(res => {
+			this.array[index] = res.data
+			if (!this.form.startProvinceText) {
+				this.form.startProvinceText = this.getAddress(this.form.startProvinceId, this.array[index])
+				this.addressInfo.startProvinceText = this.form.startProvinceText
+			}
+			if (!this.form.startCityText && this.form.startProvinceText) {
+				this.form.startCityText = this.getAddress(this.form.startCityId, this.array[index])
+				this.addressInfo.startCityText = this.form.startCityText
+			} 
+			if (!this.form.startAreaText  && this.form.startCityText) {
+				this.form.startAreaText = this.getAddress(this.form.startAreaId, this.array[index])
+				this.addressInfo.startAreaText = this.form.startAreaText
+			}
+			console.log(this.addressInfo)
+      this.$apply()
+    })
+  }
+	getLatelyLogistics(options) {
+    $http('sample/api/logistics/getLatelyLogistics', {}, 'Get').then(res => {
+			if (res.data) { 
+				this.addressInfo = res.data
+				this.startStationAddress = res.data.startStationAddress
+				this.startStreetAddress = res.data.startStreetAddress
+				delete this.addressInfo.startStationAddress
+				delete this.addressInfo.startStreetAddress
+				this.form = this.changeNewObj(this.addressInfo, this.form)
+				this.form.startStationAddress = this.startStreetAddress
+				this.addressInfo.startStationAddress = this.startStreetAddress
+				this.getAddressText()
+				this.$apply()
+			}
+    })
+	}
+	changeNewObj(obj1, obj2) {
+   	for(let key in obj1) {
+			obj2[key] = obj1[key]
+		}
+		return obj2	
 	}
 	getSubmitFlag() {
     $http('sample/api/listSubmit', {}, 'Get').then(res => {
@@ -271,6 +359,7 @@ export default class orderDetail extends wepy.page {
     $http('sample/api/logistics/createOrder', this.form).then(res => {
       if (res.code === 0) {
 				wxToast('保存成功')
+				wx.removeStorageSync('changeTime')
 				wx.setStorageSync('addressInfo', JSON.stringify(this.addressInfo))
 				let fun = () => {
           wxReLaunch('/pages/sample/detail?logisticsId=' + res.data.logisticsId)
@@ -310,15 +399,22 @@ export default class orderDetail extends wepy.page {
 				debounce(fun1(), 1000, true)		
 			} else {
 				let fun2 = () => {
+					console.log(this.addressInfo)
           wxNavigateTo('/pages/sample/address?query=' + JSON.stringify(this.addressInfo))
 				}
 				debounce(fun2(), 1000, true)		
 			}
 		},
+		checkRead(flag) {
+			this.isRead = !flag
+			this.$apply()
+		},
 		overbooking() {
 			if (!this.isCheck) return
 			if (!this.form.orderEtd) {
         wxToast('请选择预约时间')
+			} else if (!this.isRead) {
+        wxToast('请同意快件运单契约条款')
 			} else {
 				this.saveSample()
 			}

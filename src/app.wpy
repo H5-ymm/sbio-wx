@@ -13,16 +13,17 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/home/index',
+      'pages/home/intendedFor',
+      'pages/home/usageProcess',
+      'pages/sample/send',
+      'pages/home/bindSample',
+      'pages/sample/gather',
+      'pages/sample/address',
+      'pages/webView/index',
       'pages/sample/detail', 
       'pages/sample/orderDetail',
       'pages/sample/cancelOrder',
-      'pages/sample/logisticsDetail',
-      'pages/home/usageProcess',
-      'pages/home/intendedFor',
-      'pages/home/bindSample',
-      'pages/sample/gather',
-      'pages/sample/send',
-      'pages/sample/address'
+      'pages/sample/logisticsDetail'
     ],
     window: {
       navigationBarTextStyle: 'black',
@@ -41,14 +42,10 @@ export default class extends wepy.app {
     this.removeData()
     this.autoUpdate()
     this.isCheckSession()
-    // wx.loadFontFace ({
-    //   family: 'PingFangSC-Medium',
-    //   source: 'url("https://www.your-server.com/PingFangSC-Medium.ttf")',
-    //   success: function(){console.log('success')}
-    //   })
   }
   removeData() {
     wx.removeStorageSync('sessionId')
+    wx.removeStorageSync('shuoshibarCode')
     wx.removeStorageSync('addressInfo')
     wx.removeStorageSync('authFlag')
     wx.removeStorageSync('changeTime')
@@ -117,19 +114,6 @@ export default class extends wepy.app {
     super();
     this.use('promisify');
     this.use('requestfix');
-    // 授权成功，缓存没有微信信息
-    if (!wx.getStorageSync('wxInfo')) {
-      wx.getUserInfo({
-        success: res => {
-          let params = {
-            avatar: res.userInfo.avatarUrl,
-            nick: res.userInfo.nickName
-          }
-          this.globalData.wxInfo = params
-          wx.setStorageSync('wxInfo', JSON.stringify(params))
-        }
-      })
-    }
   }
   globalData = {
     userInfo: null,
@@ -143,7 +127,6 @@ export default class extends wepy.app {
         console.log('没有过期')
       },
       fail: () => {
-        this.getOpenId()
       }
     })
   }

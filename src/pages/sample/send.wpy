@@ -132,9 +132,9 @@
 			<view class="send-goods send-goods1 weui-flex start-start">
 				<view class="weui-flex__auto title">收件信息</view>
 				<view class="subTitle weui-flex__auto">
-					<view>泰州硕世医学检验实验室</view>
-					<view>0523-86201500</view>
-					<view>江苏省泰州市海陵区中国医药城G25栋9楼</view>
+					<view>{{recipientsInfo.name}}</view>
+					<view>{{recipientsInfo.phone}}</view>
+					<view>{{recipientsInfo.address}}</view>
 				</view>
 			</view>
 			<view class="weui-flex start bind-info">
@@ -153,22 +153,24 @@
 				class="noData-icon">
 			</image>
 		</view>
-		<popup :isShow.sync="isShow" @bindWx="bindWx"></popup>
+		<popup :isShow.sync="isShow"></popup>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
 import { wxNavigateTo } from '@/util'
 import popup from '@/components/popup'
+import { recipientsInfo } from '@/base/base'
 import { $http } from '@/http.js'
 import { debounce } from "@/debounce.js"
 export default class send extends wepy.page {
   data = {
 		submitFlag: true,
-		isShow: true
+		isShow: true,
+		recipientsInfo
 	}
 	components = {
-    popup: popup
+		popup: popup
   }
   config = {
     navigationBarTitleText: '样本回寄'
@@ -177,9 +179,7 @@ export default class send extends wepy.page {
 		this.isShow = wx.getStorageSync('authFlag')
 		if (!this.isShow) {
 			this.submitFlag = false
-			this.isShow = false
 		} else {
-			this.isShow = true
 			this.submitFlag = wx.getStorageSync('submitFlag')
 		}
     this.$apply()

@@ -78,7 +78,7 @@
 </style>
 <template>
   <view class="logistics-box">
-    <view class="logistics-num">顺丰快递 <text>4206917983772</text></view>
+    <view class="logistics-num">顺丰快递 <text>{{logisticsOrderId}}</text></view>
     <view class="logistics-flow">
       <repeat for="{{list}}" key="index">
         <view class="weui-flex start-start logistics-item {{index == 0 ? 'logistics-finish': ''}}">
@@ -99,7 +99,8 @@
 import wepy from 'wepy'
 export default class logisticsTemplate extends wepy.component {
   props = {
-    list: Array
+    list: Array,
+    logisticsOrderId: String
   }
 }
 </script>
