@@ -249,6 +249,7 @@ export default class orderDetail extends wepy.page {
 		}
 	}
 	onUnload() {
+		lock = false
 		if (!this.isClick) {
       wx.removeStorageSync('changeTime')
 		}
@@ -287,9 +288,9 @@ export default class orderDetail extends wepy.page {
 		}
 	}
 	getAddressText() {
-		this.getCity(0)
-		this.getCity1(this.form.startProvinceId)
-		this.getCity2(this.form.startCityId)
+		this.getCity(0, 'startProvinceText', this.form.startProvinceId)
+		this.getCity(this.form.startProvinceId, 'startCityText', this.form.startCityId )
+		this.getCity(this.form.startCityId, 'startAreaText', this.form.startAreaId)
 	}
 	getAddress(id, arr) {
 		let text
@@ -300,41 +301,23 @@ export default class orderDetail extends wepy.page {
 		})
 		return text
 	}
-	getCity(cityParentId) {
+	// 获取省市区名称
+	getCity(cityParentId, key, id) {
     $http('admin/api/getCity', { cityParentId }, 'Get').then(res => {
-			if (!this.form.startProvinceText) {
-				this.array[0] = res.data
-				this.form.startProvinceText = this.getAddress(this.form.startProvinceId, res.data)
-				this.addressInfo.startProvinceText = this.form.startProvinceText
-			}
+			this.form[key] = this.getAddress(id, res.data)
+			this.addressInfo[key] = this.form[key]
       this.$apply()
     })
 	}
-	getCity1(cityParentId) {
-    $http('admin/api/getCity', { cityParentId }, 'Get').then(res => {
-			this.array[1] = res.data
-			this.form.startCityText = this.getAddress(this.form.startCityId,  res.data)
-			this.addressInfo.startCityText = this.form.startCityText
-      this.$apply()
-    })
-	}
-	getCity2(cityParentId,) {
-    $http('admin/api/getCity', { cityParentId }, 'Get').then(res => {
-			this.array[2] = res.data
-			this.form.startAreaText = this.getAddress(this.form.startAreaId,  res.data)
-			this.addressInfo.startAreaText = this.form.startAreaText
-      this.$apply()
-    })
-  }
 	getLatelyLogistics(options) {
     $http('sample/api/logistics/getLatelyLogistics', {}, 'Get').then(res => {
-			if (res.data) {			
+			if (res.data) {
+				this.addressInfo = res.data	
 				this.form.startProvinceId = res.data.startProvinceId
 				this.form.startCityId = res.data.startCityId
 				this.form.startAreaId = res.data.startAreaId
 				this.getAddressText()
 				this.form = this.changeNewObj(res.data, this.form)
-				this.addressInfo = res.data
 				this.startStationAddress = res.data.startStationAddress
 				this.startStreetAddress = res.data.startStreetAddress
 				delete this.addressInfo.startStationAddress
