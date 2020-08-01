@@ -123,24 +123,47 @@ export default class usageProcess extends wepy.page {
     navigationBarTitleText: '使用流程'
   }
   onLoad(options) {
-    this.isShow = false
-    
-    console.log(this.isShow + '是否授权')
-    this.submitFlag = wx.getStorageSync('submitFlag')
-    this.$apply()
-    console.log(this.submitFlag + '是否寄回')
+    console.log(options)
     if (options.code_ticket) {
+      wx.removeStorageSync('sessionId')
       this.code_ticket = options.code_ticket
-      if (this.isShow) {
-        this.getCodeTicket(this.code_ticket)
-      }
+      this.getSession(this.code_ticket)
+    } else {
+      this.isShow = wx.getStorageSync('authFlag')
+      this.submitFlag = wx.getStorageSync('submitFlag')
+      this.$apply()
     }
-    this.$apply()
+  }
+  getSession(code_ticket) {
+    wx.login({
+      success: res => {
+        if (res.code) {
+          $http('user/api/wechat/getSession', { code: res.code, type: 0 }, 'Get').then(res => {
+            this.sessionId = res.data.sessionId
+            console.log(res)
+            console.log('是否授权')
+            if (!res.data.authFlag) {
+              this.isShow = true
+              this.getSubmitFlag(res.data.sessionId)
+            } else {
+              this.isShow = false
+            }
+            wx.setStorageSync('sessionId', res.data.sessionId)
+            wx.setStorageSync('authFlag', !res.data.authFlag?true:false)
+          }).catch(error => {
+            console.log(error)
+          })
+        } else {
+          console.log('获取失败！' + res.errMsg)
+        }
+      }
+    })
   }
   // 获取一物一码的codeTicket
   getCodeTicket(codeTicket, sessionId) {
     $http('unicode/api/get', { codeTicket }, 'Get', sessionId).then(res => {
       this.barCode = res.data
+      this.$apply()
       wx.setStorageSync('shuoshibarCode', res.data)
     })
   }
@@ -165,7 +188,9 @@ export default class usageProcess extends wepy.page {
 	events = {
     // 绑定小程序
 		bindWx: sessionId => {
-			this.getSubmitFlag(sessionId)
+      if (sessionId && this.code_ticket) {
+	      this.getSubmitFlag(sessionId)
+      }
 		}
 	}
   methods = {

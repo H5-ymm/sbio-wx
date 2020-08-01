@@ -17,11 +17,13 @@ export default class extends wepy.app {
       'pages/home/usageProcess',
       'pages/sample/send',
       'pages/home/bindSample',
+      'pages/ruleView/HPVRule',
       'pages/sample/gather',
       'pages/sample/address',
       'pages/webView/index',
       'pages/sample/detail', 
       'pages/sample/orderDetail',
+      'pages/ruleView/clauseView',
       'pages/sample/cancelOrder',
       'pages/sample/logisticsDetail'
     ],

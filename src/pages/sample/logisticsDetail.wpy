@@ -22,7 +22,8 @@ export default class logisticsDetail extends wepy.page {
   }
   data = {
     list: [],
-    logisticsOrderId: ''
+    logisticsOrderId: '',
+    logisticsId: ''
   }
   config = {
     navigationBarTitleText: '样本回寄'
@@ -36,13 +37,14 @@ export default class logisticsDetail extends wepy.page {
     }
   }
 	onLoad(options) {
-    this.getLogisticsInfo(options.logisticsId)
+    this.logisticsId = options.logisticsId || 14
+    this.getLogisticsInfo(this.logisticsId)
   }
   // 获取物流路由
   getLogisticsInfo(logisticsId) {
     $http('sample/api/logistics/getRoute', { logisticsId }, 'Get').then(res => {
-      this.list = res.data.route || []
       this.logisticsOrderId = res.data.logisticsOrderId
+      this.list = res.data.route || []
       this.$apply()
     })
   }

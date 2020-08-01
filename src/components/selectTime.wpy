@@ -216,6 +216,7 @@ export default class selectTime extends wepy.component {
     } else {
       this.array = this.getTimeList()
     }
+    this.date = this.array[0]
     this.$apply()
   }
   getNewDate(timeText, item) {
@@ -235,6 +236,7 @@ export default class selectTime extends wepy.component {
       this.$emit('cancel')
     },
     selectType(index, item) {
+     this.timeIndex = 0
      this.activeIndex = index
      this.timeText = item
      this.changeTime(item)

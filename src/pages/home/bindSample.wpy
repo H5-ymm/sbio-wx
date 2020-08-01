@@ -128,8 +128,9 @@
         color: #000000;
         font-size: 30rpx;
         border-bottom: 1px solid #333333;
-        padding-bottom: 4rpx;
-        width: 58%;
+        padding-bottom: 3rpx;
+        letter-spacing: 1.5rpx;
+        width: 60%;
       }
     }
     .sample-footer-info {
@@ -220,7 +221,7 @@
             <view class="label">身份证号</view>
             <input type="text" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" placeholder="我们会根据国家法律法规保护你的隐私" value="{{form.cardNo}}" data-name="cardNo" @input="changeForm">
           </view>
-          <view class="rule">HPV分型基因检测知情同意书</view>
+          <view class="rule" @tap="agreeRule">HPV分型基因检测知情同意书</view>
         </view>
         <view class="weui-flex start-start sample-footer-info" @tap="checkRead({{isRead}})">
           <image src="../../images/selected.png" class="selected-icon" wx:if="{{isRead}}"/>
@@ -238,9 +239,10 @@
 import wepy from 'wepy'
 import $moment from 'moment'
 import { $http } from '@/http.js'
-import { wxToast, checkMobile, validateIdCard, wxReLaunch, filterSpace } from '@/util'
+import { wxToast, checkMobile, validateIdCard, wxReLaunch, filterSpace, wxNavigateTo } from '@/util'
 import { debounce } from "@/debounce.js"
 import { encode, decode } from '@/base64'
+let lock = false
 export default class bindSample extends wepy.page {
   data = {
     form: {
@@ -313,13 +315,15 @@ export default class bindSample extends wepy.page {
         wxToast('绑定成功，请尽快完成取样、回寄样本')
         wx.setStorageSync('submitFlag', true)
         wx.removeStorageSync('shuoshibarCode')
-        setTimeout(() => {
+        setTimeout(() => {    
           let fn = () => {
             wxReLaunch('/pages/home/usageProcess')
+            lock = false
           }
           debounce(fn(), 1000, true)
         }, 2000) 
       } else {
+        lock = false
         wxToast('绑定失败')
       }
     })
@@ -354,6 +358,12 @@ export default class bindSample extends wepy.page {
     })
   }
   methods = {   
+    agreeRule() {
+			let fun = () => {
+				wxNavigateTo('/pages/ruleView/HPVRule')
+			}
+			debounce(fun(), 1000, true)	
+		},
     // 扫描二维码
     getQRCode: function(){
       wx.scanCode({   
@@ -402,6 +412,8 @@ export default class bindSample extends wepy.page {
     },
     // 保存按钮
     save () {
+      if (lock) return
+      lock = true
       this.form.collectionTime = $moment().unix()
       if (!this.form.barCode) {
         wxToast('样本编号不能为空')

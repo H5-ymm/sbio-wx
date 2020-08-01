@@ -178,7 +178,7 @@
 			<view class="weui-flex start bind-info" @tap="checkRead({{isRead}})">
 				<image src="../../images/selected.png" class="tip-icon" wx:if="{{isRead}}" />
 				<image src="../../images/no-select.png" class="tip-icon" wx:else/>
-				<view class="sample-text">我同意 <text>《快件运单契约条款》</text></view>
+				<view class="sample-text" @tap.stop="agreeRule">我同意 <text>《快件运单契约条款》</text></view>
 			</view>	
  		</view>
   	<view class="footer-btn">
@@ -194,6 +194,7 @@ import selectTime from '@/components/selectTime'
 import recipients from '@/components/recipients'
 import { $http } from '@/http.js'
 import { debounce } from "@/debounce.js"
+let lock = false
 export default class orderDetail extends wepy.page {
 	components = {
 		selectTime: selectTime,
@@ -222,7 +223,8 @@ export default class orderDetail extends wepy.page {
 		startStreetAddress: '',
 		isRead: true,
 		array: [],
-		startStationAddress: ''
+		startStationAddress: '',
+		isClick: false
   }
   config = {
     navigationBarTitleText: '样本回寄'
@@ -240,18 +242,16 @@ export default class orderDetail extends wepy.page {
 		this.getSubmitFlag()
 	}
 	onShow() {
+		lock = false
 		if(wx.getStorageSync('changeTime')) {
 			let data = JSON.parse(wx.getStorageSync('changeTime'))
 			this.showTime(data)
 		}
 	}
-	onHide() {
-		console.log(2)
-		wx.removeStorageSync('changeTime')
-	}
 	onUnload() {
-		console.log(3)
-    wx.removeStorageSync('changeTime')
+		if (!this.isClick) {
+      wx.removeStorageSync('changeTime')
+		}
 	}
 	showTime(data) {
   	this.form.orderEtd = data.date
@@ -287,9 +287,9 @@ export default class orderDetail extends wepy.page {
 		}
 	}
 	getAddressText() {
-		this.getCity(0, 0)
-		this.getCity(this.form.startProvinceId, 1)
-		this.getCity(this.form.startCityId, 2)
+		this.getCity(0)
+		this.getCity1(this.form.startProvinceId)
+		this.getCity2(this.form.startCityId)
 	}
 	getAddress(id, arr) {
 		let text
@@ -300,37 +300,47 @@ export default class orderDetail extends wepy.page {
 		})
 		return text
 	}
-	getCity(cityParentId, index) {
+	getCity(cityParentId) {
     $http('admin/api/getCity', { cityParentId }, 'Get').then(res => {
-			this.array[index] = res.data
 			if (!this.form.startProvinceText) {
-				this.form.startProvinceText = this.getAddress(this.form.startProvinceId, this.array[index])
+				this.array[0] = res.data
+				this.form.startProvinceText = this.getAddress(this.form.startProvinceId, res.data)
 				this.addressInfo.startProvinceText = this.form.startProvinceText
 			}
-			if (!this.form.startCityText && this.form.startProvinceText) {
-				this.form.startCityText = this.getAddress(this.form.startCityId, this.array[index])
-				this.addressInfo.startCityText = this.form.startCityText
-			} 
-			if (!this.form.startAreaText  && this.form.startCityText) {
-				this.form.startAreaText = this.getAddress(this.form.startAreaId, this.array[index])
-				this.addressInfo.startAreaText = this.form.startAreaText
-			}
-			console.log(this.addressInfo)
+      this.$apply()
+    })
+	}
+	getCity1(cityParentId) {
+    $http('admin/api/getCity', { cityParentId }, 'Get').then(res => {
+			this.array[1] = res.data
+			this.form.startCityText = this.getAddress(this.form.startCityId,  res.data)
+			this.addressInfo.startCityText = this.form.startCityText
+      this.$apply()
+    })
+	}
+	getCity2(cityParentId,) {
+    $http('admin/api/getCity', { cityParentId }, 'Get').then(res => {
+			this.array[2] = res.data
+			this.form.startAreaText = this.getAddress(this.form.startAreaId,  res.data)
+			this.addressInfo.startAreaText = this.form.startAreaText
       this.$apply()
     })
   }
 	getLatelyLogistics(options) {
     $http('sample/api/logistics/getLatelyLogistics', {}, 'Get').then(res => {
-			if (res.data) { 
+			if (res.data) {			
+				this.form.startProvinceId = res.data.startProvinceId
+				this.form.startCityId = res.data.startCityId
+				this.form.startAreaId = res.data.startAreaId
+				this.getAddressText()
+				this.form = this.changeNewObj(res.data, this.form)
 				this.addressInfo = res.data
 				this.startStationAddress = res.data.startStationAddress
 				this.startStreetAddress = res.data.startStreetAddress
 				delete this.addressInfo.startStationAddress
 				delete this.addressInfo.startStreetAddress
-				this.form = this.changeNewObj(this.addressInfo, this.form)
 				this.form.startStationAddress = this.startStreetAddress
 				this.addressInfo.startStationAddress = this.startStreetAddress
-				this.getAddressText()
 				this.$apply()
 			}
     })
@@ -361,16 +371,26 @@ export default class orderDetail extends wepy.page {
 				wxToast('保存成功')
 				wx.removeStorageSync('changeTime')
 				wx.setStorageSync('addressInfo', JSON.stringify(this.addressInfo))
-				let fun = () => {
-          wxReLaunch('/pages/sample/detail?logisticsId=' + res.data.logisticsId)
-				}
-				debounce(fun(), 1000, true)		
+				setTimeout(() => {
+					let fun = () => {
+						wxReLaunch('/pages/sample/detail?logisticsId=' + res.data.logisticsId)
+						lock = false
+					}
+					debounce(fun(), 1000, true)		
+				}, 1500)
       } else {
+			  lock = false
         wxToast('保存失败')
       }
     })
   }
   methods = {
+		agreeRule() {
+			let fun = () => {
+				wxNavigateTo('/pages/ruleView/clauseView')
+			}
+			debounce(fun(), 1000, true)	
+		},
 		selectAll() {
 			wx.showActionSheet({
 		  	itemList: ['是', '否'],
@@ -399,7 +419,6 @@ export default class orderDetail extends wepy.page {
 				debounce(fun1(), 1000, true)		
 			} else {
 				let fun2 = () => {
-					console.log(this.addressInfo)
           wxNavigateTo('/pages/sample/address?query=' + JSON.stringify(this.addressInfo))
 				}
 				debounce(fun2(), 1000, true)		
@@ -410,6 +429,10 @@ export default class orderDetail extends wepy.page {
 			this.$apply()
 		},
 		overbooking() {
+			this.isClick = true
+			if (lock) return
+			lock = true
+			this.$apply()
 			if (!this.isCheck) return
 			if (!this.form.orderEtd) {
         wxToast('请选择预约时间')

@@ -111,6 +111,7 @@ import timeCard from '@/components/timeCard'
 import { $http } from '@/http.js'
 import $moment from 'moment'
 import { debounce } from "@/debounce.js"
+let lock = false
 export default class detail extends wepy.page {
 	components  = {
 		tipTeamplte: tipTeamplte,
@@ -133,6 +134,8 @@ export default class detail extends wepy.page {
 	events = {
 		// 取消订单
 		cancalOrder: () => {
+			if (lock) return
+		  lock = true
       this.checkIsCancelOrder()
 		}
 	}
@@ -166,6 +169,7 @@ export default class detail extends wepy.page {
 			if (res.data.cancelFlag) {
 				this.cancelSamplorder()
 			} else {
+				lock = false
 				wxToast(res.data.msg || '该订单不能取消')
 			}
     })
@@ -173,11 +177,12 @@ export default class detail extends wepy.page {
 	// 取消订单
   cancelSamplorder() {
     $http('sample/api/logistics/cancel?logisticsId=' + this.logisticsId, {}, 'Put').then(res => {
-			if (res.code === 0) {
-				let fn = () => {
+			if (res.code === 0) {	
+				let fn = () => {		
 					wxToast('取消成功')
 					setTimeout(() =>{
 						wxReLaunch('/pages/sample/cancelOrder?addressInfo=' + JSON.stringify(this.addressInfo))
+						lock = false
 					}, 1500)
         }
         debounce(fn(), 1000, true) 
