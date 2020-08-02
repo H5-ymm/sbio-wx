@@ -3,7 +3,6 @@ if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = 'production'
 }
 let prod = process.env.NODE_ENV === 'production';
-console.log(process.env.NODE_ENV + '当前环境')
 
 function resolve (dir) {
     return path.join(__dirname, dir)

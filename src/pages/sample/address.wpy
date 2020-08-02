@@ -76,7 +76,7 @@
        <view class="weui-flex start">
         <view class="label">所在地区</view>
         <view class="sample-input weui-flex__item weui-flex between" @tap="selectCity">
-          <view class="sample-input1 {{addressText?'':'placeholder'}}">{{addressText?addressText:'请选择地区'}}</view>
+          <view class="{{addressText?'sample-input1':'placeholder'}}">{{addressText?addressText:'请选择地区'}}</view>
           <image src="../../images/right.png" mode="aspectFit"
             class="right-icon">
           </image>
@@ -146,13 +146,17 @@ export default class address extends wepy.page {
   }
   events = {
     save: data => {
-      this.form.startProvinceText = data.option[0]
-      this.form.startCityText = data.option[1]
-      this.form.startAreaText = data.option[2]
-      this.form.startProvinceId = data.optionCode[0]
-      this.form.startCityId = data.optionCode[1]
-      this.form.startAreaId = data.optionCode[2]   
-      this.isShow = !this.isShow
+      if (!data.option.length) {
+        wxToast('请选择地址')
+      } else {
+        this.form.startProvinceText = data.option[0]
+        this.form.startCityText = data.option[1]
+        this.form.startAreaText = data.option[2]
+        this.form.startProvinceId = data.optionCode[0]
+        this.form.startCityId = data.optionCode[1]
+        this.form.startAreaId = data.optionCode[2]   
+        this.isShow = !this.isShow
+      }
       this.$apply()
     },
     cancel: () => {

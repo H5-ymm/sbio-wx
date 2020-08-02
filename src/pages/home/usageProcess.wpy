@@ -146,7 +146,7 @@ export default class usageProcess extends wepy.page {
             console.log('是否授权')
             if (!res.data.authFlag) {
               this.isShow = true
-              this.getCodeTicket(code_ticket, sessionId)
+              this.getCodeTicket(code_ticket, res.data.sessionId)
               this.getSubmitFlag(res.data.sessionId)
             } else {
               this.isShow = false

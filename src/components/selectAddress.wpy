@@ -160,13 +160,6 @@ export default class selectAddress extends wepy.component {
   onLoad() {
     this.getCity(0)
   }
-  // watch = {
-  //   address(val) {
-  //     if (val && val[0] != 0) {
-  //       this.optionCode = val
-  //     }
-  //   }
-  // }
   methods = {
     cancel() {
       this.$emit('cancel')

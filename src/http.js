@@ -2,7 +2,7 @@ import {
     wxToast
 } from '@/util.js'
 // const apiUrl = 'https://testapi.s-sbio.com/';
-const apiUrl = 'https://testapi.s-sbio.com/'
+const apiUrl = 'https://api.s-sbio.com/'
 const http = (url, params, method, sessionId) => {
   return new Promise((resolve, reject) => {
     wx.request({
