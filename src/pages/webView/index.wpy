@@ -6,6 +6,8 @@
 <script>
 import wepy from 'wepy'
 export default class webView extends wepy.page {
-
+  config = {
+    navigationBarTitleText: '我的报告'
+  }
 }
 </script>

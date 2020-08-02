@@ -248,6 +248,9 @@ export default class orderDetail extends wepy.page {
 			this.showTime(data)
 		}
 	}
+	onHide() {
+		lock = false
+	}
 	onUnload() {
 		lock = false
 		if (!this.isClick) {

@@ -126,6 +126,7 @@ export default class detail extends wepy.page {
     navigationBarTitleText: '样本回寄'
   }
   onLoad(options) {
+		console.log(options.logisticsId)
 		if (options.logisticsId) {
 			this.logisticsId = options.logisticsId
 		  this.getLogistics(this.logisticsId)
