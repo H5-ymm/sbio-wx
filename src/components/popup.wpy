@@ -153,13 +153,13 @@ export default class popup extends wepy.component {
     $http('user/api/wechat/decryptData', params).then(res => {
       if (res.code == 0) {
         wx.setStorageSync('sessionId', res.data.sessionId)
+        wx.setStorageSync('authFlag', true)
         this.$emit('bindWx', res.data.sessionId)
       }
     })
   }
   methods = {
     bindgetuserinfo(e) {
-      console.log(e)
       if (e.detail.errMsg.indexOf('getUserInfo:fail') > -1) {
         wxToast('拒绝授权，小程序功能将无法使用！')
       } else {

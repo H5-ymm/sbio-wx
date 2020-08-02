@@ -127,7 +127,7 @@ export default class usageProcess extends wepy.page {
     if (options.code_ticket) {
       wx.removeStorageSync('sessionId')
       this.code_ticket = options.code_ticket
-      this.getSession(this.code_ticket)
+      this.getSession(options.code_ticket)
     } else {
       this.isShow = wx.getStorageSync('authFlag')
       this.submitFlag = wx.getStorageSync('submitFlag')
@@ -140,16 +140,18 @@ export default class usageProcess extends wepy.page {
         if (res.code) {
           $http('user/api/wechat/getSession', { code: res.code, type: 0 }, 'Get').then(res => {
             this.sessionId = res.data.sessionId
+            wx.setStorageSync('sessionId', res.data.sessionId)
+            wx.setStorageSync('authFlag', !res.data.authFlag?true:false)
             console.log(res)
             console.log('是否授权')
             if (!res.data.authFlag) {
               this.isShow = true
+              this.getCodeTicket(code_ticket, sessionId)
               this.getSubmitFlag(res.data.sessionId)
             } else {
               this.isShow = false
             }
-            wx.setStorageSync('sessionId', res.data.sessionId)
-            wx.setStorageSync('authFlag', !res.data.authFlag?true:false)
+            this.$apply()    
           }).catch(error => {
             console.log(error)
           })
@@ -162,33 +164,31 @@ export default class usageProcess extends wepy.page {
   // 获取一物一码的codeTicket
   getCodeTicket(codeTicket, sessionId) {
     $http('unicode/api/get', { codeTicket }, 'Get', sessionId).then(res => {
+      wx.setStorageSync('shuoshibarCode', res.data)
       this.barCode = res.data
       this.$apply()
-      wx.setStorageSync('shuoshibarCode', res.data)
     })
   }
   // 判断是否绑定样本
 	getSubmitFlag(sessionId) {
-    $http('sample/api/listSubmit', {}, 'Get', sessionId).then(res => {
+    $http('sample/api/listSubmit', {}, 'Get', sessionId).then(res => {		
       if (res.data.length) {
         this.submitFlag = true
         wx.setStorageSync('sampleList', JSON.stringify(res.data))
       } else {
         this.submitFlag = false
       }
+      wx.setStorageSync('submitFlag', this.submitFlag)
       this.isShow = true
-      wx.setStorageSync('authFlag', true)
-			wx.setStorageSync('submitFlag', this.submitFlag)
 			this.$apply()
-      if (this.code_ticket) {
-        this.getCodeTicket(this.code_ticket, sessionId)
-      }
     })
   }
 	events = {
     // 绑定小程序
 		bindWx: sessionId => {
       if (sessionId && this.code_ticket) {
+        console.log(sessionId + '获取sessionId')
+        this.getCodeTicket(this.code_ticket, sessionId)
 	      this.getSubmitFlag(sessionId)
       }
 		}
