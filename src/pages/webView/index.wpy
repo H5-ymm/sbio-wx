@@ -1,6 +1,6 @@
 <template>
   <view class="page-body">
-    <web-view src="https://testapi.s-sbio.com/index.html"></web-view>
+    <web-view src="https://api.s-sbio.com/index.html"></web-view>
   </view>
 </template>
 <script>

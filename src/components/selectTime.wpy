@@ -221,7 +221,7 @@ export default class selectTime extends wepy.component {
   }
   getNewDate(timeText, item) {
     let time = $moment().format('YYYY-MM-DD')
-    let str = item.split('-')[1]
+    let str = item.split('-')[0]
     let newTime = time + ' ' + str
     if (timeText == '明天') {
       newTime = $moment(newTime).add(1, 'days').format("YYYY-MM-DD HH:mm")

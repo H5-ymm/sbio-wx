@@ -142,8 +142,6 @@ export default class usageProcess extends wepy.page {
             this.sessionId = res.data.sessionId
             wx.setStorageSync('sessionId', res.data.sessionId)
             wx.setStorageSync('authFlag', !res.data.authFlag?true:false)
-            console.log(res)
-            console.log('是否授权')
             if (!res.data.authFlag) {
               this.isShow = true
               this.getCodeTicket(code_ticket, res.data.sessionId)
@@ -187,7 +185,6 @@ export default class usageProcess extends wepy.page {
     // 绑定小程序
 		bindWx: sessionId => {
       if (sessionId && this.code_ticket) {
-        console.log(sessionId + '获取sessionId')
         this.getCodeTicket(this.code_ticket, sessionId)
 	      this.getSubmitFlag(sessionId)
       }

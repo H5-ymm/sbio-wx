@@ -129,10 +129,10 @@
 <template>
   <view class="send_view">
 		<view class="order-header weui-flex between">
-			<view class="order-col1 weui-flex between">
+			<view class="order-col1 weui-flex between" @tap="setAddress">
 				<view class="order-left  weui-flex center">寄</view>
-				<view class="order-right" wx:if="{{!addressInfo}}" @tap="setAddress">寄件人信息</view>
-				<view wx:else class="order-right order-right-info weui-flex__item" @tap="setAddress">
+				<view class="order-right" wx:if="{{!addressInfo}}">寄件人信息</view>
+				<view wx:else class="order-right order-right-info weui-flex__item">
           <view class="order-time1"><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
 					<view class="startStationAddress">{{addressText}}</view>
 				</view>
@@ -181,8 +181,8 @@
 				<view class="sample-text" @tap.stop="agreeRule">我同意 <text>《快件运单契约条款》</text></view>
 			</view>	
  		</view>
-  	<view class="footer-btn">
-			<button class="weui-flex center {{isCheck?'btn':''}}" @tap="overbooking">下单</button>
+  	<view class="footer-btn" @tap="overbooking">
+			<button class="weui-flex center {{isCheck?'btn':''}}">下单</button>
 		</view>
 		<selectTime :isShow.sync="isShow" @cancel="cancel" @seletOrderTime="seletOrderTime"></selectTime>
   </view>
@@ -290,10 +290,10 @@ export default class orderDetail extends wepy.page {
 			this.$apply()
 		}
 	}
-	getAddressText() {
-		this.getCity(0, 'startProvinceText', this.form.startProvinceId)
-		this.getCity(this.form.startProvinceId, 'startCityText', this.form.startCityId )
-		this.getCity(this.form.startCityId, 'startAreaText', this.form.startAreaId)
+	getAddressText(form) {
+		this.getCity(0, 'startProvinceText', form.startProvinceId)
+		this.getCity(form.startProvinceId, 'startCityText', form.startCityId )
+		this.getCity(form.startCityId, 'startAreaText', form.startAreaId)
 	}
 	getAddress(id, arr) {
 		let text
@@ -316,10 +316,7 @@ export default class orderDetail extends wepy.page {
     $http('sample/api/logistics/getLatelyLogistics', {}, 'Get').then(res => {
 			if (res.data) {
 				this.addressInfo = res.data	
-				this.form.startProvinceId = res.data.startProvinceId
-				this.form.startCityId = res.data.startCityId
-				this.form.startAreaId = res.data.startAreaId
-				this.getAddressText()
+				this.getAddressText(res.data)
 				this.form = this.changeNewObj(res.data, this.form)
 				this.startStationAddress = res.data.startStationAddress
 				this.startStreetAddress = res.data.startStreetAddress
@@ -416,8 +413,6 @@ export default class orderDetail extends wepy.page {
 		},
 		overbooking() {
 			this.isClick = true
-			if (lock) return
-			lock = true
 			this.$apply()
 			if (!this.isCheck) return
 			if (!this.form.orderEtd) {
@@ -425,6 +420,8 @@ export default class orderDetail extends wepy.page {
 			} else if (!this.isRead) {
         wxToast('请同意快件运单契约条款')
 			} else {
+				if (lock) return
+		  	lock = true
 				this.saveSample()
 			}
 		}

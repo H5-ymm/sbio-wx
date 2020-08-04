@@ -43,6 +43,12 @@
       color: #666666;
       font-size: 30rpx;
       margin-left: 20rpx;
+      &.cancelActive {
+        color: #FF627C;
+      }
+      &:active {
+        opacity: 0.5;
+      }
     }
   }
 </style>
@@ -62,7 +68,7 @@
     </view>
     <view class="weui-flex center" @tap="cancalOrder">
       <image src="../images/sample/cancel.png" mode="scaleToFill" class="cancel-icon"></image>
-      <text class="cancel">取消订单</text>
+      <view class="cancel" hover-class="cancelActive">取消订单</view>
     </view>
   </view>
 </template>

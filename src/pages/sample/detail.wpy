@@ -126,11 +126,16 @@ export default class detail extends wepy.page {
     navigationBarTitleText: '样本回寄'
   }
   onLoad(options) {
-		console.log(options.logisticsId)
 		if (options.logisticsId) {
 			this.logisticsId = options.logisticsId
 		  this.getLogistics(this.logisticsId)
 		}
+	}
+	onHide() {
+		lock = false
+	}
+	onUnload() {
+		lock = false
 	}
 	events = {
 		// 取消订单
@@ -157,10 +162,10 @@ export default class detail extends wepy.page {
 		} else {
 			type = '明天'
 		}
-		let startTime = Number(date) - 1
+		let startTime = Number(date) + 1
 		this.timeInfo = {
-			startTime: startTime < 10 ? '0' + startTime + ':00' : startTime + ':00',
-			endTime: date +':00',
+			startTime: date +':00',
+			endTime: startTime < 10 ? '0' + startTime + ':00' : startTime + ':00',
 			type
 		}
 	}
@@ -173,7 +178,9 @@ export default class detail extends wepy.page {
 				lock = false
 				wxToast(res.data.msg || '该订单不能取消')
 			}
-    })
+    }).catch(error => {
+      lock = false
+    }) 
 	}
 	// 取消订单
   cancelSamplorder() {

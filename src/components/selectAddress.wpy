@@ -139,6 +139,7 @@
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
+import { wxToast } from '@/util'
 export default class selectAddress extends wepy.component {
   props = {
     isShow: Boolean,
@@ -167,14 +168,18 @@ export default class selectAddress extends wepy.component {
     selectCity(item, index) {
       this.index = index
       if (index == 1) {
+        this.option[1] = ''
+        this.optionCode[1] = ''
+      }
+      if (index < 3) {
         this.array[2] = []
+        this.option[2] = ''
+        this.optionCode[2] = ''
       }
       this.option[index - 1]= item.cityNameZh
       this.optionCode[index - 1] = item.id
-      if (index <3) {
+      if (index < 3) {
         this.getCity(item.id)
-      } else {
-        console.log(item)
       }
     },
     save() {
@@ -182,7 +187,11 @@ export default class selectAddress extends wepy.component {
         optionCode: this.optionCode,
         option: this.option
       }
-      this.$emit('save', params)
+      if (!this.option[0] || !this.option[1] || !this.option[2]) {
+        wxToast('请选择地址')
+      } else {
+        this.$emit('save', params)
+      }
     }
   }
 }

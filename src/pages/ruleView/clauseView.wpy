@@ -19,12 +19,10 @@
       line-height: 50rpx;
     }
     .col-2 {
-      // padding-left: 10rpx;
       line-height: 40rpx;
       margin-top: 10rpx;
     }
     .col-3 {
-      // padding-left: 20rpx;
       line-height: 50rpx;
     }
   }

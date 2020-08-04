@@ -1,10 +1,19 @@
 <style lang="less">
   .home_view {
-    width: 100%;
-    overflow: scroll;
-    margin: 0 auto 30rpx;
+    width: 100%; 
+    margin: 0 auto;
+    padding-bottom: 40rpx;
+    &.overflow_auto {
+      overflow: scroll;
+    }
+    &.overflow_hidden {
+      overflow: hidden;
+    }
     .bind_box {
       margin: 24rpx 20rpx;
+      .bind-row {
+        margin-left: 32rpx;
+      }
       .line-icon {
         width: 8rpx;
         height: 28rpx;
@@ -142,7 +151,7 @@
     }
     .footer-btn {
       width: 70%;
-      margin: 60rpx auto 132rpx;
+      margin: 60rpx auto;
       button {
         height:80rpx;
         background:#F8C1C7;
@@ -157,9 +166,9 @@
   }
 </style>
 <template>
-  <scroll-view scroll-y="{{sysScroll}}"  scroll-top="{{scrollTop}}" class="home_view">
+  <view class="home_view {{sysScroll?'overflow_auto':'overflow_hidden'}}">
     <view class="bind_box">
-      <view class="weui-flex start">
+      <view class="weui-flex start bind-row">
         <image src="../../images/line.png" mode="scaleToFill"
           class="line-icon">
         </image>
@@ -189,7 +198,7 @@
           </view>
         </view>
       </view>
-      <view class="weui-flex start">
+      <view class="weui-flex start bind-row">
         <image src="../../images/line.png" mode="scaleToFill"
           class="line-icon">
         </image>
@@ -233,7 +242,7 @@
     <view class="footer-btn">
       <button class="weui-flex center {{isCheck?'btn':''}}" @tap="save">核对无误，提交</button>
     </view>
-  </scroll-view>
+  </view>
 </template>
 <script>
 import wepy from 'wepy'
@@ -271,6 +280,12 @@ export default class bindSample extends wepy.page {
     }
     this.getUserInfo()
   }
+  onHide() {
+		lock = false
+	}
+	onUnload() {
+		lock = false
+	}
   computed = {
     // 判断表单按钮是否置灰
     isCheck() {
@@ -326,7 +341,9 @@ export default class bindSample extends wepy.page {
         lock = false
         wxToast('绑定失败')
       }
-    })
+    }).catch(error => {
+      lock = false
+    }) 
   }
   // 倒计时时间定时器
   getTime () {
@@ -412,8 +429,6 @@ export default class bindSample extends wepy.page {
     },
     // 保存按钮
     save () {
-      if (lock) return
-      lock = true
       this.form.collectionTime = $moment().unix()
       if (!this.form.barCode) {
         wxToast('样本编号不能为空')
@@ -434,6 +449,8 @@ export default class bindSample extends wepy.page {
       } else if (!this.isRead) {
         wxToast('未同意知情同意书,不能绑定样本')
       } else {
+        if (lock) return
+        lock = true
         this.saveSample()
       }
     }

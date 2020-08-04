@@ -27,7 +27,7 @@ module.exports = {
         modules: ['node_modules']
     },
     appConfig: {
-        baseUrl: process.env.NODE_ENV === 'production' ? 'https://a.rsd123.com/' : 'http://tiantianxsg.com:39888/',
+        baseUrl: process.env.NODE_ENV === 'production' ? 'https://api.s-sbio.com/' : 'https://testapi.s-sbio.com/',
         noPromiseAPI: ['createSelectorQuery']
     },
     compilers: {

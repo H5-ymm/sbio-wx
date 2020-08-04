@@ -19,6 +19,7 @@ const http = (url, params, method, sessionId) => {
             resolve(res.data)
           } else {
             wxToast(res.data.msg)
+            reject(res.data)
           }
         } else {
           wxToast('请求失败')

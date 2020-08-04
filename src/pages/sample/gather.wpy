@@ -92,7 +92,7 @@
         <view class="gather-video">
           <video 
             id="myVideo" 
-            src="http://api.s-sbio.com/test.mp4" 
+            src="{{url}}" 
             loop="true"
             autoplay="{{autoplay}}"
             @play="bindplay"
@@ -124,15 +124,20 @@
 <script>
 import wepy from 'wepy'
 import { gatherList } from '@/base/base'
-import { wxNavigateTo } from '@/util'
+import { wxNavigateTo, videoUrl } from '@/util'
 import { debounce } from "@/debounce.js"
 export default class gather extends wepy.page {
   data = {
     gatherList,
-    autoplay: false
+    autoplay: false,
+    url: ''
   }
   config = {
     navigationBarTitleText: '样本采集'
+  }
+  onLoad() {
+    this.url = videoUrl()
+    this.$apply()
   }
   methods = {
     back() {

@@ -178,6 +178,9 @@ const  filterSpace = name =>{
     return str
 
 }
+const videoUrl = () => {
+    return 'https://video.s-sbio.com/sample.mp4'
+}
 module.exports = {
     manglingFormatCardNumber: manglingFormatCardNumber,
     validateIdCard: validateIdCard,
@@ -194,5 +197,6 @@ module.exports = {
     getList: getList,
     isJSON: isJSON,
     checkNum: checkNum,
-    filterSpace: filterSpace
+    filterSpace: filterSpace,
+    videoUrl: videoUrl
 }

@@ -61,10 +61,10 @@
 				line-height: 40rpx;
 			}
 			.send-goods-col1 {
-				width: 40%;
+				width: 36%;
 			}
 			.send-goods-col2 {
-				width: 60%;
+				width: 64%;
 			}
 		}
 		.bind-info {
@@ -175,7 +175,7 @@ export default class send extends wepy.page {
   config = {
     navigationBarTitleText: '样本回寄'
   }
-  onLoad() {
+  onShow() {
 		this.isShow = wx.getStorageSync('authFlag')
 		if (!this.isShow) {
 			this.submitFlag = false
@@ -201,7 +201,9 @@ export default class send extends wepy.page {
   }
 	events = {
 		bindWx: sessionId => {
-			this.getSubmitFlag(sessionId)
+			if (sessionId) {
+				this.getSubmitFlag(sessionId)
+			}
 		}
 	}
   methods = {

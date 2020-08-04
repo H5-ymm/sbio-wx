@@ -5,7 +5,7 @@
 </style>
 <template>
   <view class="send_view">
-    <logisticsTemplate :list.sync="newList" :logisticsOrderId.sync="logisticsOrderId"></logisticsTemplate>
+    <logisticsTemplate :list.sync="list" :logisticsOrderId.sync="logisticsOrderId"></logisticsTemplate>
 		<tipTeamplte></tipTeamplte>
   </view>
 </template>
@@ -28,23 +28,24 @@ export default class logisticsDetail extends wepy.page {
   config = {
     navigationBarTitleText: '样本回寄'
   }
-  computed = {
-    newList() {
-      return this.list.map(item => {
-        item.operatorTime = $moment.unix(item.operatorTime).format('YYYY-MM-DD HH:mm')
-        return item
-      })
-    }
+  newList() {
+    return this.list.map(item => {
+      item.operatorTime = $moment.unix(item.operatorTime).format('YYYY-MM-DD HH:mm')
+      return item
+    })
   }
 	onLoad(options) {
-    this.logisticsId = options.logisticsId || 14
+    this.logisticsId = options.logisticsId
+  }
+  onShow() {
     this.getLogisticsInfo(this.logisticsId)
   }
   // 获取物流路由
   getLogisticsInfo(logisticsId) {
     $http('sample/api/logistics/getRoute', { logisticsId }, 'Get').then(res => {
       this.logisticsOrderId = res.data.logisticsOrderId
-      this.list = res.data.route || []
+      let arr = res.data.route || []
+      this.list = this.newList(arr)
       this.$apply()
     })
   }

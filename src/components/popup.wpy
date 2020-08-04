@@ -143,12 +143,6 @@ export default class popup extends wepy.component {
   props = {
     isShow: Boolean
   }
-  data = {
-    
-  }
-  onLoad() {
-   
-  }
   decryptData(params) {
     $http('user/api/wechat/decryptData', params).then(res => {
       if (res.code == 0) {
@@ -156,6 +150,8 @@ export default class popup extends wepy.component {
         wx.setStorageSync('authFlag', true)
         this.$emit('bindWx', res.data.sessionId)
       }
+    }).catch(err => {
+      wx.setStorageSync('authFlag', true)
     })
   }
   methods = {

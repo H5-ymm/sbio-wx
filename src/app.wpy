@@ -7,7 +7,6 @@ import moment from 'moment'
 import './utils.js'
 import 'lodash'
 import { $http } from '@/http.js'
-moment.locale('zh-cn');
 wepy.$moment = moment
 export default class extends wepy.app {
   config = {

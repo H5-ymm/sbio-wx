@@ -49,7 +49,9 @@ import { debounce } from "@/debounce.js"
 export default class home extends wepy.page {
   data = {
     menus,
-    submitFlag: true
+    sessionId: '',
+    isRouter: true,
+    routerInfo: null
   }
   config = {
     navigationBarTitleText: '硕世健康',
@@ -68,6 +70,10 @@ export default class home extends wepy.page {
       } else {
         submitFlag = false
       }
+      // 如果跳转的时候没有获取到sessionId
+      if (!this.isRouter) {
+        this.viewNavigate(this.routerInfo)
+      }
       wx.setStorageSync('submitFlag', submitFlag)
     })
   }
@@ -76,8 +82,8 @@ export default class home extends wepy.page {
     wx.login({
       success: res => {
         if (res.code) {
-          console.log(res.code)
           $http('user/api/wechat/getSession', { code: res.code, type: 0 }, 'Get').then(res => {
+            this.sessionId = res.data.sessionId
             wx.setStorageSync('sessionId', res.data.sessionId)
             wx.setStorageSync('authFlag', !res.data.authFlag?true:false)
             if (!res.data.authFlag) {
@@ -95,12 +101,22 @@ export default class home extends wepy.page {
   onShow() {
     this.getSession()
   }
+  viewNavigate(item) {
+    let fn = (item) => {
+      wxNavigateTo(item.path)
+    }
+    debounce(fn(item), 1000, true)
+  }
   methods = {
     routeView(item) {
-      let fn = (item) => {
-        wxNavigateTo(item.path)
+      this.routerInfo = item
+      if (!this.sessionId) {
+        this.isRouter = false
+        this.getSession()
+      } else {
+        this.isRouter = true
+        this.viewNavigate(item)
       }
-      debounce(fn(item), 1000, true)
     }
   }
 }
