@@ -280,11 +280,41 @@ export default class bindSample extends wepy.page {
     }
     this.getUserInfo()
   }
+  onShow() {
+    if (wx.getStorageSync('auth_time')) {
+      let new_Time = $moment().valueOf()
+      if (Number($moment(new_Time - wx.getStorageSync('now_time')).format('ss')) >= 60) {
+        this.sendAuthCode = true
+        this.$apply()
+        wx.removeStorageSync('auth_time')
+      } else {
+        this.sendAuthCode = false
+        this.auth_time = wx.getStorageSync('auth_time')
+        this.getTime()
+      }
+    }
+  }
   onHide() {
-		lock = false
-	}
+    lock = false
+    if (!this.sendAuthCode) {
+      wx.setStorageSync('auth_time', this.auth_time)
+      wx.setStorageSync('now_time', $moment().valueOf())
+      clearInterval(this.auth_timetimer)
+    } else {
+      wx.removeStorageSync('now_time')
+      wx.removeStorageSync('auth_time')
+    }
+  }
 	onUnload() {
-		lock = false
+    lock = false
+    if (!this.sendAuthCode) {
+      wx.setStorageSync('auth_time', this.auth_time)
+      wx.setStorageSync('now_time', $moment().valueOf())
+      clearInterval(this.auth_timetimer)
+    } else {
+      wx.removeStorageSync('now_time')
+      wx.removeStorageSync('auth_time')
+    }
 	}
   computed = {
     // 判断表单按钮是否置灰
@@ -303,12 +333,8 @@ export default class bindSample extends wepy.page {
     $http('sample/api/getVeriCode', { phone: this.form.phone, sessionId: wx.getStorageSync('sessionId') }, 'Get')
     .then(res => {
       wxToast('验证码发送成功')
-      console.log(res)
-    }).catch(()=>{
-      wx.removeStorageSync('shuoshibarCode')
-      this.form.barCode = ''
-      this.barCode = ''
-      this.$apply()
+    }).catch(err => {
+      console.log(err)
     })
   }
   // 获取最新的用户信息
@@ -347,7 +373,6 @@ export default class bindSample extends wepy.page {
   }
   // 倒计时时间定时器
   getTime () {
-    if (!this.sendAuthCode) return
     this.sendAuthCode = false
     this.auth_timetimer = setInterval(() => {
       this.auth_time--
@@ -356,6 +381,8 @@ export default class bindSample extends wepy.page {
         this.sendAuthCode = true
         this.auth_time = 60
         this.$apply()
+        wx.removeStorageSync('now_time')
+        wx.removeStorageSync('auth_time')
         clearInterval(this.auth_timetimer)
       }
     }, 1000)
@@ -367,6 +394,7 @@ export default class bindSample extends wepy.page {
         this.codeError = false
         this.form.barCode = ''
         this.barCode = ''
+        wx.removeStorageSync('shuoshibarCode')
         wxToast(res.data.msg || '请扫描正确的样本编号')
       } else {
         this.codeError = true
