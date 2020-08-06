@@ -1,6 +1,7 @@
 <style lang="less">
 	.tip-box {
-    margin-top: 30rpx;
+    margin: 20rpx 0 40rpx;
+    padding-bottom: 20rpx;
     border-top: 14rpx solid #F6F6F6;
     .bind-info {
        margin: 36rpx 36rpx 20rpx;

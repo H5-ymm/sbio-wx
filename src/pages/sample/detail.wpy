@@ -120,15 +120,20 @@ export default class detail extends wepy.page {
   data = {
 		addressInfo: {},
 		logisticsId: '',
-		timeInfo: {}
+		timeInfo: {},
+		sessionId: ''
   }
   config = {
     navigationBarTitleText: '样本回寄'
   }
   onLoad(options) {
-		if (options.logisticsId) {
-			this.logisticsId = options.logisticsId
-		  this.getLogistics(this.logisticsId)
+		this.logisticsId = options.logisticsId
+		if (!this.$parent.globalData.sessionId) {
+			this.$parent.getSession().then(res => {
+		  	this.getLogistics(this.logisticsId , res.sessionId)
+			})
+		} else {
+			this.getLogistics(this.logisticsId)
 		}
 	}
 	onHide() {
@@ -146,8 +151,8 @@ export default class detail extends wepy.page {
 		}
 	}
 	// 获取物流信息
-	getLogistics(logisticsId) {
-		$http('sample/api/logistics/getLogistics', { logisticsId }, 'Get').then(res => {
+	getLogistics(logisticsId, sessionId) {
+		$http('sample/api/logistics/getLogistics', { logisticsId }, 'Get', sessionId).then(res => {
 			this.addressInfo = res.data
 			this.getSampleDate(res.data.orderEtd)
 			this.$apply()
@@ -171,7 +176,7 @@ export default class detail extends wepy.page {
 	}
 	// 验证订单是否可以取消
 	checkIsCancelOrder() {
-		$http('sample/api/logistics/getCancelFlag', { logisticsId: this.logisticsId }, 'Get').then(res => {
+		$http('sample/api/logistics/getCancelFlag', { logisticsId: this.logisticsId }, 'Get',  this.sessionId).then(res => {
 			if (res.data.cancelFlag) {
 				this.cancelSamplorder()
 			} else {
@@ -184,14 +189,14 @@ export default class detail extends wepy.page {
 	}
 	// 取消订单
   cancelSamplorder() {
-    $http('sample/api/logistics/cancel?logisticsId=' + this.logisticsId, {}, 'Put').then(res => {
+    $http('sample/api/logistics/cancel?logisticsId=' + this.logisticsId, {}, 'Put',  this.sessionId).then(res => {
 			if (res.code === 0) {	
 				let fn = () => {		
 					wxToast('取消成功')
 					setTimeout(() =>{
 						wxReLaunch('/pages/sample/cancelOrder?addressInfo=' + JSON.stringify(this.addressInfo))
 						lock = false
-					}, 1500)
+					}, 1200)
         }
         debounce(fn(), 1000, true) 
 			}

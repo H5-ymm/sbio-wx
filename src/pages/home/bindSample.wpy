@@ -218,6 +218,10 @@
             <input type="text" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" value="{{form.name}}" data-name="name" @input="changeForm">
           </view>
           <view class="weui-flex start">
+            <view class="label">身份证号</view>
+            <input type="text" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" placeholder="我们会根据国家法律法规保护你的隐私" value="{{form.cardNo}}" data-name="cardNo" @input="changeForm">
+          </view>
+          <view class="weui-flex start">
             <view class="label">手机号</view>
             <input type="text" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" value="{{form.phone}}" data-name="phone" @input="changeForm">
           </view>
@@ -225,10 +229,6 @@
             <view class="label">验证码</view>
             <input type="text" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" value="{{form.veriCode}}" data-name="veriCode" @input="changeForm">
             <view class="code-text" @tap="getCode">{{sendAuthCode?'获取验证码':auth_time+'s'}}</view>
-          </view>
-          <view class="weui-flex start">
-            <view class="label">身份证号</view>
-            <input type="text" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" placeholder="我们会根据国家法律法规保护你的隐私" value="{{form.cardNo}}" data-name="cardNo" @input="changeForm">
           </view>
           <view class="rule" @tap="agreeRule">HPV分型基因检测知情同意书</view>
         </view>
@@ -283,8 +283,9 @@ export default class bindSample extends wepy.page {
   onShow() {
     if (wx.getStorageSync('auth_time')) {
       let new_Time = $moment().valueOf()
-      if (Number($moment(new_Time - wx.getStorageSync('now_time')).format('ss')) >= 60) {
+      if (($moment(new_Time - wx.getStorageSync('now_time'))/1000/60) > 1) {
         this.sendAuthCode = true
+        this.auth_time = 60
         this.$apply()
         wx.removeStorageSync('auth_time')
       } else {
@@ -307,15 +308,13 @@ export default class bindSample extends wepy.page {
   }
 	onUnload() {
     lock = false
-    if (!this.sendAuthCode) {
-      wx.setStorageSync('auth_time', this.auth_time)
-      wx.setStorageSync('now_time', $moment().valueOf())
-      clearInterval(this.auth_timetimer)
-    } else {
-      wx.removeStorageSync('now_time')
-      wx.removeStorageSync('auth_time')
-    }
-	}
+    this.auth_time = 60
+    this.sendAuthCode = true
+    this.$apply()
+    clearInterval(this.auth_timetimer)
+    wx.removeStorageSync('now_time')
+    wx.removeStorageSync('auth_time')
+}
   computed = {
     // 判断表单按钮是否置灰
     isCheck() {
@@ -462,18 +461,18 @@ export default class bindSample extends wepy.page {
         wxToast('样本编号不能为空')
       } else if (!this.form.name) {
         wxToast('姓名不能为空')
-      } else if (!this.form.name.length>50) {
+      } else if (this.form.name.length > 50) {
         wxToast('姓名不能超过50个字符')
+      } else if (!this.form.cardNo) {
+        wxToast('身份证号不能为空')
+      } else if (!validateIdCard(this.form.cardNo)) {
+        wxToast('身份证号格式不正确')
       } else if (!this.form.phone) {
         wxToast('手机号不能为空')
       } else if (!checkMobile(this.form.phone)) {
         wxToast('手机号格式不正确')
       } else if (!this.form.veriCode) {
         wxToast('验证码不能为空')
-      } else if (!this.form.cardNo) {
-        wxToast('身份证号不能为空')
-      } else if (!validateIdCard(this.form.cardNo)) {
-        wxToast('身份证号格式不正确')
       } else if (!this.isRead) {
         wxToast('未同意知情同意书,不能绑定样本')
       } else {

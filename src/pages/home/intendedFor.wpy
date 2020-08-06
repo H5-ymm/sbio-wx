@@ -33,7 +33,7 @@
             content: '.';
             font-size: 70rpx;
             color: #909090;
-            top: -26rpx;
+            top: -22rpx;
             left: -30rpx;
             position: absolute;
           }

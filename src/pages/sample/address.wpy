@@ -175,6 +175,8 @@ export default class address extends wepy.page {
     save () {
       if (!this.form.startContactName) {
         wxToast('姓名不能为空')
+      } else if (this.form.startContactName.length>50) {
+        wxToast('姓名不能超过50个字符')
       } else if (!this.form.startContactPhone) {
         wxToast('手机号不能为空')
       } else if (!checkMobile(this.form.startContactPhone)) {

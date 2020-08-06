@@ -58,7 +58,11 @@ export default class home extends wepy.page {
     enablePullDownRefresh: true
   }
   onPullDownRefresh() {
-    this.getSession()
+    this.$parent.getSession().then(res => {
+      this.sessionId = res.sessionId
+      this.getSubmitFlag(res.sessionId)
+      this.$apply()
+    })
   }
   // 是否有回寄样本
   getSubmitFlag(sessionId) {
@@ -78,28 +82,12 @@ export default class home extends wepy.page {
     })
   }
   // 获取sessionId
-  getSession() {
-    wx.login({
-      success: res => {
-        if (res.code) {
-          $http('user/api/wechat/getSession', { code: res.code, type: 0 }, 'Get').then(res => {
-            this.sessionId = res.data.sessionId
-            wx.setStorageSync('sessionId', res.data.sessionId)
-            wx.setStorageSync('authFlag', !res.data.authFlag?true:false)
-            if (!res.data.authFlag) {
-              this.getSubmitFlag(res.data.sessionId)
-            }
-          }).catch(error => {
-            console.log(error)
-          })
-        } else {
-          console.log('获取失败！' + res.errMsg)
-        }
-      }
-    })
-  }
   onShow() {
-    this.getSession()
+    this.$parent.getSession().then(res => {
+      this.sessionId = res.sessionId
+      this.getSubmitFlag(res.sessionId)
+      this.$apply()
+    })
   }
   viewNavigate(item) {
     let fn = (item) => {
@@ -112,7 +100,10 @@ export default class home extends wepy.page {
       this.routerInfo = item
       if (!this.sessionId) {
         this.isRouter = false
-        this.getSession()
+        this.$parent.getSession().then(res => {
+          this.sessionId = res.sessionId
+          this.viewNavigate(item)
+        })
       } else {
         this.isRouter = true
         this.viewNavigate(item)

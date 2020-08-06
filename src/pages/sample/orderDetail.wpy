@@ -239,6 +239,8 @@ export default class orderDetail extends wepy.page {
 		} else {
 			this.getLatelyLogistics()
 		}
+	}
+	onReady() {
 		this.getSubmitFlag()
 	}
 	onShow() {
@@ -312,7 +314,7 @@ export default class orderDetail extends wepy.page {
       this.$apply()
     })
 	}
-	getLatelyLogistics(options) {
+	getLatelyLogistics() {
     $http('sample/api/logistics/getLatelyLogistics', {}, 'Get').then(res => {
 			if (res.data) {
 				this.addressInfo = res.data	
@@ -336,16 +338,16 @@ export default class orderDetail extends wepy.page {
 	}
 	getSubmitFlag() {
     $http('sample/api/listSubmit', {}, 'Get').then(res => {
-			this.sampleList = res.data
 			wx.setStorageSync('sampleList', JSON.stringify(res.data))
+			this.sampleList = res.data
 			this.$apply()
     })
-  }
+	}
 	// 下单
   saveSample() {
 		let arr = this.sampleList.map(item => { return item.sampleId })
 		if (this.isSingleMailing && arr.length > 1) {
-      this.form.sampleIds = arr[0]
+			this.form.sampleIds = arr[0]
 		} else {
 			this.form.sampleIds = arr.join(',')
 		}

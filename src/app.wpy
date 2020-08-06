@@ -11,20 +11,20 @@ wepy.$moment = moment
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/home/index',
-      'pages/home/intendedFor',
-      'pages/home/usageProcess',
-      'pages/sample/send',
-      'pages/home/bindSample',
-      'pages/ruleView/HPVRule',
-      'pages/sample/gather',
-      'pages/sample/address',
-      'pages/webView/index',
-      'pages/sample/detail', 
-      'pages/sample/orderDetail',
-      'pages/ruleView/clauseView',
-      'pages/sample/cancelOrder',
-      'pages/sample/logisticsDetail'
+      'pages/home/index',  // 首页
+      'pages/sample/send',  // 样本回寄
+      'pages/home/intendedFor', // 适用人群
+      'pages/home/usageProcess', // 样本绑定
+      'pages/home/bindSample', // 绑定样本提交页面
+      'pages/ruleView/HPVRule', // HPV同意须知
+      'pages/sample/gather',  // 样本视频
+      'pages/sample/address', // 添加地址
+      'pages/webView/index', // 我的报告
+      'pages/sample/detail', // 样本回寄详情
+      'pages/sample/orderDetail', // 样本回寄下单
+      'pages/ruleView/clauseView', // 快件运单契约条款
+      'pages/sample/cancelOrder',  // 取消订单成功页面
+      'pages/sample/logisticsDetail' // 物流详情
     ],
     window: {
       navigationBarTextStyle: 'black',
@@ -42,7 +42,6 @@ export default class extends wepy.app {
   onLaunch(options) {
     this.removeData()
     this.autoUpdate()
-    this.isCheckSession()
   }
   removeData() {
     wx.removeStorageSync('sessionId')
@@ -50,6 +49,29 @@ export default class extends wepy.app {
     wx.removeStorageSync('addressInfo')
     wx.removeStorageSync('authFlag')
     wx.removeStorageSync('changeTime')
+  }
+  getSession() {
+    var that = this
+    return new Promise(function (resolve, reject) {
+      wx.login({
+        success: res => {
+          //code 获取用户信息的凭证
+          if (res.code) {
+            //请求获取用户sessionId
+            $http('user/api/wechat/getSession', { code: res.code, type: 0 }, 'Get').then(res => {
+              that.globalData.sessionId = res.data.sessionId
+              that.globalData.authFlag = res.data.authFlag
+              wx.setStorageSync('sessionId', res.data.sessionId)
+              wx.setStorageSync('authFlag', !res.data.authFlag?true:false)
+              resolve(res.data);
+            })
+          } else {
+            console.log('获取用户登录态失败！' + res.errMsg)
+            reject('error');  
+          }
+        }
+      })
+    });
   }
   autoUpdate() {
     var self = this
@@ -118,18 +140,8 @@ export default class extends wepy.app {
   }
   globalData = {
     userInfo: null,
-    openId: '',
-    wxInfo: '',
-    sessionKey: ''
-  };
-  isCheckSession() {
-    wx.checkSession({
-      success: () => {
-        console.log('没有过期')
-      },
-      fail: () => {
-      }
-    })
+    sessionId: '',
+    authFlag: 0 // 是否绑定
   }
 }
 </script>

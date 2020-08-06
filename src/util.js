@@ -97,7 +97,11 @@ const wxToast = title => {
 }
 const wxNavigateTo = url => {
     wx.navigateTo({
-        url
+        url,
+        fail: () => {
+            console.log(2)
+            wxReLaunch(url)
+        }
     })
 }
 const wxRedirectTo = url => {

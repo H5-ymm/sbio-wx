@@ -1,8 +1,3 @@
-<style lang="less">
-  .send_view {
-		height: 100%;
-  }
-</style>
 <template>
   <view class="send_view">
     <logisticsTemplate :list.sync="list" :logisticsOrderId.sync="logisticsOrderId"></logisticsTemplate>
@@ -23,13 +18,14 @@ export default class logisticsDetail extends wepy.page {
   data = {
     list: [],
     logisticsOrderId: '',
-    logisticsId: ''
+    logisticsId: '',
+    sessionId: ''
   }
   config = {
     navigationBarTitleText: '样本回寄'
   }
-  newList() {
-    return this.list.map(item => {
+  newList(arr) {
+    return arr.map(item => {
       item.operatorTime = $moment.unix(item.operatorTime).format('YYYY-MM-DD HH:mm')
       return item
     })
@@ -38,15 +34,23 @@ export default class logisticsDetail extends wepy.page {
     this.logisticsId = options.logisticsId
   }
   onShow() {
-    this.getLogisticsInfo(this.logisticsId)
+    this.$parent.getSession().then(res => {
+      wx.showLoading({
+        title: '加载中'
+      })
+      this.getLogisticsInfo(this.logisticsId, res.sessionId)
+    })
   }
   // 获取物流路由
   getLogisticsInfo(logisticsId) {
-    $http('sample/api/logistics/getRoute', { logisticsId }, 'Get').then(res => {
+    $http('sample/api/logistics/getRoute', { logisticsId }, 'Get', this.sessionId).then(res => {
       this.logisticsOrderId = res.data.logisticsOrderId
       let arr = res.data.route || []
+      wx.hideLoading()
       this.list = this.newList(arr)
       this.$apply()
+    }).catch(err => {
+      wx.hideLoading()
     })
   }
 }
