@@ -105,12 +105,12 @@
 </template>
 <script>
 import wepy from 'wepy'
-import { wxReLaunch, wxToast } from '@/util'
+import { wxReLaunch, wxToast } from '@/tool/util'
 import tipTeamplte from '@/components/tipTeamplte'
 import timeCard from '@/components/timeCard'
-import { $http } from '@/http.js'
+import { $http } from '@/tool/http.js'
 import $moment from 'moment'
-import { debounce } from "@/debounce.js"
+import { debounce } from "@/tool/debounce.js"
 let lock = false
 export default class detail extends wepy.page {
 	components  = {

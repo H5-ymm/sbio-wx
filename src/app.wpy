@@ -4,7 +4,7 @@
 <script>
 import wepy from 'wepy';
 import moment from 'moment'
-import './utils.js'
+import './tool/utils.js'
 import 'lodash'
 import { $http } from '@/http.js'
 wepy.$moment = moment
@@ -13,6 +13,7 @@ export default class extends wepy.app {
     pages: [
       'pages/home/index',  // 首页
       'pages/sample/send',  // 样本回寄
+      'pages/home/list',
       'pages/home/intendedFor', // 适用人群
       'pages/home/usageProcess', // 样本绑定
       'pages/home/bindSample', // 绑定样本提交页面

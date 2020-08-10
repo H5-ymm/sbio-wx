@@ -137,8 +137,8 @@
 </template>
 <script>
 import wepy from 'wepy'
-import { $http } from '@/http.js'
-import { wxShowModal, wxToast } from '@/util'
+import { $http } from '@/tool/http.js'
+import { wxShowModal, wxToast } from '@/tool/util'
 export default class popup extends wepy.component {
   props = {
     isShow: Boolean

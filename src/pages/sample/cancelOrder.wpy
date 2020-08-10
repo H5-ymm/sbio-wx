@@ -116,8 +116,8 @@
 </template>
 <script>
 import wepy from 'wepy'
-import { wxNavigateTo } from '@/util'
-import { debounce } from "@/debounce.js"
+import { wxNavigateTo } from '@/tool/util'
+import { debounce } from "@/tool/debounce.js"
 export default class cancelOrder extends wepy.page {
   data = {
 		addressInfo: {},

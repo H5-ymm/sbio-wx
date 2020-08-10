@@ -165,10 +165,10 @@
 </template>
 <script>
 import wepy from 'wepy'
-import { wxNavigateTo } from '@/util'
+import { wxNavigateTo } from '@/tool/util'
+import { $http } from '@/tool/http.js'
+import { debounce } from "@/tool/debounce.js"
 import popup from '@/components/popup'
-import { $http } from '@/http.js'
-import { debounce } from "@/debounce.js"
 export default class send extends wepy.page {
   data = {
 		submitFlag: false,

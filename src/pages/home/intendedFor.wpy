@@ -92,8 +92,8 @@
 <script>
 import wepy from 'wepy'
 import { tipList } from '@/base/base'
-import { wxNavigateTo } from '@/util'
-import { debounce } from "@/debounce.js"
+import { wxNavigateTo } from '@/tool/util'
+import { debounce } from "@/tool/debounce.js"
 export default class intendedFor extends wepy.page {
   data = {
     tipList

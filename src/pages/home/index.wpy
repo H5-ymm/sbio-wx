@@ -46,17 +46,14 @@
           </view>
         </view>
       </repeat>
-      <image src="../../images/homeBg.png" mode="heightFix"
-        class="homeBg">
-      </image>
    </view>
 </template>
 <script>
 import wepy from 'wepy'
-import { wxNavigateTo } from '@/util'
+import { wxNavigateTo } from '@/tool/util'
 import { menus } from '@/base/base'
-import { $http } from '@/http.js'
-import { debounce } from "@/debounce.js"
+import { $http } from '@/tool/http.js'
+import { debounce } from "@/tool/debounce.js"
 export default class home extends wepy.page {
   data = {
     menus,
@@ -114,7 +111,6 @@ export default class home extends wepy.page {
   }
   methods = {
     routeView(item) {
-      console.log(item)
       this.routerInfo = item
       if (!this.sessionId) {
         this.isRouter = false

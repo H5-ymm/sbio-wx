@@ -247,10 +247,10 @@
 <script>
 import wepy from 'wepy'
 import $moment from 'moment'
-import { $http } from '@/http.js'
-import { wxToast, checkMobile, validateIdCard, wxReLaunch, filterSpace, wxNavigateTo } from '@/util'
-import { debounce } from "@/debounce.js"
-import { encode, decode } from '@/base64'
+import { $http } from '@/tool/http.js'
+import { wxToast, checkMobile, validateIdCard, wxReLaunch, filterSpace, wxNavigateTo } from '@/tool/util'
+import { debounce } from "@/tool/debounce.js"
+import { encode, decode } from '@/tool/base64'
 let lock = false
 export default class bindSample extends wepy.page {
   data = {

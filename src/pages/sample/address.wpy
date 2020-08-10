@@ -96,10 +96,10 @@
 <script>
 import wepy from 'wepy'
 import $moment from 'moment'
-import { $http } from '@/http.js'
-import { wxToast, checkMobile, wxNavigateTo, filterSpace } from '@/util'
+import { $http } from '@/tool/http.js'
+import { wxToast, checkMobile, wxNavigateTo, filterSpace } from '@/tool/util'
 import selectAddress from '@/components/selectAddress'
-import { debounce } from "@/debounce.js"
+import { debounce } from "@/tool/debounce.js"
 export default class address extends wepy.page {
   components  = {
     selectAddress: selectAddress

@@ -3,7 +3,7 @@
   export const  menus = [{
     title: '绑定样本',
     subTitle: '足不出户，轻松自测',
-    icon: '../../images/icon1.png',
+    icon: 'https://api.s-sbio.com/images/icon1.png',
     path: '/pages/home/usageProcess',
     background: '#FEF2F2'
   },
@@ -12,6 +12,13 @@
     subTitle: '在线预约顺丰，上门取件免费寄送',
     icon: '../../images/icon2.png',
     path: '/pages/sample/send',
+    background: '#F5EFFC'
+  },
+  {
+    title: '查看报告',
+    subTitle: '在线查看报告，报告解读专业指导',
+    icon: '../../images/icon3.png',
+    path: '/pages/home/list',
     background: '#EDF7FF'
   }]
   // 提示列表

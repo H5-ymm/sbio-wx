@@ -189,11 +189,11 @@
 </template>
 <script>
 import wepy from 'wepy'
-import { wxNavigateTo, wxToast, wxReLaunch } from '@/util'
+import { wxNavigateTo, wxToast, wxReLaunch } from '@/tool/util'
 import selectTime from '@/components/selectTime'
 import recipients from '@/components/recipients'
-import { $http } from '@/http.js'
-import { debounce } from "@/debounce.js"
+import { $http } from '@/tool/http.js'
+import { debounce } from "@/tool/debounce.js"
 let lock = false
 export default class orderDetail extends wepy.page {
 	components = {

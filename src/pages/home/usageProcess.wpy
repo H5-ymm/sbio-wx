@@ -102,11 +102,11 @@
 </template>
 <script>
 import wepy from 'wepy'
-import { wxNavigateTo } from '@/util'
+import { wxNavigateTo } from '@/tool/util'
 import { flowList } from '@/base/base'
 import popup from '@/components/popup'
-import { debounce } from '@/debounce.js'
-import { $http } from '@/http.js'
+import { debounce } from '@/tool/debounce.js'
+import { $http } from '@/tool/http.js'
 export default class usageProcess extends wepy.page {
   components = {
     popup: popup

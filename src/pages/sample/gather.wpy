@@ -124,8 +124,8 @@
 <script>
 import wepy from 'wepy'
 import { gatherList } from '@/base/base'
-import { wxNavigateTo, videoUrl } from '@/util'
-import { debounce } from "@/debounce.js"
+import { wxNavigateTo, videoUrl } from '@/tool/util'
+import { debounce } from "@/tool/debounce.js"
 export default class gather extends wepy.page {
   data = {
     gatherList,
