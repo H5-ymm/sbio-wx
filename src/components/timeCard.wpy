@@ -67,7 +67,7 @@
       </view>
     </view>
     <view class="weui-flex center" @tap="cancalOrder">
-      <image src="../images/sample/cancel.png" mode="scaleToFill" class="cancel-icon"></image>
+      <image src="https://api.s-sbio.com/images/sample/cancel.png" mode="scaleToFill" class="cancel-icon"></image>
       <view class="cancel" hover-class="cancelActive">取消订单</view>
     </view>
   </view>

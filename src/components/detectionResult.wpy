@@ -1,0 +1,60 @@
+
+<template>
+  <view class="detection-result weui-flex start-start {{item.result == '阴性'?'negative': ''}}">
+    <view class="result-left">
+      <view class="title">本次HPV检测结果为</view>
+      <view class="result-detail weui-flex start-start" >
+        <image src="https://api.s-sbio.com/images/tip3.png" class="tip-icon" 
+        wx:if="{{item.result!='阴性'}}">
+        <text>{{item.resultShow}}</text>
+      </view>
+    </view>
+    <view class="result-type weui-flex__auto">{{item.result}}</view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class detectionResult extends wepy.component {
+  props = {
+    item: Object
+  }
+}
+</script>
+<style lang="less">
+.detection-result{
+  height: 134rpx;
+  background: url('https://api.s-sbio.com/images/bg.png') center;
+  background-size: cover;
+  color: #ffffff;
+  font-size: 24rpx;
+  padding: 60rpx 54rpx;
+  border-radius: 20rpx;
+  &.negative {
+    background: url('https://api.s-sbio.com/images/negative.png') center;
+    .result-type {
+      text-shadow: 0px 8rpx 10rpx rgba(141,178,113,0.55);
+      background-size: cover;
+    }
+  }
+  .result-left {
+    width: 73%;
+    .tip-icon {
+      width: 34rpx;
+      height: 20rpx;
+      margin-top: 8rpx;
+      margin-right: 10rpx;
+    }
+  }
+  .title {
+    margin-bottom: 32rpx;
+    font-size: 28rpx;
+  }
+  .result-type {
+    font-size: 50rpx;
+    margin-top: -8rpx;
+    text-shadow: 0px 16rpx 20rpx rgba(236,73,108,0.7);
+    font-weight: 500;
+    margin-left: 10rpx;
+  }
+}
+</style>

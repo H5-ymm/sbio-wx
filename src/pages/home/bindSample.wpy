@@ -169,17 +169,17 @@
   <view class="home_view {{sysScroll?'overflow_auto':'overflow_hidden'}}">
     <view class="bind_box">
       <view class="weui-flex start bind-row">
-        <image src="../../images/line.png" mode="scaleToFill"
+        <image src="https://api.s-sbio.com/images/line.png" mode="scaleToFill"
           class="line-icon">
         </image>
-         <image src="../../images/text1.png" mode="scaleToFill"
+         <image src="https://api.s-sbio.com/images/text1.png" mode="scaleToFill"
           class="title_icon" />
       </view>
       <view class="bind-box-1">
         <view class="weui-flex between sample-header">
           <view class="sample-title">样本编号</view>
           <view class="sample-num weui-flex start" @tap="getQRCode">
-            <image src="../../images/scan.png" mode="scaleToFill"
+            <image src="https://api.s-sbio.com/images/scan.png" mode="scaleToFill"
               class="scan-icon">
             </image>
             扫描样本编号
@@ -187,10 +187,10 @@
         </view>
         <input type="text" class="sample-input" readonly value="{{barCode}}" disabled>
         <view class="sample-tip weui-flex center">
-          <image src="../../images/qrcode.png" mode="scaleToFill"
+          <image src="https://api.s-sbio.com/images/qrcode.png" mode="scaleToFill"
             class="qrcode_icon">
           </image>
-          <image src="../../images/arrow.png" mode="widthFix"
+          <image src="https://api.s-sbio.com/images/arrow.png" mode="widthFix"
             class="arrow_icon">
           </image>
           <view class="sample-text">
@@ -199,15 +199,15 @@
         </view>
       </view>
       <view class="weui-flex start bind-row">
-        <image src="../../images/line.png" mode="scaleToFill"
+        <image src="https://api.s-sbio.com/images/line.png" mode="scaleToFill"
           class="line-icon">
         </image>
-        <image src="../../images/text2.png" mode="scaleToFill"
+        <image src="https://api.s-sbio.com/images/text2.png" mode="scaleToFill"
         class="title_icon" />
       </view>
       <view class="bind-box-1 bind-info">
         <view class="weui-flex start">
-          <image src="../../images/tip.png" mode="scaleToFill"
+          <image src="https://api.s-sbio.com/images/tip.png" mode="scaleToFill"
             class="tip-icon">
           </image>
           <view class="sample-text">身份信息是您获取检测结果的唯一凭证，请如实填写，我们将严格保密</view>
@@ -233,8 +233,8 @@
           <view class="rule" @tap="agreeRule">HPV分型基因检测知情同意书</view>
         </view>
         <view class="weui-flex start-start sample-footer-info" @tap="checkRead({{isRead}})">
-          <image src="../../images/selected.png" class="selected-icon" wx:if="{{isRead}}"/>
-          <image src="../../images/no-select.png" class="selected-icon" wx:else/>
+          <image src="https://api.s-sbio.com/images/selected.png" class="selected-icon" wx:if="{{isRead}}"/>
+          <image src="https://api.s-sbio.com/images/no-select.png" class="selected-icon" wx:else/>
           <view class="sample-text sample-text1">本人已详细阅读HPV分型基因检测知情同意书，并同意使用电子同意的方式代替书面签名同意</view>
         </view>
       </view>

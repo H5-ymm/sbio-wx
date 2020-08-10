@@ -77,7 +77,7 @@
         <view class="label">所在地区</view>
         <view class="sample-input weui-flex__item weui-flex between" @tap="selectCity">
           <view class="{{addressText?'sample-input1':'placeholder'}}">{{addressText?addressText:'请选择地区'}}</view>
-          <image src="../../images/right.png" mode="aspectFit"
+          <image src="https://api.s-sbio.com/images/right.png" mode="aspectFit"
             class="right-icon">
           </image>
         </view>

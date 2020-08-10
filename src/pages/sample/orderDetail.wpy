@@ -139,7 +139,7 @@
 			</view>
 			<view class="order-col2 weui-flex end weui-flex__auto" @tap="setAddress">
 				<text class="order-time1" wx:if="{{!addressInfo}}">请填写</text>
-				<image src="../../images/right.png" mode="aspectFit"
+				<image src="https://api.s-sbio.com/images/right.png" mode="aspectFit"
 					class="right-icon">
 				</image>
 			</view>
@@ -150,7 +150,7 @@
 				<view>你有{{!isSingleMailing?sampleList.length:1}}份待回寄样本，是否一起回寄 ?</view>
 				<view class="order-time weui-flex between" @tap="selectAll">
 					<view class="order-time1">{{isSingleMailing?'否':'是'}}</view>
-					<image src="../../images/right.png" mode="aspectFit" class="right-icon"></image>
+					<image src="https://api.s-sbio.com/images/right.png" mode="aspectFit" class="right-icon"></image>
 				</view>
 			</view>
 			 <view class="tip-content" wx:if="{{!isSingleMailing&&sampleList.length>1}}">
@@ -162,7 +162,7 @@
 				<view>上门取件时间</view>
 				<view class="order-time weui-flex between" @tap="selectOrderTime">
 				  <view class="order-time1">{{orderEtd?timeText + orderEtd:'请选择'}}</view>
-					<image src="../../images/right.png" mode="aspectFit"
+					<image src="https://api.s-sbio.com/images/right.png" mode="aspectFit"
 					class="right-icon">
 				  </image>
 				</view>
@@ -176,8 +176,8 @@
 				<view>到付</view>
 			</view>
 			<view class="weui-flex start bind-info" @tap="checkRead({{isRead}})">
-				<image src="../../images/selected.png" class="tip-icon" wx:if="{{isRead}}" />
-				<image src="../../images/no-select.png" class="tip-icon" wx:else/>
+				<image src="https://api.s-sbio.com/images/selected.png" class="tip-icon" wx:if="{{isRead}}" />
+				<image src="https://api.s-sbio.com/images/no-select.png" class="tip-icon" wx:else/>
 				<view class="sample-text" @tap.stop="agreeRule">我同意 <text>《快件运单契约条款》</text></view>
 			</view>	
  		</view>
@@ -249,6 +249,10 @@ export default class orderDetail extends wepy.page {
 			let data = JSON.parse(wx.getStorageSync('changeTime'))
 			this.showTime(data)
 		}
+		if (wx.getStorageSync('isSingleMailing')) {
+			this.isSingleMailing = wx.getStorageSync('isSingleMailing')
+			this.$apply()
+		}
 	}
 	onHide() {
 		lock = false
@@ -256,6 +260,7 @@ export default class orderDetail extends wepy.page {
 	onUnload() {
 		lock = false
 		if (!this.isClick) {
+			wx.removeStorageSync('isSingleMailing')
       wx.removeStorageSync('changeTime')
 		}
 	}
@@ -355,6 +360,7 @@ export default class orderDetail extends wepy.page {
       if (res.code === 0) {
 				wxToast('保存成功')
 				wx.removeStorageSync('changeTime')
+				wx.removeStorageSync('isSingleMailing')
 				wx.setStorageSync('addressInfo', JSON.stringify(this.addressInfo))
 				setTimeout(() => {
 					let fun = () => {
@@ -385,6 +391,7 @@ export default class orderDetail extends wepy.page {
 					} else {
 						this.isSingleMailing = true
 					}
+					wx.setStorageSync('isSingleMailing', this.isSingleMailing)
 					this.$apply()
 				},
 				fail (res) {
@@ -403,6 +410,9 @@ export default class orderDetail extends wepy.page {
 				}
 				debounce(fun1(), 1000, true)		
 			} else {
+				if (!this.addressInfo.startAreaText) {
+					this.getCity(this.form.startCityId, 'startAreaText', this.form.startAreaId)
+				}
 				let fun2 = () => {
           wxNavigateTo('/pages/sample/address?query=' + JSON.stringify(this.addressInfo))
 				}

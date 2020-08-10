@@ -10,21 +10,21 @@
   {
     title: '样本回寄',
     subTitle: '在线预约顺丰，上门取件免费寄送',
-    icon: '../../images/icon2.png',
+    icon: 'https://api.s-sbio.com/images/icon2.png',
     path: '/pages/sample/send',
     background: '#F5EFFC'
   },
   {
     title: '查看报告',
     subTitle: '在线查看报告，报告解读专业指导',
-    icon: '../../images/icon3.png',
-    path: '/pages/home/list',
+    icon: 'https://api.s-sbio.com/images/icon3.png',
+    path: '/pages/report/list',
     background: '#EDF7FF'
   }]
   // 提示列表
   export const tipList =  [{
     title: '请确认您是否适合HPV检测',
-    icon: '../../images/personal.png',
+    icon: 'https://api.s-sbio.com/images/personal.png',
     child: [
       '仅供有过性生活的成年女性使用', 
       '处于妊娠期的女性不能使用',
@@ -35,7 +35,7 @@
   },
   {
     title: '注意事项',
-    icon: '../../images/tip.png',
+    icon: 'https://api.s-sbio.com/images/tip.png',
     child: [
       '洗澡后可以取样，不影响检测结果', 
       '取样前3天请勿进行阴道冲洗',
@@ -48,7 +48,7 @@
 
 export const gatherList = [{
   title: '温馨提示',
-  icon: '../../images/tip1.png',
+  icon: 'https://api.s-sbio.com/images/tip1.png',
   child: [
     '取样全程无痛，少数人推进过程中可能有轻微不适， 请不用担心，若疼痛明显请停止操作；', 
     '99%用户首次使用即可成功取样(基于既往检测数据)；',

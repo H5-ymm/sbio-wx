@@ -113,19 +113,19 @@
 </style>
 <template>
   <view class="send_view">
-		<view class="send_content" wx:if="{{submitFlag}}">
+		<view class="send_content" wx:if="{{submitFlag&&loading}}">
 			<view class="send-header weui-flex around">
-				<image src="../../images/sample/car.png" mode="aspectFit"
+				<image src="https://api.s-sbio.com/images/sample/car.png" mode="aspectFit"
 					class="car-icon">
 				</image>
 				<view class="send-tip">
 					<view><text>顺丰包邮</text> <text>保密发货</text></view>
 					<view class="tip-text">建议取样后24小时内回寄</view>
 				</view>
-				<image src="../../images/sample/waterdrop1.png" mode="aspectFit"
+				<image src="https://api.s-sbio.com/images/sample/waterdrop1.png" mode="aspectFit"
 					class="waterdrop1">
 				</image>
-				<image src="../../images/sample/waterdrop2.png" mode="aspectFit"
+				<image src="https://api.s-sbio.com/images/sample/waterdrop2.png" mode="aspectFit"
 					class="waterdrop2">
 				</image>
 			</view>
@@ -142,7 +142,7 @@
 				</view>
 			</view>
 			<view class="weui-flex start bind-info">
-				<image src="../../images/tip.png" mode="scaleToFill"
+				<image src="https://api.s-sbio.com/images/tip.png" mode="scaleToFill"
 					class="tip-icon">
 				</image>
 				<view class="sample-text">如果顺丰不可到，其他快递请邮费自理</view>
@@ -151,16 +151,16 @@
 				<button class="weui-flex center" @tap="order">预约顺丰上门取件</button>
 			</view>
 		</view>
-		<view wx:else class="noData-box">
+		<view wx:if="{{!loading&&!submitFlag}}" class="noData-box">
 			<view class="noData-text">完成样本绑定及采集后，才能预约快递哦！</view>
-			<image src="../../images/sample/noData.png" mode="widthFix"
+			<image src="https://api.s-sbio.com/images/sample/noData.png" mode="widthFix"
 				class="noData-icon">
 			</image>
-			<view class="footer-btn"  @tap="bindSample">
+			<view class="footer-btn" @tap="bindSample">
         <button class="weui-flex center">去绑定</button>
       </view>
 		</view>
-		<popup :isShow.sync="isShow"></popup>
+		<popup :isShow.sync="isShow" @bindWx="bindWx"></popup>
   </view>
 </template>
 <script>
@@ -173,7 +173,8 @@ export default class send extends wepy.page {
   data = {
 		submitFlag: false,
 		isShow: true,
-		recipientsInfo: {}
+		recipientsInfo: {},
+		loading: true
 	}
 	components = {
 		popup: popup
@@ -202,6 +203,7 @@ export default class send extends wepy.page {
 			this.isShow = wx.getStorageSync('authFlag')
 			if (!this.isShow) {
 				this.submitFlag = false
+				this.loading = false
 			} else {
 				 wx.showLoading({
 					title: '加载中'
@@ -214,14 +216,16 @@ export default class send extends wepy.page {
 	// 判断是否绑定样本
 	getSubmitFlag(sessionId) {
     $http('sample/api/listSubmit',{} ,'Get', sessionId).then(res => {
-      if (res.data.length) {
-        this.submitFlag = true
-        wx.setStorageSync('sampleList', JSON.stringify(res.data))
-      } else {
-        this.submitFlag = false
-			}
 			this.recipientsInfo = this.$parent.globalData.addressData
 			this.isShow = true
+      if (res.data.length) {
+				this.submitFlag = true
+				this.loading = true
+        wx.setStorageSync('sampleList', JSON.stringify(res.data))
+      } else {
+				this.loading = false
+        this.submitFlag = false
+			}
 			this.$apply()
 			wx.hideLoading()
 			wx.setStorageSync('authFlag', true)

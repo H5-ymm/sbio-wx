@@ -62,17 +62,17 @@
   <view class="send_view">
 		<view class="send_content">
 			<view class="send-header weui-flex center">
-				<image src="../../images/sample/orderCancel.png" mode="aspectFit"
+				<image src="https://api.s-sbio.com/images/sample/orderCancel.png" mode="aspectFit"
 					class="car-icon cancel-icon">
 				</image>
 				<view class="send-tip">
 					<view><text>订单已取消</text></view>
 					<view class="tip-text">如需回寄请重新下单</view>
 				</view>
-				<image src="../../images/sample/waterdrop3.png" mode="aspectFit"
+				<image src="https://api.s-sbio.com/images/sample/waterdrop3.png" mode="aspectFit"
 					class="waterdrop1">
 				</image>
-				<image src="../../images/sample/waterdrop4.png" mode="aspectFit"
+				<image src="https://api.s-sbio.com/images/sample/waterdrop4.png" mode="aspectFit"
 					class="waterdrop2">
 				</image>
 			</view>

@@ -84,7 +84,7 @@
     <view class="tip-card">
       <view>
         <view class="weui-flex start tip-row step-row">
-          <image src="../../images/step.png" mode="aspectFit"
+          <image src="https://api.s-sbio.com/images/step.png" mode="aspectFit"
             class="tip-icon">
           </image>
           <view class="tip_title">步骤说明</view>

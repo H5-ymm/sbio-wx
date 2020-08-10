@@ -32,21 +32,19 @@
  }
 </style>
 <template>
-   <view class="home_view">
-      <repeat for="{{menus}}" wx:key="index">
-        <view class="weui-flex start row" style="background:{{item.background}}" @tap="routeView({{item}})">
-          <view class="col-1">
-            <image src="{{item.icon}}" mode="aspectFit"
-              class="row-icon">
-            </image>
-          </view>
-          <view class="col-2">
-            <view class="page_title">{{item.title}}</view>
-            <view class="page_subTitle">{{item.subTitle}}</view>
-          </view>
+  <view class="home_view">
+    <repeat for="{{menus}}" wx:key="index">
+      <view class="weui-flex start row" style="background:{{item.background}}" @tap="routeView({{item}})">
+        <view class="col-1">
+          <image src="{{item.icon}}" mode="aspectFit" class="row-icon"/>
         </view>
-      </repeat>
-   </view>
+        <view class="col-2">
+          <view class="page_title">{{item.title}}</view>
+          <view class="page_subTitle">{{item.subTitle}}</view>
+        </view>
+      </view>
+    </repeat>
+  </view>
 </template>
 <script>
 import wepy from 'wepy'
@@ -76,7 +74,7 @@ export default class home extends wepy.page {
   }
   // 是否有回寄样本
   getSubmitFlag(sessionId) {
-    $http('sample/api/listSubmit', {},'Get', sessionId).then(res => {
+    $http('sample/api/listSubmit', {}, 'Get', sessionId).then(res => {
       let submitFlag
       if (res.data.length) {
         submitFlag = true

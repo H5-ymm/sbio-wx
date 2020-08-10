@@ -127,7 +127,7 @@
     <view class="mask"></view>
     <view class="selectAddress-content popup-content">
       <view class="box">
-        <image src="../images/popup.png"  class="bg"></image>
+        <image src="https://api.s-sbio.com/images/popup.png"  class="bg"></image>
         <view class="box-btn">
           <button class="weui-flex__item btn btn1 weui-flex center" lang="zh_CN" open-type="getUserInfo" @getuserinfo="bindgetuserinfo">绑定微信</button>
         </view>
@@ -141,7 +141,10 @@ import { $http } from '@/tool/http.js'
 import { wxShowModal, wxToast } from '@/tool/util'
 export default class popup extends wepy.component {
   props = {
-    isShow: Boolean
+    isShow: {
+      type: Boolean,
+      value: true
+    }
   }
   decryptData(params) {
     $http('user/api/wechat/decryptData', params).then(res => {

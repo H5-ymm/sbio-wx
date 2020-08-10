@@ -17,7 +17,6 @@ export default class recipients extends wepy.component {
   }
   onLoad() {
     this.recipientsInfo = this.$parent.$parent.globalData.addressData
-    console.log(this.recipientsInfo)
     this.$apply()
   }
 }

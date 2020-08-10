@@ -1,0 +1,172 @@
+
+<template>
+  <view class="result-box-detail result-box-health">
+    <view wx:if="{{text=='阳性'}}">
+      <view class="weui-flex start result-content">
+       <image src="https://api.s-sbio.com/images/line.png"
+          class="line-icon" />
+        <view class="title">诊疗建议</view>
+      </view>
+      <view class="tip-content tip-content-health">
+        <view class="health-text">HPV检测结果为阳性时，根据型别的不同，处理方式也不同，分为以下三种情况：</view>
+        <view class="text">检测结果为高危型HPV16、18阳性：
+          <view class="text1">
+            <view>提示发生宫颈上皮内瘤变或宫颈癌的风险增加，根据临床诊疗指南，建议您到正规医院进行阴道镜检查或遵医嘱。</view>
+          </view>
+        </view>
+        <view class="text">检测结果为其他16种高危型HPV阳性： 
+          <view class="text1">
+            <view>提示发生宫颈上皮内瘤变或宫颈癌的风险增加，根据临床诊疗指南，建议您到正规医院进行细胞学检测（TCT）。</view>
+          </view>
+        </view>
+        <view class="text">检测结果为低危型HPV6、11、81阳性：
+          <view class="text1">
+            <view>提示生殖器疣（良性病变）的风险增加，建议去正规医院进一步确。</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-flex start result-content">
+      <image src="https://api.s-sbio.com/images/line.png"
+        class="line-icon" />
+      <view class="title">健康建议</view>
+    </view>
+     <view class="recommed-box">
+        <view class="recommed-title weui-flex center">接种HPV疫苗+定期HPV筛查</view>
+        <view class="tip-content tip-content-health">
+          <view class="health-text">1、接种HPV疫苗</view>
+          <view class="recommed-text">
+            <view class="text1">
+              全球有3种HPV疫苗，针对可预防HPV型别的数量不同，国内均已上市，条件允许可接种HPV疫苗。
+            </view>
+          </view>
+          <view class="health-text">2、接种HPV疫苗还需要定期HPV筛查吗？</view>
+          <view class="recommed-text">
+            <view class="text1">
+              HPV疫苗只能覆盖部分型别，且无数据表明可保护终身免疫，所以HPV疫苗+定期HPV筛查是目前预防宫颈癌的最佳组合方式。
+            </view>
+          </view>
+          <view class="health-text">3、建议HPV筛查周期</view>
+          <view class="text recommed-text">
+            HPV筛查阳性：6-12个月
+          </view>
+          <view class="text recommed-text">
+            HPV筛查阴性：1年
+          </view>
+        </view>
+     </view>
+     <view class="recommed-box">
+        <view class="recommed-title recommed-title1 weui-flex center">提高自身免疫力</view>
+        <view class="tip-content tip-content-health">
+          <view class="health-text">提升免疫力首选生活方式调整，其次是适当干预。</view>
+          <view class="health-text">1、生活方式调整</view>
+          <view class="text recommed-text">
+            饮食：注意饮食营养均衡、增加食物多样化、增加膳食纤维摄取，减少高油脂食物摄取。另外可以适当食用可增强免疫力的中药材。
+          </view>
+          <view class="text recommed-text">睡眠：与人体免疫力密切相关，需规律作息、保证充足睡眠。</view>
+          <view class="text recommed-text">运动：定期进行适度运动有益于提升免疫力，例如快走、慢跑、瑜伽、游泳等。</view>
+          <view class="health-text">2、适当干预</view>
+          <view class="recommed-text">干预之前对个体免疫力进行评估，可遵医嘱进行检查评估，也可寻求中医辨证论治。根据评估进行干预，例如体质调理、睡眠管理等。</view>
+          <view class="recommed-text">Tips： 以上建议仅供参考，如有条件可经过专业医生评估后遵医嘱。</view>
+        </view>
+     </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class healthTemplate extends wepy.component {
+  props = {
+    result: String
+  }
+  data = {
+    text: ''
+  }
+  watch = {
+    result(val) {
+      console.log(val)
+      this.text = val
+      this.$apply()
+    }
+  }
+}
+</script>
+<style lang="less">
+.result-box-detail.result-box-health { 
+  margin-bottom: 40rpx;
+  border-top: none;
+  .result-content {
+    margin: 40rpx 52rpx 0!important;
+    .title_icon { 
+      width: 192rpx!important;
+    }
+  }
+  .health-text {
+    color: #000;
+    font-size: 2p8rx;
+    margin-left: 20rpx;
+  }
+  .title {
+    color: #000;
+    font-size: 36rpx;
+    margin-left: 20rpx;
+  }
+  .tip-content.tip-content-health{
+    margin: 36rpx 20rpx 20rpx 60rpx;
+    line-height: 48rpx;
+    .recommed-text {
+      font-weight: 300;
+      margin-left: 60rpx;
+      font-size: 28rpx;
+      margin-bottom: 10rpx;
+    }
+    .text {
+      color: #000;
+      font-weight: 400;
+      font-size: 28rpx;
+      position: relative;
+      padding-left: 20rpx;
+      &::before {
+        content: '.';
+        font-size: 40rpx;
+        color: #000000;
+        top: -14rpx;
+        left: -10rpx;
+        position: absolute;
+      }
+      &.recommed-text {
+        font-weight: 300;
+        margin-left: 40rpx;
+        &::before {
+          content: '.';
+          font-size: 64rpx;
+          color: #333333;
+          font-weight: 300;
+          top: -20rpx;
+          left: -8rpx;
+          position: absolute;
+        }
+      }
+      .text1 {
+        font-weight: 300;
+      }
+    }
+  }
+  .recommed-box {
+    width: 100%;
+    margin: 40rpx auto;
+  }
+  .recommed-title {
+    width: 426rpx;
+    box-sizing: border-box;
+    height: 60rpx;
+    background:rgba(243,102,129,1);
+    border-radius: 10rpx;
+    font-size: 30rpx;
+    margin: 0 auto;
+    color: #ffffff;
+    &.recommed-title1 {
+      width: 360rpx;
+    }
+  }
+}
+</style>

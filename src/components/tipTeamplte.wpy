@@ -34,7 +34,7 @@
 <template>
   <view class="tip-box">
     <view class="weui-flex start bind-info">
-      <image src="../images/tip1.png" mode="scaleToFill" class="tip-icon">
+      <image src="https://api.s-sbio.com/images/tip1.png" mode="scaleToFill" class="tip-icon">
       </image>
       <view class="sample-text">温馨提示</view>
     </view>

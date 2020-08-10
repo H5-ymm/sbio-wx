@@ -1,0 +1,177 @@
+<template>
+  <view class="report-detail">
+    <tabBar :tabBarList.sync="tabBarList" @switchTab="switchTab" class="header-tab"></tabBar>
+    <view class="tab-item" wx:if="{{activeIndex==0}}">
+      <view class="detection-result-box">
+        <detectionResult :item.sync="resultInfo"></detectionResult>
+        <view class="result-box">
+          <view class="weui-flex start result-content">
+            <image src="https://api.s-sbio.com/images/line.png" alt=""
+              class="line-icon" />
+            <image src="../../images/text1.png" alt=""
+            class="title_icon" mode="heightFix"/>
+          </view>
+          <view class="result-table">
+            <view class="weui-flex between result-title">
+              <view class="result-text-left">高危型HPV感染
+                <image src="https://api.s-sbio.com/images/question.png" class="question">
+              </view>
+              <view class="result-num-right">{{highMaleCount}}个</view>
+            </view>
+            <view class="weui-flex between wrap">
+              <repeat for="{{highTypes}}" wx:key="index">
+                <view class="item {{item.resultInt?'item-avtive':''}}">
+                  <text class="subType">{{item.subType}}</text>
+                  <text class="result">{{item.result}}</text>
+                </view>
+              </repeat>
+            </view>
+            <view class="weui-flex between result-title">
+              <view class="result-text-left">
+                低危型HPV感染
+                <image src="https://api.s-sbio.com/images/question.png" class="question">
+              </view>
+              <view class="result-num-right">{{lowMaleCount}}个</view>
+            </view>
+            <view class="weui-flex between wrap">
+              <repeat for="{{lowTypes}}" wx:key="index">
+                <view class="item {{item.resultInt?'item-avtive':''}}"> 
+                  <text class="subType">{{item.subType}}</text>
+                  <text class="result">{{item.result}}</text>
+                </view>
+              </repeat>
+            </view>
+          </view>
+        </view>
+      </view>
+      <resultDetail></resultDetail>
+    </view>
+    <view wx:if="{{activeIndex==1}}">
+      <healthTemplate :result.sync="result" ></healthTemplate>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import detectionResult from '@/components/detectionResult'
+import resultDetail from '@/components/resultDetail'
+import healthTemplate from '@/components/healthTemplate'
+import tabBar from '@/components/tabBar'
+import { wxNavigateTo } from '@/tool/util'
+import { debounce } from '@/tool/debounce.js'
+import { $http } from '@/tool/http.js'
+export default class sampleDetail extends wepy.page {
+  components =  {
+    detectionResult: detectionResult,
+    resultDetail: resultDetail,
+    healthTemplate: healthTemplate,
+    tabBar: tabBar
+  }
+  config = {
+    navigationBarTitleText: '我的报告'
+  }
+  data = {
+    active: 0,
+    highTypes: [],
+    lowTypes: [],
+    highMaleCount: 0,
+    lowMaleCount: 0,
+    resultInfo: {},
+    sampleId: '',
+    tabBarList: [
+    { name: '检测结果'},
+    { name: '健康建议'}
+    ],
+    activeIndex: 0,
+    result: ''
+  }
+  events = {
+    switchTab: data => {
+      this.activeIndex = data
+      this.result = this.resultInfo.result 
+      this.$apply()
+    }
+  }
+  onLoad(options) {
+    this.sampleId = options.query
+    this.getSampleDetail(this.sampleId)
+  }
+  getSampleDetail(sampleId) {
+    $http('sample/api/get', { sampleId }, 'Get').then(res => { 
+      this.resultInfo.resultShow = res.data.resultShow
+      this.resultInfo.result = res.data.result
+      this.highTypes = res.data.highTypes
+      this.lowTypes = res.data.lowTypes
+      this.highMaleCount = res.data.highMaleCount
+      this.lowMaleCount = res.data.lowMaleCount  
+      this.$apply()
+    })
+  }
+}
+</script>
+
+<style lang="less">
+ .report-detail {
+   width: 100%;
+   background: #ffffff;
+   padding-bottom: 40rpx;
+  .detection-result-box {
+    margin: 32rpx 52rpx 20rpx;
+  }
+  .tab-item {
+    font-size: 32rpx;
+  }
+  .result-content {
+    margin: 40rpx 0;
+    .line-icon {
+      width: 8rpx;
+      height: 28rpx;
+    }
+    .title_icon {
+      height: 32rpx;
+      width: 128rpx;
+      margin-left: 22rpx;
+    }
+  }
+  .result-table {
+    .result-title {
+      margin: 12rpx 0;
+    }
+    .result-text-left {
+      color: #000000;
+      font-size: 32rpx;
+      .question {
+        width: 26rpx;
+        height: 26rpx;
+        margin-left: 12rpx;
+      }
+    }
+    .result-num-right {
+      font-size: 32rpx;
+      color: #F04D6F;
+    }
+    .item {
+      font-size: 28rpx;
+      color: #000000;
+      font-weight: 300;
+      width: 28%;
+      margin: 10rpx 0;
+      &:nth-of-type(3n) {
+        justify-content: flex-end;
+      }
+      text {
+        display: inline-block;
+        width: 100rpx;
+      }
+      &.item-avtive {
+        color: #F04D6F;
+      }
+      .result {
+        width: 60rpx;
+        margin-left: 12rpx;
+        text-align: right;
+      }
+    }
+  }
+ }
+</style>

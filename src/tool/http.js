@@ -1,8 +1,8 @@
 import {
     wxToast
-} from '@/util.js'
-// const apiUrl = 'https://testapi.s-sbio.com/'
-const apiUrl = 'https://api.s-sbio.com/'
+} from '@/tool/util.js'
+const apiUrl = 'https://testapi.s-sbio.com/'
+// const apiUrl = 'https://api.s-sbio.com/'
 const http = (url, params, method, sessionId) => {
   let sbioSessionId = sessionId ? sessionId : wx.getStorageSync('sessionId')
   return new Promise((resolve, reject) => {
@@ -34,25 +34,33 @@ const http = (url, params, method, sessionId) => {
       }
     }).onHeadersReceived(function (res) {
     })
-  });
+  })
 }
-const getSession = () => {
-  wx.login({
-    success: res => {
-      if (res.code) {
-        http('user/api/wechat/getSession', { code: res.code, type: 0 }, 'Get').then(res => {
-          wx.setStorageSync('sessionId', res.data.sessionId)
-          wx.setStorageSync('authFlag', !res.data.authFlag ? true: false)
-        }).catch(error => {
-          console.log(error)
-        })
-      } else {
-        console.log('获取失败！' + res.errMsg)
+const downloadFile = (url, params) => {
+  return new Promise((resolve, reject) => {
+    let savePath = `${wx.env.USER_DATA_PATH}/${params.name}的检测报告.pdf`
+    wx.downloadFile({
+      url: `${apiUrl}${url}?sampleId=${params.sampleId}`,
+      filePath: savePath,
+      header: {
+        'content-type': 'application/pdf'
+      },
+      success (res) {
+        if (res.statusCode === 200) {  
+          resolve(res)
+        } else {
+          wxToast('下载失败')
+          reject(error)
+        }
+      },
+      fail: function (error) {
+        wxToast('网络失败')
+        reject(error)
       }
-    }
+    })
   })
 }
 module.exports = {
   $http: http,
-  getSession: getSession
+  $downloadFile: downloadFile
 }

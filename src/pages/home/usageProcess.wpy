@@ -80,7 +80,7 @@
 <template>
    <view class="home_view">
       <view class="header weui-flex start">
-        <image src="../../images/smiling.png" mode="scaleToFill"
+        <image src="https://api.s-sbio.com/images/smiling.png" mode="scaleToFill"
           class="icon-smiling">
         </image>
         <view class="tip">温馨提示：请按流程操作解锁每一步哦！</view>
