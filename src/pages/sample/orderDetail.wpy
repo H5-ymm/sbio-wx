@@ -362,7 +362,7 @@ export default class orderDetail extends wepy.page {
 						lock = false
 					}
 					debounce(fun(), 1000, true)		
-				}, 1500)
+				}, 1200)
       } else {
 			  lock = false
         wxToast('保存失败')

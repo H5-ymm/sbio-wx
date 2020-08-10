@@ -136,8 +136,8 @@
 			<view class="send-goods send-goods1 weui-flex start-start">
 				<view class="weui-flex__auto title">收件信息</view>
 				<view class="subTitle weui-flex__auto">
-					<view>{{recipientsInfo.name}}</view>
-					<view>{{recipientsInfo.phone}}</view>
+					<view>{{recipientsInfo.contactName}}</view>
+					<view>{{recipientsInfo.contactPhone}}</view>
 					<view>{{recipientsInfo.address}}</view>
 				</view>
 			</view>
@@ -167,14 +167,13 @@
 import wepy from 'wepy'
 import { wxNavigateTo } from '@/util'
 import popup from '@/components/popup'
-import { recipientsInfo } from '@/base/base'
 import { $http } from '@/http.js'
 import { debounce } from "@/debounce.js"
 export default class send extends wepy.page {
   data = {
-		submitFlag: true,
+		submitFlag: false,
 		isShow: true,
-		recipientsInfo
+		recipientsInfo: {}
 	}
 	components = {
 		popup: popup
@@ -184,15 +183,30 @@ export default class send extends wepy.page {
 	}
   onShow() {
 		if (!this.$parent.globalData.sessionId) {
+			wx.showLoading({
+				title: '加载中'
+		 	})
       this.$parent.getSession().then(res => {
-        this.getSubmitFlag(res.sessionId)
-      })
+				wx.hideLoading()
+				// 已经关注公众号
+				if (!res.authFlag) {
+					this.getSubmitFlag(res.sessionId)
+				} else {
+					this.isShow = false
+					this.$apply()
+				}  
+      }).catch(err => {
+				wx.hideLoading()
+			})
     } else {
 			this.isShow = wx.getStorageSync('authFlag')
 			if (!this.isShow) {
 				this.submitFlag = false
 			} else {
-				this.getSubmitFlag(this.$parent.globalData.sessionId)
+				 wx.showLoading({
+					title: '加载中'
+				})
+				this.getSubmitFlag()
 			}
 		}
     this.$apply()
@@ -206,10 +220,15 @@ export default class send extends wepy.page {
       } else {
         this.submitFlag = false
 			}
+			this.recipientsInfo = this.$parent.globalData.addressData
 			this.isShow = true
 			this.$apply()
+			wx.hideLoading()
 			wx.setStorageSync('authFlag', true)
 			wx.setStorageSync('submitFlag', this.submitFlag)
+    }).catch(err => {
+			wx.hideLoading()
+      console.log(err)
     })
   }
 	events = {

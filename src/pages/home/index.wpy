@@ -2,8 +2,16 @@
  .home_view {
     height: 100%;
     overflow: hidden;
+    position: relative;
+    .homeBg {
+      max-width: 100%;
+      margin: 0 auto;
+      position: absolute;
+      bottom: 180rpx;
+      left: 0;
+    }
   }
- .row {
+  .row {
     width: 90%;
     margin: 80rpx auto 0;
     height: 218rpx;
@@ -36,8 +44,11 @@
             <view class="page_title">{{item.title}}</view>
             <view class="page_subTitle">{{item.subTitle}}</view>
           </view>
-         </view>
+        </view>
       </repeat>
+      <image src="../../images/homeBg.png" mode="heightFix"
+        class="homeBg">
+      </image>
    </view>
 </template>
 <script>
@@ -60,7 +71,9 @@ export default class home extends wepy.page {
   onPullDownRefresh() {
     this.$parent.getSession().then(res => {
       this.sessionId = res.sessionId
-      this.getSubmitFlag(res.sessionId)
+      if (!res.authFlag) {
+        this.getSubmitFlag(res.sessionId)
+      }
       this.$apply()
     })
   }
@@ -79,13 +92,17 @@ export default class home extends wepy.page {
         this.viewNavigate(this.routerInfo)
       }
       wx.setStorageSync('submitFlag', submitFlag)
+    }).catch(err => {
+      console.log(err)
     })
   }
   // 获取sessionId
   onShow() {
     this.$parent.getSession().then(res => {
       this.sessionId = res.sessionId
-      this.getSubmitFlag(res.sessionId)
+     if (!res.authFlag) {
+        this.getSubmitFlag(res.sessionId)
+      }
       this.$apply()
     })
   }
@@ -97,6 +114,7 @@ export default class home extends wepy.page {
   }
   methods = {
     routeView(item) {
+      console.log(item)
       this.routerInfo = item
       if (!this.sessionId) {
         this.isRouter = false

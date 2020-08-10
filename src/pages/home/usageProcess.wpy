@@ -93,7 +93,7 @@
               <view class="page_title">{{item.title}}</view>
               <view class="page_subTitle">{{item.subTitle}}</view>
             </view>
-            <view class="card-3 weui-flex center {{!submitFlag&&index==2?'card-disabled-3':''}}" @tap="routeView({{item}})">{{item.btnText}}</view>
+            <view class="card-3 weui-flex center {{!submitFlag&&index==2?'card-disabled-3':''}}" @tap="routeView({{item}}, {{index}})">{{item.btnText}}</view>
           </view>
         </repeat>
       </view>
@@ -113,7 +113,7 @@ export default class usageProcess extends wepy.page {
   }
   data = {
     flowList,
-    submitFlag: false,
+    submitFlag: true,
     isShow: true,
     code_ticket: '',
     sessionId: '',
@@ -128,7 +128,7 @@ export default class usageProcess extends wepy.page {
       this.code_ticket = options.code_ticket
       this.getSession(options.code_ticket)
     } else {
-      if (this.$parent.globalData.sessionId && wx.getStorageSync('sessionId')) {
+      if (this.$parent.globalData.sessionId) {
         this.isShow = wx.getStorageSync('authFlag')
         this.submitFlag = wx.getStorageSync('submitFlag')
         this.$apply()
@@ -152,7 +152,7 @@ export default class usageProcess extends wepy.page {
           $http('user/api/wechat/getSession', { code: res.code, type: 0 }, 'Get').then(res => {
             this.sessionId = res.data.sessionId
             wx.setStorageSync('sessionId', res.data.sessionId)
-            wx.setStorageSync('authFlag', !res.data.authFlag?true:false)
+            wx.setStorageSync('authFlag', !res.data.authFlag ? true : false)
             if (!res.data.authFlag) {
               this.isShow = true
               this.getSubmitFlag(res.data.sessionId)
@@ -189,8 +189,8 @@ export default class usageProcess extends wepy.page {
       } else {
         this.submitFlag = false
       }
-      wx.setStorageSync('submitFlag', this.submitFlag)
-			this.$apply()
+      this.$apply()
+      wx.setStorageSync('submitFlag', this.submitFlag)	
     })
   }
 	events = {
@@ -207,7 +207,8 @@ export default class usageProcess extends wepy.page {
 		}
 	}
   methods = {
-    routeView(item) {
+    routeView(item, index) {
+      if (!this.submitFlag&&index==2) return
       let fn = (item) => {
         wxNavigateTo(item.path)
       }

@@ -81,8 +81,8 @@
 			<view class="order-col1 weui-flex between">
 				<view class="order-left weui-flex center order-left-reduce">收</view>
 				<view class="order-right">
-					<view class="order-address-name">泰州硕世医学检验实验室</view>
-					<view>江苏省泰州市海陵区中国医药城G25栋9楼</view>
+					<view class="order-address-name">{{recipientsInfo.contactName}}</view>
+					<view>{{recipientsInfo.address}}</view>
 				</view>
 			</view>
 		</view>
@@ -121,7 +121,8 @@ export default class detail extends wepy.page {
 		addressInfo: {},
 		logisticsId: '',
 		timeInfo: {},
-		sessionId: ''
+		sessionId: '',
+		recipientsInfo: {}
   }
   config = {
     navigationBarTitleText: '样本回寄'
@@ -130,7 +131,7 @@ export default class detail extends wepy.page {
 		this.logisticsId = options.logisticsId
 		if (!this.$parent.globalData.sessionId) {
 			this.$parent.getSession().then(res => {
-		  	this.getLogistics(this.logisticsId , res.sessionId)
+				this.getLogistics(this.logisticsId , res.sessionId)
 			})
 		} else {
 			this.getLogistics(this.logisticsId)
@@ -154,9 +155,12 @@ export default class detail extends wepy.page {
 	getLogistics(logisticsId, sessionId) {
 		$http('sample/api/logistics/getLogistics', { logisticsId }, 'Get', sessionId).then(res => {
 			this.addressInfo = res.data
+			this.recipientsInfo = this.$parent.globalData.addressData
 			this.getSampleDate(res.data.orderEtd)
 			this.$apply()
-    })
+    }).catch(error => {
+			console.log(errro)
+		})
 	}
   // 处理预约时间
 	getSampleDate(orderEtd) {

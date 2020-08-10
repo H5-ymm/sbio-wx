@@ -46,8 +46,8 @@ export default class logisticsDetail extends wepy.page {
     $http('sample/api/logistics/getRoute', { logisticsId }, 'Get', this.sessionId).then(res => {
       this.logisticsOrderId = res.data.logisticsOrderId
       let arr = res.data.route || []
-      wx.hideLoading()
       this.list = this.newList(arr)
+      wx.hideLoading()
       this.$apply()
     }).catch(err => {
       wx.hideLoading()

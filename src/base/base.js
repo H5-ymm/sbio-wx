@@ -69,7 +69,7 @@ export const flowList = [{
 }]
 
 export const recipientsInfo = {
-  name: '泰州硕世医学检验实验室',
+  name: '泰州硕世检验所',
   phone: '0523-86201500',
   address: '江苏省泰州市海陵区中国医药城G25栋9楼'
 }

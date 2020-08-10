@@ -61,17 +61,28 @@ export default class extends wepy.app {
             $http('user/api/wechat/getSession', { code: res.code, type: 0 }, 'Get').then(res => {
               that.globalData.sessionId = res.data.sessionId
               that.globalData.authFlag = res.data.authFlag
+              if (!res.data.authFlag) {
+                that.getAddress(res.data.sessionId)
+              }
               wx.setStorageSync('sessionId', res.data.sessionId)
-              wx.setStorageSync('authFlag', !res.data.authFlag?true:false)
+              wx.setStorageSync('authFlag', !res.data.authFlag ? true : false)
               resolve(res.data);
             })
           } else {
-            console.log('获取用户登录态失败！' + res.errMsg)
-            reject('error');  
+            console.log('获取用户登录态失败！')
+            reject(res)  
           }
         }
       })
-    });
+    })
+  }
+  getAddress(sessionId) {
+    $http('sample/api/logistics/getReceiptInfo', {}, 'Get', sessionId).then(res => {
+      console.log(res)
+      this.globalData.addressData = res.data
+    }).catch(error => {
+      console.log(error)
+    })
   }
   autoUpdate() {
     var self = this
@@ -141,7 +152,8 @@ export default class extends wepy.app {
   globalData = {
     userInfo: null,
     sessionId: '',
-    authFlag: 0 // 是否绑定
+    authFlag: 0, // 是否绑定
+    addressData: {}  // 收件地址
   }
 }
 </script>
