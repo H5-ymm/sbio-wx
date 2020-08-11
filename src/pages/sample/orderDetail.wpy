@@ -147,7 +147,7 @@
 		<recipients></recipients>
 		<view class="order_content">
 			<view class="order-row weui-flex between" wx:if="{{sampleList.length>1}}">
-				<view>你有{{!isSingleMailing?sampleList.length:1}}份待回寄样本，是否一起回寄 ?</view>
+				<view>你有{{sampleList.length}}份待回寄样本，是否一起回寄 ?</view>
 				<view class="order-time weui-flex between" @tap="selectAll">
 					<view class="order-time1">{{isSingleMailing?'否':'是'}}</view>
 					<image src="https://api.s-sbio.com/images/right.png" mode="aspectFit" class="right-icon"></image>
@@ -184,7 +184,7 @@
   	<view class="footer-btn" @tap="overbooking">
 			<button class="weui-flex center {{isCheck?'btn':''}}">下单</button>
 		</view>
-		<selectTime :isShow.sync="isShow" @cancel="cancel" @seletOrderTime="seletOrderTime"></selectTime>
+		<selectTime wx:if="{{!isShow}}" @cancel="cancel" @seletOrderTime="seletOrderTime"></selectTime>
   </view>
 </template>
 <script>

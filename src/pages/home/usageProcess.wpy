@@ -97,7 +97,7 @@
           </view>
         </repeat>
       </view>
-      <popup :isShow.sync="isShow" @bindWx="bindWx"></popup>
+      <popup wx:if="{{!isShow}}" @bindWx="bindWx"></popup>
    </view>
 </template>
 <script>

@@ -18,7 +18,7 @@
     title: '查看报告',
     subTitle: '在线查看报告，报告解读专业指导',
     icon: 'https://api.s-sbio.com/images/icon3.png',
-    path: '/pages/report/list',
+    path: '/pages/webView/index',
     background: '#EDF7FF'
   }]
   // 提示列表

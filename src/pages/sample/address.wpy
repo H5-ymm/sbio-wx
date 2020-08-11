@@ -90,7 +90,7 @@
     <view class="footer-btn">
       <button class="weui-flex center {{isCheck?'btn':''}}" @tap="save">确定</button>
     </view>
-    <selectAddress :isShow.sync="isShow" @save="save" :addressCode.sync="addressCode" @cancel="cancel"></selectAddress>
+    <selectAddress wx:if="{{!isShow}}"  @save="save" :addressCode.sync="addressCode" @cancel="cancel"></selectAddress>
   </view>
 </template>
 <script>

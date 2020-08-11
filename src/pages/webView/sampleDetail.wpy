@@ -1,22 +1,29 @@
 <template>
   <view class="report-detail">
     <tabBar :tabBarList.sync="tabBarList" @switchTab="switchTab" class="header-tab"></tabBar>
-    <view class="tab-item" wx:if="{{activeIndex==0}}">
+    <view class="tab-item" wx:if="{{activeIndex==0}}" @tap="closeTip">
       <view class="detection-result-box">
         <detectionResult :item.sync="resultInfo"></detectionResult>
         <view class="result-box">
           <view class="weui-flex start result-content">
             <image src="https://api.s-sbio.com/images/line.png" alt=""
               class="line-icon" />
-            <image src="../../images/text1.png" alt=""
-            class="title_icon" mode="heightFix"/>
+             <text>检测结果</text>
+            <!-- <image src="https://api.s-sbio.com/images/text3.png" alt=""
+            class="title_icon" mode="heightFix"/> -->
           </view>
           <view class="result-table">
             <view class="weui-flex between result-title">
-              <view class="result-text-left">高危型HPV感染
+              <view class="result-text-left"
+               @tap.stop="showTip('isShowTip', {{isShowTip}})">
+                高危型HPV感染
                 <image src="https://api.s-sbio.com/images/question.png" class="question">
               </view>
               <view class="result-num-right">{{highMaleCount}}个</view>
+              <view class="result-bg" wx:if="{{isShowTip}}"  @tap.stop="showTip('isShowTip', {{isShowTip}})">
+                <text class="highTypes-text">高危型的感染与子宫颈癌及可能发生子宫颈癌的高级别癌前病变有关。</text>
+                <image src="../../images/bg.png" class="result-img">
+              </view>
             </view>
             <view class="weui-flex between wrap">
               <repeat for="{{highTypes}}" wx:key="index">
@@ -27,11 +34,15 @@
               </repeat>
             </view>
             <view class="weui-flex between result-title">
-              <view class="result-text-left">
+              <view class="result-text-left"  @tap.stop="showTip('lowTypesShow', {{lowTypesShow}})">
                 低危型HPV感染
                 <image src="https://api.s-sbio.com/images/question.png" class="question">
               </view>
               <view class="result-num-right">{{lowMaleCount}}个</view>
+              <view class="result-bg" wx:if="{{lowTypesShow}}"  @tap.stop="showTip('lowTypesShow', {{lowTypesShow}})">
+                <text>低危型的感染与生殖器疣及低级别外阴、阴道、子宫颈病变相关，不会引起子宫颈癌的发生。</text>
+                <image src="../../images/bg.png" class="result-img">
+              </view>
             </view>
             <view class="weui-flex between wrap">
               <repeat for="{{lowTypes}}" wx:key="index">
@@ -57,7 +68,7 @@ import detectionResult from '@/components/detectionResult'
 import resultDetail from '@/components/resultDetail'
 import healthTemplate from '@/components/healthTemplate'
 import tabBar from '@/components/tabBar'
-import { wxNavigateTo } from '@/tool/util'
+import { wxNavigateTo, wxToast } from '@/tool/util'
 import { debounce } from '@/tool/debounce.js'
 import { $http } from '@/tool/http.js'
 export default class sampleDetail extends wepy.page {
@@ -83,16 +94,23 @@ export default class sampleDetail extends wepy.page {
     { name: '健康建议'}
     ],
     activeIndex: 0,
-    result: ''
+    result: '',
+    isShowTip: false,
+    lowTypesShow: false
   }
   events = {
     switchTab: data => {
       this.activeIndex = data
-      this.result = this.resultInfo.result 
+      this.result = this.resultInfo.result
+      this.isShowTip = false
+      this.lowTypesShow = false
       this.$apply()
     }
   }
   onLoad(options) {
+    wx.showLoading({
+      title: '加载中'
+    })
     this.sampleId = options.query
     this.getSampleDetail(this.sampleId)
   }
@@ -103,13 +121,26 @@ export default class sampleDetail extends wepy.page {
       this.highTypes = res.data.highTypes
       this.lowTypes = res.data.lowTypes
       this.highMaleCount = res.data.highMaleCount
-      this.lowMaleCount = res.data.lowMaleCount  
+      this.lowMaleCount = res.data.lowMaleCount
       this.$apply()
+      wx.hideLoading()
+    }).catch(err => {
+      wx.hideLoading()
     })
+  }
+  methods = {
+    showTip(key, isShowTip) {
+      this[key] = !isShowTip
+      this.$apply()
+    },
+    closeTip() {
+      this.isShowTip = false
+      this.lowTypesShow = false
+      this.$apply()
+    }
   }
 }
 </script>
-
 <style lang="less">
  .report-detail {
    width: 100%;
@@ -127,15 +158,46 @@ export default class sampleDetail extends wepy.page {
       width: 8rpx;
       height: 28rpx;
     }
-    .title_icon {
-      height: 32rpx;
-      width: 128rpx;
-      margin-left: 22rpx;
+    text {
+      font-size: 30rpx;
+      color: #141414;
+      margin-left: 20rpx;
     }
   }
   .result-table {
     .result-title {
       margin: 12rpx 0;
+      position: relative;
+      .result-bg {
+        height: 120rpx;
+        position: absolute;
+        width: 457rpx;
+        top: -120rpx;
+        left: 30%;
+        color: #ffffff;
+        transition: .1s;
+        line-height: 60rpx;
+        text {
+          position: absolute;
+          top: 4rpx;
+          padding: 0 20rpx;
+          right: 0;
+          z-index: 3;
+          font-size: 23rpx;
+          line-height: 36rpx;
+          &.highTypes-text {
+            top: 20rpx;
+          }
+        }
+        .result-img {
+          width: 100%;
+          max-height: 120rpx;
+          z-index: 2;
+          position: absolute;
+          top: 0;
+          right: 0;
+        }
+      }
     }
     .result-text-left {
       color: #000000;
@@ -143,7 +205,7 @@ export default class sampleDetail extends wepy.page {
       .question {
         width: 26rpx;
         height: 26rpx;
-        margin-left: 12rpx;
+        margin-left: 14rpx;
       }
     }
     .result-num-right {
@@ -173,5 +235,5 @@ export default class sampleDetail extends wepy.page {
       }
     }
   }
- }
+}
 </style>

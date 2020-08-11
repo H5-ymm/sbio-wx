@@ -397,6 +397,9 @@ export default class bindSample extends wepy.page {
         wxToast(res.data.msg || '请扫描正确的样本编号')
       } else {
         this.codeError = true
+        if(!wx.getStorageSync('shuoshibarCode')) {
+          wxToast('扫码成功')
+        }
       }
       this.$apply()
     })
@@ -412,7 +415,6 @@ export default class bindSample extends wepy.page {
     getQRCode: function(){
       wx.scanCode({   
         success: res => {
-          wxToast('扫码成功')
           this.form.barCode = res.rawData
           this.barCode = decode(res.rawData)
           this.isCheckCode()

@@ -95,7 +95,7 @@
   }
 </style>
 <template>
-  <view class="selectAddress" hidden="{{isShow}}">
+  <view class="selectAddress">
     <view class="mask"></view>
     <view class="selectAddress-content">
       <view class="box">
@@ -142,7 +142,6 @@ import { $http } from '@/tool/http.js'
 import { wxToast } from '@/tool/util'
 export default class selectAddress extends wepy.component {
   props = {
-    isShow: Boolean,
     addressCode: Array
   }
   data = {

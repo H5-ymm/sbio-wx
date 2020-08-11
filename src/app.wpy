@@ -12,21 +12,35 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/home/index',  // 首页
-      'pages/sample/send',  // 样本回寄
-      'pages/report/list',
-      'pages/report/sampleDetail',
+      // 'pages/sample/send',  // 样本回寄
+      // 'pages/webView/index',
+      // 'pages/webView/sampleDetail',
       'pages/home/usageProcess', // 样本绑定
       'pages/home/intendedFor', // 适用人群
-      'pages/home/bindSample', // 绑定样本提交页面
-      'pages/ruleView/HPVRule', // HPV同意须知
-      'pages/sample/gather',  // 样本视频
-      'pages/sample/address', // 添加地址
-      'pages/webView/index', // 我的报告
-      'pages/sample/detail', // 样本回寄详情
-      'pages/sample/orderDetail', // 样本回寄下单
-      'pages/ruleView/clauseView', // 快件运单契约条款
-      'pages/sample/cancelOrder',  // 取消订单成功页面
-      'pages/sample/logisticsDetail' // 物流详情
+      'pages/home/bindSample' // 绑定样本提交页面
+      // 'pages/ruleView/HPVRule', // HPV同意须知
+      // 'pages/sample/gather',  // 样本视频
+      // 'pages/sample/address', // 添加地址
+      // 'pages/sample/detail', // 样本回寄详情
+      // 'pages/sample/orderDetail', // 样本回寄下单
+      // 'pages/ruleView/clauseView', // 快件运单契约条款
+      // 'pages/sample/cancelOrder',  // 取消订单成功页面
+      // 'pages/sample/logisticsDetail'// 物流详情
+    ],
+    // 分包加载
+    subPackages: [
+      {
+        root: 'pages/sample',
+        pages: ['send', 'gather', 'address', 'detail', 'orderDetail', 'cancelOrder', 'logisticsDetail']
+      },
+      {
+        root: 'pages/webView',
+        pages: ['index', 'sampleDetail']
+      },
+      {
+        root: 'pages/ruleView',
+        pages: ['HPVRule', 'clauseView']
+      }
     ],
     window: {
       navigationBarTextStyle: 'black',
