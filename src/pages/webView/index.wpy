@@ -132,6 +132,8 @@ export default class list extends wepy.page {
       } else {
         this.routerLogistics(item.logisticsId)
       }
+    }).catch(err => {
+      console.log(err)
     })
   }
   routerLogistics(logisticsId) {

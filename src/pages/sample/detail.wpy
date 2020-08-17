@@ -1,10 +1,11 @@
 <style lang="less">
   .send_view {
-		height: 100%;
+		padding: 20rpx 30rpx;
+		background: #f6f6f6;
 		.order-header {
 			margin: 0;
 			.order-col1 {
-				margin: 36rpx;
+				margin: 30rpx;
 			}
 			.order-address-name {
 				font-size: 30rpx;
@@ -12,7 +13,7 @@
 	  	.order-left {
 				border-radius: 50%;
 				color: #ffffff;
-				background:linear-gradient(270deg,rgba(255,89,121,1) 0%,rgba(255,135,135,1) 100%);
+				background: linear-gradient(270deg,rgba(255,89,121,1) 0%,rgba(255,135,135,1) 100%);
 				&.order-left-reduce {
 					width: 68rpx;
 					height: 68rpx;
@@ -22,13 +23,13 @@
 			}
 			.order-right {
 				font-size: 26rpx;
-				font-weight:300;
+				font-weight: 300;
 				color: #666;
 				margin-left: 48rpx;
 				&.order-right-info {
 					line-height: 50rpx;
 					text {
-						font-weight: 400;
+						font-weight:400;
 						color: #000000;
 						margin-right: 20rpx;
 						font-size: 30rpx;
@@ -37,7 +38,6 @@
 				}
 			}
 			&.order-header1 {
-				border-top: 1px solid #EAEAEA;
 				.order-left {
 					background: #eeeeee;
 					color: #333333;
@@ -50,11 +50,24 @@
 				}
 			}
 		}
+		.section {
+			background: #ffffff;
+			border-radius: 20rpx;
+			.tip-box {
+				border-radius: 20rpx;
+				margin: 20rpx 0 40rpx;
+				border-top: 0;
+				padding-top: 20rpx; 
+				.bind-info {
+				  margin: 0 36rpx 20rpx;
+				}
+			}
+		}
 		.order_content {
-			padding-top: 0;
+			padding-top: 20rpx;
 			.order-row {
 				color: #000000;
-				padding: 20rpx 36rpx;
+				padding: 10rpx 30rpx 30rpx;
 				font-size: 32rpx;
 				font-weight: 300;
 				.order-time {
@@ -68,39 +81,43 @@
 <template>
   <view class="send_view">
 		<timeCard @cancalOrder="cancalOrder" :timeInfo.sync="timeInfo"></timeCard>
-		<view class="order-header weui-flex between">
-			<view class="order-col1 weui-flex between">
-				<view class="order-left weui-flex center order-left-reduce">寄</view>
-				<view class="order-right order-right-info weui-flex__item">
-          <view><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
-					<view>{{addressInfo.startStationAddress}}</view>
+		<view class="section">
+			<view class="order-header weui-flex between">
+				<view class="order-col1 weui-flex between">
+					<view class="order-left weui-flex center order-left-reduce">寄</view>
+					<view class="order-right order-right-info weui-flex__item">
+						<view><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
+						<view>{{addressInfo.startStationAddress}}</view>
+					</view>
+				</view>
+			</view>
+			<view class="order-header weui-flex between order-header1">
+				<view class="order-col1 weui-flex between">
+					<view class="order-left weui-flex center order-left-reduce">收</view>
+					<view class="order-right">
+						<view class="order-address-name">{{recipientsInfo.contactName}}</view>
+						<view>{{recipientsInfo.address}}</view>
+					</view>
+				</view>
+	  	</view>
+			<view class="order_content">
+				<view class="order-row weui-flex between">
+					<view>邮寄物品</view>
+					<view>检测样本</view>
+				</view>
+				<view class="order-row weui-flex between">
+					<view>付费方式</view>
+					<view>到付</view>
+				</view>
+				<view class="order-row weui-flex between" wx:if="{{addressInfo.skuCount>1}}">
+					<view>样本数量</view>
+					<view>{{addressInfo.skuCount}}</view>
 				</view>
 			</view>
 		</view>
-		<view class="order-header weui-flex between order-header1">
-			<view class="order-col1 weui-flex between">
-				<view class="order-left weui-flex center order-left-reduce">收</view>
-				<view class="order-right">
-					<view class="order-address-name">{{recipientsInfo.contactName}}</view>
-					<view>{{recipientsInfo.address}}</view>
-				</view>
-			</view>
+		<view class="section">
+			<tipTeamplte></tipTeamplte>
 		</view>
-		<view class="order_content">
-			<view class="order-row weui-flex between">
-				<view>邮寄物品</view>
-				<view>检测样本</view>
-			</view>
-			<view class="order-row weui-flex between">
-				<view>付费方式</view>
-				<view>到付</view>
-			</view>
-			<view class="order-row weui-flex between" wx:if="{{addressInfo.skuCount>1}}">
-				<view>样本数量</view>
-				<view>{{addressInfo.skuCount}}</view>
-			</view>
- 		</view>
-		<tipTeamplte></tipTeamplte>
   </view>
 </template>
 <script>
@@ -175,7 +192,8 @@ export default class detail extends wepy.page {
 		this.timeInfo = {
 			startTime: date +':00',
 			endTime: startTime < 10 ? '0' + startTime + ':00' : startTime + ':00',
-			type
+			type,
+			date: $moment.unix(orderEtd).format('YYYY/MM/DD')
 		}
 	}
 	// 验证订单是否可以取消

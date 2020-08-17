@@ -14,7 +14,7 @@
       z-index: 30;
       left: 5%;
       width: 100%;
-      animation: findIn.3s linear;
+      animation: findIn .3s linear;
       &.popup-content {
         width: 88%;
         border-radius: 40rpx;
@@ -123,9 +123,9 @@
   }
 </style>
 <template>
-  <view class="selectAddress">
+  <view class="selectAddress" hidden="{{isShow}}">
     <view class="mask"></view>
-    <view class="selectAddress-content popup-content">
+    <view class="selectAddress-content popup-content {{isShow?'':'popup-content1'}}">
       <view class="box">
         <image src="https://api.s-sbio.com/images/popup.png"  class="bg"></image>
         <view class="box-btn">

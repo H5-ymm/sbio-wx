@@ -1,6 +1,10 @@
 <style lang="less">
   .send_view {
 		height: 100%;
+		overflow: auto;
+		&.send_view1 {
+			overflow: hidden;
+		}
 		.right-icon {
 			width: 24rpx;
 			height: 24rpx;
@@ -127,7 +131,7 @@
   }
 </style>
 <template>
-  <view class="send_view">
+  <view class="send_view {{isShow?'send_view1':''}}">
 		<view class="order-header weui-flex between">
 			<view class="order-col1 weui-flex between" @tap="setAddress">
 				<view class="order-left  weui-flex center">寄</view>

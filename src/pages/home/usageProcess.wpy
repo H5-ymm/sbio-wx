@@ -145,6 +145,14 @@ export default class usageProcess extends wepy.page {
       }
     }
   }
+  onHide() {
+    this.isShow = true
+    this.$apply()
+  }
+  onUnload() {
+    this.isShow = true
+    this.$apply()
+  }
   getSession(code_ticket) {
     wx.login({
       success: res => {

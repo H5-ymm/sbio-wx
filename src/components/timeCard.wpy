@@ -1,49 +1,57 @@
 <style lang="less">
 	.order-time-box {
-    margin: 36rpx;
-    height: 276rpx;
-    background:#FFF6F6;
-    border-radius:20rpx;
+    height: 330rpx;
+    background: #ffffff;
+    border-radius: 20rpx;
     text-align: center;
-    padding: 24rpx 30rpx;
+    padding: 40rpx 30rpx;
+    margin-bottom: 20rpx;
     .order-time-col1 {
-      line-height: 56rpx;
       color: #000000;
+      line-height: 60rpx;
       font-size: 28rpx;
       .text {
-        font-size: 34rpx;
+        font-size: 36rpx;
       }
     }
     .time-type {
-      font-size:40rpx;
-      color: #333333;
-      width: 100rpx;
+      font-size: 28rpx;
+      color: #002A33;
+      text {
+        color: #FF627C;
+      }
     }
     .time {
-      width:212rpx;
+      width: 190rpx;
       height: 100rpx;
-      background:rgba(255,255,255,1);
-      border-radius:10rpx;
-      background: #fff;
-      margin: 10rpx 20rpx 20rpx;
-      color: #FF627C;
+      background: #F4F4F5;
+      border-radius: 10rpx;
+      margin: 20rpx;
+      color: #000000;
       font-size: 52rpx;
     }
     .line {
-      width:30rpx;
-      height:4rpx;
-      background:#FF627C;
-      border-radius:2rpx;
+      width: 22rpx;
+      height: 4rpx;
+      background: rgba(0,0,0,0.85);
+      border-radius: 2rpx;
     }
     .cancel-icon {
       width: 34rpx;
       height: 38rpx;
     }
+    .cancel-box {
+      padding-top: 20rpx;
+    }
     .cancel {
-      color: #666666;
-      font-size: 30rpx;
-      margin-left: 20rpx;
+      color: rgba(0,0,0,0.85);
+      font-size: 25rpx;
+      border: 1px solid #eeeeee;
+      border-radius: 50rpx;
+      width: 140rpx;
+      height: 50rpx;
       &.cancelActive {
+        border: 1px solid #FF627C;
         color: #FF627C;
       }
       &:active {
@@ -56,19 +64,21 @@
   <view class="order-time-box">
     <view class="order-time-col1">
       <view class="text">等待上门取件</view>
-      <view>上门时间：</view>
+      <view class="time-type">取件时间：<text>{{timeInfo.type}}{{timeInfo.date}}</text></view>
     </view>
-    <view class="weui-flex start">
-      <view class="time-type">{{timeInfo.type}}</view>
+    <view class="weui-flex center">
+      <!-- <view class="time-type">
+        <view class="date">{{timeInfo.date}}</view>
+        {{timeInfo.type}}
+      </view> -->
       <view class="weui-flex between">
         <view class="time weui-flex center">{{timeInfo.startTime}}</view>
         <view class="line"></view>
         <view class="time weui-flex center">{{timeInfo.endTime}}</view>
       </view>
     </view>
-    <view class="weui-flex center" @tap="cancalOrder">
-      <image src="https://api.s-sbio.com/images/sample/cancel.png" mode="scaleToFill" class="cancel-icon"></image>
-      <view class="cancel" hover-class="cancelActive">取消订单</view>
+    <view class="weui-flex center cancel-box">
+      <view class="cancel weui-flex center" hover-class="cancelActive" @tap="cancalOrder">取消订单</view>
     </view>
   </view>
 </template>
