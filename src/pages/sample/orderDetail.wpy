@@ -131,7 +131,7 @@
   }
 </style>
 <template>
-  <view class="send_view {{isShow?'send_view1':''}}">
+  <view class="send_view {{!isShow?'send_view1':''}}">
 		<view class="order-header weui-flex between">
 			<view class="order-col1 weui-flex between" @tap="setAddress">
 				<view class="order-left  weui-flex center">寄</view>

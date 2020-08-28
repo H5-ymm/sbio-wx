@@ -9,17 +9,14 @@
             <image src="https://api.s-sbio.com/images/line.png" alt=""
               class="line-icon" />
              <text>检测结果</text>
-            <!-- <image src="https://api.s-sbio.com/images/text3.png" alt=""
-            class="title_icon" mode="heightFix"/> -->
           </view>
           <view class="result-table">
             <view class="weui-flex between result-title">
-              <view class="result-text-left"
-               @tap.stop="showTip('isShowTip', {{isShowTip}})">
+              <view class="result-text-left" @tap.stop="showTip('isShowTip', {{isShowTip}})">
                 高危型HPV感染
                 <image src="https://api.s-sbio.com/images/question.png" class="question">
               </view>
-              <view class="result-num-right">{{highMaleCount}}个</view>
+              <view class="result-num-right" wx:if="{{highMaleCount}}">{{highMaleCount}}个</view>
               <view class="result-bg" wx:if="{{isShowTip}}"  @tap.stop="showTip('isShowTip', {{isShowTip}})">
                 <text class="highTypes-text">高危型的感染与子宫颈癌及可能发生子宫颈癌的高级别癌前病变有关。</text>
                 <image src="../../images/bg.png" class="result-img">
@@ -34,11 +31,30 @@
               </repeat>
             </view>
             <view class="weui-flex between result-title">
+              <view class="result-text-left"  @tap.stop="showTip('middleMale', {{middleMale}})">
+                中危型HPV感染
+                <image src="https://api.s-sbio.com/images/question.png" class="question">
+              </view>
+              <view class="result-num-right" wx:if="{{middleMaleCount}}">{{middleMaleCount}}个</view>
+              <view class="result-bg" wx:if="{{middleMale}}"  @tap.stop="showTip('middleMale', {{middleMale}})">
+                <text>疑似高危HPV，致癌性（子宫颈癌及可能发生子宫颈癌的高级别癌前病变）没有高危型HPV高。</text>
+                <image src="../../images/bg.png" class="result-img">
+              </view>
+            </view>
+            <view class="weui-flex between wrap">
+              <repeat for="{{middleTypes}}" wx:key="index">
+                <view class="item item-middleTypes {{item.resultInt?'item-avtive':''}}"> 
+                  <text class="subType">{{item.subType}}</text>
+                  <text class="result">{{item.result}}</text>
+                </view>
+              </repeat>
+            </view>
+            <view class="weui-flex between result-title">
               <view class="result-text-left"  @tap.stop="showTip('lowTypesShow', {{lowTypesShow}})">
                 低危型HPV感染
                 <image src="https://api.s-sbio.com/images/question.png" class="question">
               </view>
-              <view class="result-num-right">{{lowMaleCount}}个</view>
+              <view class="result-num-right" wx:if="{{lowMaleCount}}">{{lowMaleCount}}个</view>
               <view class="result-bg" wx:if="{{lowTypesShow}}"  @tap.stop="showTip('lowTypesShow', {{lowTypesShow}})">
                 <text>低危型的感染与生殖器疣及低级别外阴、阴道、子宫颈病变相关，不会引起子宫颈癌的发生。</text>
                 <image src="../../images/bg.png" class="result-img">
@@ -85,8 +101,10 @@ export default class sampleDetail extends wepy.page {
     active: 0,
     highTypes: [],
     lowTypes: [],
+    middleTypes: [],
     highMaleCount: 0,
     lowMaleCount: 0,
+    middleMaleCount: 0,
     resultInfo: {},
     sampleId: '',
     tabBarList: [
@@ -96,7 +114,8 @@ export default class sampleDetail extends wepy.page {
     activeIndex: 0,
     result: '',
     isShowTip: false,
-    lowTypesShow: false
+    lowTypesShow: false,
+    middleMale: false
   }
   events = {
     switchTab: data => {
@@ -104,6 +123,7 @@ export default class sampleDetail extends wepy.page {
       this.result = this.resultInfo.result
       this.isShowTip = false
       this.lowTypesShow = false
+      this.middleMale = false
       this.$apply()
     }
   }
@@ -120,8 +140,10 @@ export default class sampleDetail extends wepy.page {
       this.resultInfo.result = res.data.result
       this.highTypes = res.data.highTypes
       this.lowTypes = res.data.lowTypes
+      this.middleTypes = res.data.middleTypes
       this.highMaleCount = res.data.highMaleCount
       this.lowMaleCount = res.data.lowMaleCount
+      this.middleMaleCount = res.data.middleMaleCount
       this.$apply()
       wx.hideLoading()
     }).catch(err => {
@@ -136,6 +158,7 @@ export default class sampleDetail extends wepy.page {
     closeTip() {
       this.isShowTip = false
       this.lowTypesShow = false
+      this.middleMale = false
       this.$apply()
     }
   }
@@ -218,21 +241,28 @@ export default class sampleDetail extends wepy.page {
       font-weight: 300;
       width: 28%;
       margin: 10rpx 0;
-      &:nth-of-type(3n) {
-        justify-content: flex-end;
-      }
       text {
         display: inline-block;
         width: 100rpx;
-      }
-      &.item-avtive {
-        color: #F04D6F;
       }
       .result {
         width: 60rpx;
         margin-left: 12rpx;
         text-align: right;
       }
+      &.item-middleTypes {
+        &:nth-last-of-type(1) {
+          position: relative;
+          left: -36%;
+        }
+      }
+      &:nth-of-type(3n) {
+        justify-content: flex-end;
+      }
+      &.item-avtive {
+        color: #F04D6F;
+      }
+      
     }
   }
 }

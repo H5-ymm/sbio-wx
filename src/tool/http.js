@@ -1,8 +1,8 @@
 import {
     wxToast
 } from '@/tool/util.js'
-// const apiUrl = 'https://testapi.s-sbio.com/'
-const apiUrl = 'https://api.s-sbio.com/'
+const apiUrl = 'https://testapi.s-sbio.com/'
+// const apiUrl = 'https://api.s-sbio.com/'
 const http = (url, params, method, sessionId) => {
   let sbioSessionId = sessionId ? sessionId : wx.getStorageSync('sessionId')
   return new Promise((resolve, reject) => {
