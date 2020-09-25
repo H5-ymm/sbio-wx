@@ -140,6 +140,12 @@ import wepy from 'wepy'
 import { $http } from '@/tool/http.js'
 import { wxShowModal, wxToast } from '@/tool/util'
 export default class popup extends wepy.component {
+  props = {
+    isShow: {
+      type: Boolean,
+      default: true
+    }
+  }
   decryptData(params) {
     $http('user/api/wechat/decryptData', params).then(res => {
       if (res.code == 0) {

@@ -22,14 +22,7 @@
                 <image src="../../images/bg.png" class="result-img">
               </view>
             </view>
-            <view class="weui-flex between wrap">
-              <repeat for="{{highTypes}}" wx:key="index">
-                <view class="item {{item.resultInt?'item-avtive':''}}">
-                  <text class="subType">{{item.subType}}</text>
-                  <text class="result">{{item.result}}</text>
-                </view>
-              </repeat>
-            </view>
+            <highHpvTemplate :list.sync="highTypes"></highHpvTemplate>
             <view class="weui-flex between result-title">
               <view class="result-text-left"  @tap.stop="showTip('middleMale', {{middleMale}})">
                 中危型HPV感染
@@ -41,14 +34,7 @@
                 <image src="../../images/bg.png" class="result-img">
               </view>
             </view>
-            <view class="weui-flex between wrap">
-              <repeat for="{{middleTypes}}" wx:key="index">
-                <view class="item item-middleTypes {{item.resultInt?'item-avtive':''}}"> 
-                  <text class="subType">{{item.subType}}</text>
-                  <text class="result">{{item.result}}</text>
-                </view>
-              </repeat>
-            </view>
+            <middleHpvTemplate :list.sync="middleTypes"></middleHpvTemplate>
             <view class="weui-flex between result-title">
               <view class="result-text-left"  @tap.stop="showTip('lowTypesShow', {{lowTypesShow}})">
                 低危型HPV感染
@@ -60,21 +46,14 @@
                 <image src="../../images/bg.png" class="result-img">
               </view>
             </view>
-            <view class="weui-flex between wrap">
-              <repeat for="{{lowTypes}}" wx:key="index">
-                <view class="item {{item.resultInt?'item-avtive':''}}"> 
-                  <text class="subType">{{item.subType}}</text>
-                  <text class="result">{{item.result}}</text>
-                </view>
-              </repeat>
-            </view>
+            <hpvTemplate :list.sync="lowTypes"></hpvTemplate>
           </view>
         </view>
       </view>
       <resultDetail></resultDetail>
     </view>
     <view wx:if="{{activeIndex==1}}">
-      <healthTemplate :result.sync="result" ></healthTemplate>
+      <healthTemplate :result.sync="result"></healthTemplate>
     </view>
   </view>
 </template>
@@ -83,6 +62,9 @@ import wepy from 'wepy'
 import detectionResult from '@/components/detectionResult'
 import resultDetail from '@/components/resultDetail'
 import healthTemplate from '@/components/healthTemplate'
+import hpvTemplate from '@/components/hpvTemplate'
+import highHpvTemplate from '@/components/hpvTemplate'
+import middleHpvTemplate from '@/components/hpvTemplate'
 import tabBar from '@/components/tabBar'
 import { wxNavigateTo, wxToast } from '@/tool/util'
 import { debounce } from '@/tool/debounce.js'
@@ -92,7 +74,10 @@ export default class sampleDetail extends wepy.page {
     detectionResult: detectionResult,
     resultDetail: resultDetail,
     healthTemplate: healthTemplate,
-    tabBar: tabBar
+    tabBar: tabBar,
+    hpvTemplate: hpvTemplate,
+    middleHpvTemplate: middleHpvTemplate,
+    highHpvTemplate: highHpvTemplate
   }
   config = {
     navigationBarTitleText: '我的报告'
@@ -108,8 +93,8 @@ export default class sampleDetail extends wepy.page {
     resultInfo: {},
     sampleId: '',
     tabBarList: [
-    { name: '检测结果'},
-    { name: '健康建议'}
+      { name: '检测结果'},
+      { name: '健康建议'}
     ],
     activeIndex: 0,
     result: '',

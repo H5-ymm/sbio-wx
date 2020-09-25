@@ -1,0 +1,19 @@
+
+<template>
+  <view class="weui-flex between wrap">
+    <repeat for="{{list}}" wx:key="index">
+      <view class="item {{item.resultInt?'item-avtive':''}}"> 
+        <text class="subType">{{item.subType}}</text>
+        <text class="result">{{item.result}}</text>
+      </view>
+    </repeat>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class hpvTemplate extends wepy.component {
+  props = {
+    list: Array
+  }
+}
+</script>

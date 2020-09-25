@@ -188,7 +188,7 @@
   	<view class="footer-btn" @tap="overbooking">
 			<button class="weui-flex center {{isCheck?'btn':''}}">下单</button>
 		</view>
-		<selectTime wx:if="{{!isShow}}" @cancel="cancel" @seletOrderTime="seletOrderTime"></selectTime>
+		<selectTime :isShow.sync="isShow" @cancel="cancel" @seletOrderTime="seletOrderTime"></selectTime>
   </view>
 </template>
 <script>

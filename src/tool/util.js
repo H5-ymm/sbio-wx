@@ -183,7 +183,8 @@ const  filterSpace = name =>{
 
 }
 const videoUrl = () => {
-    return 'https://video.s-sbio.com/sample.mp4'
+    return 'https://video.s-sbio.com/sample_test.mp4'
+    // return 'https://video.s-sbio.com/sample.mp4'
 }
 module.exports = {
     manglingFormatCardNumber: manglingFormatCardNumber,

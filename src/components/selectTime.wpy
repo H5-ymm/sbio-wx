@@ -125,7 +125,7 @@
   }
 </style>
 <template>
-  <view class="selectAddress">
+  <view class="selectAddress" hidden="{{isShow}}">
     <view class="mask"></view>
     <view class="selectAddress-content">
       <view class="box">
@@ -161,6 +161,12 @@ import wepy from 'wepy'
 import { $http } from '@/tool/http.js'
 import $moment from 'moment'
 export default class selectTime extends wepy.component {
+  props = {
+    isShow: {
+      type: Boolean,
+      default: true
+    }
+  }
   data = {
     array: [],
     index: 0,

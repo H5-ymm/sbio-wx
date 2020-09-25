@@ -1,6 +1,6 @@
 <template>
   <view class="report-container">
-    <scroll-view class="report-list" wx:if="{{hasData&&list.length}}" scroll-y="true" @scrolltolower="searchScrollLower" >
+    <scroll-view class="report-list" wx:if="{{isEmpty}}" scroll-y="true" @scrolltolower="searchScrollLower" >
       <repeat for="{{list}}" wx:key="index">
         <view class="report-item">
           <view>样本编号: {{item.sampleNo}}</view>
@@ -15,14 +15,8 @@
         </view>
       </repeat>
     </scroll-view>
-    <view wx:if="{{!hasData&&!list.length}}" class="noData-box">
-			<view class="noData-text">完成样本绑定及采集后，才能预约快递哦！</view>
-		  <image src="https://api.s-sbio.com/images/noData.png" class="noData-icon" mode="widthFix">
-      <view class="footer-btn" @tap="bindSample()">
-        <button class="weui-flex center">去绑定</button>
-      </view>
-		</view>
-    <popup wx:if="{{!isShow}}" @bindWx="bindWx"></popup>
+    <emptyPage @bindSample="bindSample" :isShow.sync="!isEmpty" :imgUrl.sync="imgUrl"></emptyPage>
+    <popup :isShow.sync="isShow" @bindWx="bindWx"></popup>
   </view>
 </template>
 <script>
@@ -32,13 +26,15 @@ import { $http, $downloadFile } from '@/tool/http.js'
 import { debounce } from "@/tool/debounce.js"
 import wxs from '../../filterWxs/sample.wxs'
 import popup from '@/components/popup'
+import emptyPage from '@/components/emptyPage'
 export default class list extends wepy.page {
   wxs = { wxs }
   config = {
     navigationBarTitleText: '我的报告'
   }
   components = {
-		popup: popup
+    popup: popup,
+    emptyPage: emptyPage
   }
   data = {
     list: [],
@@ -48,7 +44,13 @@ export default class list extends wepy.page {
     },
     total: 0,
     hasData: true,
-    isShow: true
+    isShow: true,
+    imgUrl: 'https://api.s-sbio.com/images/noData.png'
+  }
+  computed = {
+    isEmpty() {
+      return this.hasData&&this.list.length
+    }
   }
   onShow() {
     if (!this.$parent.globalData.sessionId) {
@@ -80,6 +82,7 @@ export default class list extends wepy.page {
 		}
     this.$apply()
   }
+  // 获取样本列表
   getList(sessionId) {
     $http('sample/api/list', this.params, 'Get', sessionId).then(res => {
       wx.hideLoading()
@@ -104,8 +107,13 @@ export default class list extends wepy.page {
       if (sessionId) {
         this.getList(sessionId)
       }
+    },
+    // 绑定按钮
+    bindSample() {
+      this.noRepetitionRourte('/pages/home/usageProcess')
     }
   }
+  // 下载pdf Api
   downLoadPdf(item) {
     $downloadFile('sample/api/selectReport', item).then(res => {
       wx.openDocument({
@@ -123,10 +131,10 @@ export default class list extends wepy.page {
       console.log(err)
     })
   }
+  // 判断是否可以取消订单
   cancelFlag(item) {
     $http('sample/api/logistics/getCancelFlag', {logisticsId: item.logisticsId}, 'Get').then(res => {
       const { data } = res
-      // 判断是否可以取消订单
       if (data.cancelFlag) {
         this.noRepetitionRourte(`/pages/sample/detail?logisticsId=${item.logisticsId}`)  
       } else {
@@ -136,6 +144,7 @@ export default class list extends wepy.page {
       console.log(err)
     })
   }
+  // 跳转物流详情页
   routerLogistics(logisticsId) {
     this.noRepetitionRourte(`/pages/sample/logisticsDetail?logisticsId=${logisticsId}`)
   }
@@ -146,9 +155,7 @@ export default class list extends wepy.page {
     debounce(fn(path), 1000, true)
   }
   methods = {
-    bindSample() {
-      this.noRepetitionRourte('/pages/home/usageProcess')
-    },
+    // 下载pdf
     download(item) {
       this.downLoadPdf(item)
     },
@@ -163,6 +170,7 @@ export default class list extends wepy.page {
         this.noRepetitionRourte(`/pages/webView/sampleDetail?query=${item.sampleId}`)
       }
     },
+    // 加载更多
     searchScrollLower() {
 			if (this.total > this.list.length && this.total > this.params.size) {
 				this.params.size = this.params.size + 10
@@ -223,32 +231,8 @@ export default class list extends wepy.page {
       }
     }
    }
-   .noData-box {
-      text-align: center;
-      height: 100%;
-      background: #ffffff;
-      .noData-text {
-        color: #000000;
-        font-weight: 300;
-        font-size: 32rpx;
-        padding: 122rpx 0;
-      }
-      .noData-icon {
-        width: 90%!important;
-        height: 53%!important;
-      }
-    }
-    .footer-btn {
-      width: 70%;
-      margin: 0 auto;
-      button {
-        height: 80rpx;
-        width: 100%;
-        background: #F36681;
-        border-radius: 40rpx;
-        color: #ffffff;
-        font-size: 30rpx;
-      }
-		}
+  .noData-box {
+    background: #ffffff;
+  }
  }
 </style>
