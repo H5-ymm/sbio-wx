@@ -81,7 +81,7 @@
 		}
 	  .footer-btn {
       width: 70%;
-      margin: 0 auto;
+      margin: 60rpx auto 132rpx;
       button {
         height: 80rpx;
         background: #F36681;
@@ -90,11 +90,29 @@
         font-size: 30rpx;
       }
 		}
+		.noData-box {
+			text-align: center;
+			height: 100%;
+			overflow: hidden;
+			.noData-text {
+				color: #000000;
+				font-weight: 300;
+				font-size: 32rpx;
+				margin: 102rpx 0;
+			}
+			.noData-icon {
+				width: 90%;
+				height: 90%;
+			}
+			.footer-btn {
+				margin: 0 auto;
+			}
+		}
   }
 </style>
 <template>
   <view class="send_view">
-		<view class="send_content" wx:if="{{ishasBind}}">
+		<view class="send_content" wx:if="{{submitFlag&&loading}}">
 			<view class="send-header weui-flex around">
 				<image src="https://api.s-sbio.com/images/sample/car.png" mode="aspectFit"
 					class="car-icon">
@@ -112,7 +130,7 @@
 			</view>
 			<view class="send-goods weui-flex start-start">
 				<view class="send-goods-col1 title">邮寄物品</view>
-				<view class="send-goods-col2 subTitle">请将样本保存管放到原内衬中， 并装入外包装盒进行回寄</view>
+				<view class="send-goods-col2 subTitle">请将样本保存管放到样本回寄盒中，并装入快递盒进行回寄</view>
 			</view>
 			<view class="send-goods send-goods1 weui-flex start-start">
 				<view class="weui-flex__auto title">收件信息</view>
@@ -132,7 +150,15 @@
 				<button class="weui-flex center" @tap="order">预约顺丰上门取件</button>
 			</view>
 		</view>
-		<emptyPage @bindSample="bindSample" :isShow.sync="!ishasBind" :imgUrl.sync="imgUrl"></emptyPage>
+		<view wx:if="{{!loading&&!submitFlag}}" class="noData-box">
+			<view class="noData-text">完成样本绑定及采集后，才能预约快递哦！</view>
+			<image src="https://api.s-sbio.com/images/sample/noData.png" mode="widthFix"
+				class="noData-icon">
+			</image>
+			<view class="footer-btn" @tap="bindSample">
+        <button class="weui-flex center">去绑定</button>
+      </view>
+		</view>
 		<popup :isShow.sync="isShow" @bindWx="bindWx"></popup>
   </view>
 </template>
@@ -142,27 +168,19 @@ import { wxNavigateTo } from '@/tool/util'
 import { $http } from '@/tool/http.js'
 import { debounce } from "@/tool/debounce.js"
 import popup from '@/components/popup'
-import emptyPage from '@/components/emptyPage'
 export default class send extends wepy.page {
   data = {
 		submitFlag: false,
 		isShow: true,
 		recipientsInfo: {},
-		loading: true,
-		imgUrl: 'https://api.s-sbio.com/images/sample/noData.png'
+		loading: true
 	}
 	components = {
-		popup: popup,
-		emptyPage: emptyPage
+		popup: popup
   }
   config = {
     navigationBarTitleText: '样本回寄'
 	}
-	computed = {
-    ishasBind() {
-      return this.loading&&this.submitFlag
-    }
-  }
   onShow() {
 		if (!this.$parent.globalData.sessionId) {
 			wx.showLoading({
@@ -221,12 +239,6 @@ export default class send extends wepy.page {
 			if (sessionId) {
 				this.getSubmitFlag(sessionId)
 			}
-		},
-		bindSample: () => {
-			let fun = () => {
-        wxNavigateTo('/pages/home/usageProcess')
-			}
-			debounce(fun(), 1000, true)  
 		}
 	}
   methods = {
@@ -235,7 +247,13 @@ export default class send extends wepy.page {
         wxNavigateTo('/pages/sample/orderDetail')
 			}
 			debounce(fun(), 1000, true)   
-    }
+    },
+		bindSample: () => {
+			let fun = () => {
+        wxNavigateTo('/pages/home/usageProcess')
+			}
+			debounce(fun(), 1000, true)  
+		}
   }
 }
 </script>

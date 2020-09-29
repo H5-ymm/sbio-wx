@@ -98,7 +98,7 @@
 		<view class="order_content">
 			<view class="order-row weui-flex between">
 				<view>邮寄物品</view>
-				<view>检测样本</view>
+				<view>试纸</view>
 			</view>
 			<view class="order-row weui-flex between">
 				<view>付费方式</view>

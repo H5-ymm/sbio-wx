@@ -103,7 +103,7 @@
 			<view class="order_content">
 				<view class="order-row weui-flex between">
 					<view>邮寄物品</view>
-					<view>检测样本</view>
+					<view>试纸</view>
 				</view>
 				<view class="order-row weui-flex between">
 					<view>付费方式</view>
@@ -182,17 +182,10 @@ export default class detail extends wepy.page {
   // 处理预约时间
 	getSampleDate(orderEtd) {
 		let date = $moment.unix(orderEtd).format('HH')
-		let type
-		if ($moment.unix(orderEtd).format('YYYY-MM-DD') == $moment().format('YYYY-MM-DD')) {
-			type = '今天'
-		} else {
-			type = '明天'
-		}
 		let startTime = Number(date) + 1
 		this.timeInfo = {
 			startTime: date +':00',
 			endTime: startTime < 10 ? '0' + startTime + ':00' : startTime + ':00',
-			type,
 			date: $moment.unix(orderEtd).format('YYYY/MM/DD')
 		}
 	}

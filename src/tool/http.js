@@ -1,8 +1,8 @@
 import {
     wxToast
 } from '@/tool/util.js'
-const apiUrl = 'https://testapi.s-sbio.com/'
-// const apiUrl = 'https://api.s-sbio.com/'
+// const apiUrl = 'https://testapi.s-sbio.com/'
+const apiUrl = 'https://api.s-sbio.com/'
 const http = (url, params, method, sessionId) => {
   let sbioSessionId = sessionId ? sessionId : wx.getStorageSync('sessionId')
   return new Promise((resolve, reject) => {
@@ -20,6 +20,8 @@ const http = (url, params, method, sessionId) => {
             resolve(res.data)
           } else if (res.data.code === 400 || res.data.code === 401) {
             reject(res.data)
+          } else if (res.data.code === 303) {
+            resolve(res.data)
           } else {
             wxToast(res.data.msg)
             reject(res.data)

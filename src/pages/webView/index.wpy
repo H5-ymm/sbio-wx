@@ -1,6 +1,6 @@
 <template>
   <view class="report-container">
-    <scroll-view class="report-list" wx:if="{{isEmpty}}" scroll-y="true" @scrolltolower="searchScrollLower" >
+    <scroll-view class="report-list" wx:if="{{hasData&&list.length}}" scroll-y="true" @scrolltolower="searchScrollLower" >
       <repeat for="{{list}}" wx:key="index">
         <view class="report-item">
           <view>样本编号: {{item.sampleNo}}</view>
@@ -15,7 +15,13 @@
         </view>
       </repeat>
     </scroll-view>
-    <emptyPage @bindSample="bindSample" :isShow.sync="!isEmpty" :imgUrl.sync="imgUrl"></emptyPage>
+    <view wx:if="{{!hasData&&!list.length}}" class="noData-box">
+      <view class="noData-text">您还没有报告，请先绑定样本哦！</view>
+      <image src="https://api.s-sbio.com/images/noData.png" class="noData-icon" mode="widthFix">
+      <view class="footer-btn" @tap="bindSample()">
+        <button class="weui-flex center">去绑定</button>
+      </view>
+    </view>
     <popup :isShow.sync="isShow" @bindWx="bindWx"></popup>
   </view>
 </template>
@@ -26,15 +32,13 @@ import { $http, $downloadFile } from '@/tool/http.js'
 import { debounce } from "@/tool/debounce.js"
 import wxs from '../../filterWxs/sample.wxs'
 import popup from '@/components/popup'
-import emptyPage from '@/components/emptyPage'
 export default class list extends wepy.page {
   wxs = { wxs }
   config = {
     navigationBarTitleText: '我的报告'
   }
-  components = {
-    popup: popup,
-    emptyPage: emptyPage
+  components = { 
+    popup: popup
   }
   data = {
     list: [],
@@ -44,13 +48,7 @@ export default class list extends wepy.page {
     },
     total: 0,
     hasData: true,
-    isShow: true,
-    imgUrl: 'https://api.s-sbio.com/images/noData.png'
-  }
-  computed = {
-    isEmpty() {
-      return this.hasData&&this.list.length
-    }
+    isShow: true
   }
   onShow() {
     if (!this.$parent.globalData.sessionId) {
@@ -107,10 +105,6 @@ export default class list extends wepy.page {
       if (sessionId) {
         this.getList(sessionId)
       }
-    },
-    // 绑定按钮
-    bindSample() {
-      this.noRepetitionRourte('/pages/home/usageProcess')
     }
   }
   // 下载pdf Api
@@ -176,6 +170,10 @@ export default class list extends wepy.page {
 				this.params.size = this.params.size + 10
 				this.getList()
 			}
+    },
+    // 绑定按钮
+    bindSample() {
+      this.noRepetitionRourte('/pages/home/usageProcess')
     }
   }
 }
@@ -231,8 +229,32 @@ export default class list extends wepy.page {
       }
     }
    }
-  .noData-box {
-    background: #ffffff;
-  }
+   .noData-box {
+      text-align: center;
+      height: 100%;
+      background: #ffffff;
+      .noData-text {
+        color: #000000;
+        font-weight: 300;
+        font-size: 32rpx;
+        padding: 122rpx 0;
+      }
+      .noData-icon {
+        width: 90%!important;
+        height: 53%!important;
+      }
+    }
+    .footer-btn {
+      width: 70%;
+      margin: 0 auto;
+      button {
+        height: 80rpx;
+        width: 100%;
+        background: #F36681;
+        border-radius: 40rpx;
+        color: #ffffff;
+        font-size: 30rpx;
+      }
+		}
  }
 </style>

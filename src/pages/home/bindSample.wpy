@@ -351,13 +351,17 @@ export default class bindSample extends wepy.page {
   saveSample() {
     if (!this.codeError) return
     $http('sample/api/save', this.form).then(res => {
-      if (res.code === 0) {
-        wxToast('绑定成功，请尽快完成取样、回寄样本')
+      if (res.code === 0 || res.code === 303) {
+        if (res.code === 0) {
+          wxToast('绑定成功，请尽快完成取样、回寄样本')
+        } else {
+          wxToast(res.msg)
+        }
         wx.setStorageSync('submitFlag', true)
         wx.removeStorageSync('shuoshibarCode')
         setTimeout(() => {    
           let fn = () => {
-            wxReLaunch('/pages/home/usageProcess')
+            wxReLaunch('/pages/sample/gather')
             lock = false
           }
           debounce(fn(), 1000, true)

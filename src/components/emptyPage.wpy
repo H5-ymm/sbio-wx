@@ -28,8 +28,8 @@
   }
 </style>
 <template>
-  <view wx:if="{{isShow}}" class="noData-box">
-    <view class="noData-text">完成样本绑定及采集后，才能预约快递哦！</view>
+  <view wx:if="{{isShowView}}" class="noData-box">
+    <view class="noData-text">{{text}}</view>
     <image src="{{imgUrl}}" mode="widthFix" class="noData-icon"></image>
     <view class="footer-btn" @tap="bindSample">
       <button class="weui-flex center">去绑定</button>
@@ -40,8 +40,9 @@
 import wepy from 'wepy'
 export default class emptyPage extends wepy.component {
   props = {
-    isShow: Boolean,
-    imgUrl: String
+    isShowView: Boolean,
+    imgUrl: String,
+    text: String
   }
   methods = {
     bindSample() {

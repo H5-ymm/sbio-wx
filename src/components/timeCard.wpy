@@ -64,13 +64,9 @@
   <view class="order-time-box">
     <view class="order-time-col1">
       <view class="text">等待上门取件</view>
-      <view class="time-type">取件时间：<text>{{timeInfo.type}}{{timeInfo.date}}</text></view>
+      <view class="time-type">取件时间：<text>{{timeInfo.date}}</text></view>
     </view>
     <view class="weui-flex center">
-      <!-- <view class="time-type">
-        <view class="date">{{timeInfo.date}}</view>
-        {{timeInfo.type}}
-      </view> -->
       <view class="weui-flex between">
         <view class="time weui-flex center">{{timeInfo.startTime}}</view>
         <view class="line"></view>

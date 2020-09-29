@@ -34,7 +34,7 @@
                 <image src="../../images/bg.png" class="result-img">
               </view>
             </view>
-            <middleHpvTemplate :list.sync="middleTypes"></middleHpvTemplate>
+            <middleHpvTemplate :list.sync="middleTypes" class="item-middleTypes"></middleHpvTemplate>
             <view class="weui-flex between result-title">
               <view class="result-text-left"  @tap.stop="showTip('lowTypesShow', {{lowTypesShow}})">
                 低危型HPV感染
@@ -235,19 +235,20 @@ export default class sampleDetail extends wepy.page {
         margin-left: 12rpx;
         text-align: right;
       }
-      &.item-middleTypes {
+      &.item-avtive {
+        color: #F04D6F;
+      }
+    }
+    .item-middleTypes {
+      .item {
         &:nth-last-of-type(1) {
           position: relative;
           left: -36%;
         }
+        &:nth-of-type(3n) {
+          justify-content: flex-end;
+        }
       }
-      &:nth-of-type(3n) {
-        justify-content: flex-end;
-      }
-      &.item-avtive {
-        color: #F04D6F;
-      }
-      
     }
   }
 }

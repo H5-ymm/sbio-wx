@@ -135,14 +135,14 @@
 		<view class="order-header weui-flex between">
 			<view class="order-col1 weui-flex between" @tap="setAddress">
 				<view class="order-left  weui-flex center">寄</view>
-				<view class="order-right" wx:if="{{!addressInfo}}">寄件人信息</view>
+				<view class="order-right" wx:if="{{!addressInfo||!hasAddress}}">寄件人信息</view>
 				<view wx:else class="order-right order-right-info weui-flex__item">
           <view class="order-time1"><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
 					<view class="startStationAddress">{{addressText}}</view>
 				</view>
 			</view>
 			<view class="order-col2 weui-flex end weui-flex__auto" @tap="setAddress">
-				<text class="order-time1" wx:if="{{!addressInfo}}">请填写</text>
+				<text class="order-time1" wx:if="{{!addressInfo||!hasAddress}}">请填写</text>
 				<image src="https://api.s-sbio.com/images/right.png" mode="aspectFit"
 					class="right-icon">
 				</image>
@@ -173,7 +173,7 @@
 			</view>
 			<view class="order-row weui-flex between">
 				<view>邮寄物品</view>
-				<view>检测样本</view>
+				<view>试纸</view>
 			</view>
 			<view class="order-row weui-flex between">
 				<view>付费方式</view>
@@ -228,7 +228,8 @@ export default class orderDetail extends wepy.page {
 		isRead: true,
 		array: [],
 		startStationAddress: '',
-		isClick: false
+		isClick: false,
+		hasAddress: true
   }
   config = {
     navigationBarTitleText: '样本回寄'
@@ -326,6 +327,7 @@ export default class orderDetail extends wepy.page {
 	getLatelyLogistics() {
     $http('sample/api/logistics/getLatelyLogistics', {}, 'Get').then(res => {
 			if (res.data) {
+				this.hasAddress = true
 				this.addressInfo = res.data	
 				this.getAddressText(res.data)
 				this.form = this.changeNewObj(res.data, this.form)
@@ -336,9 +338,33 @@ export default class orderDetail extends wepy.page {
 				this.form.startStationAddress = this.startStreetAddress
 				this.addressInfo.startStationAddress = this.startStreetAddress
 				this.$apply()
+			} else {
+				this.hasAddress = false
+				this.getUserInfo()
 			}
     })
 	}
+	// 获取最新的用户信息
+  getUserInfo() {
+    $http('sample/api/getLatelySample', {}, 'Get').then(res => {
+      if (res.data) {
+        this.form.startContactName = res.data.patientName
+				this.form.startContactPhone = res.data.phone
+				this.addressInfo = {
+					startContactName: res.data.patientName,
+					startContactPhone: res.data.phone,
+					startStationAddress: '',
+					startProvinceText: '',
+					startCityText: '',
+					startAreaText: '',
+					startProvinceId: '',
+					startCityId: '',
+					startAreaId: ''
+				}
+        this.$apply()
+      }
+    })
+  }
 	changeNewObj(obj1, obj2) {
    	for(let key in obj1) {
 			obj2[key] = obj1[key]

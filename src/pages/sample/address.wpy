@@ -141,7 +141,12 @@ export default class address extends wepy.page {
   onLoad(options) {
     if(options.query) {
       this.form = JSON.parse(options.query)
-      this.addressCode = [options.query.startProvinceId, options.query.startCityId, options.query.startAreaId]
+      if (options.query.startProvinceId) {
+        this.addressCode = [options.query.startProvinceId, options.query.startCityId, options.query.startAreaId]
+      } else {
+        this.addressCode = []
+      }
+      this.$apply()
     }
   }
   events = {

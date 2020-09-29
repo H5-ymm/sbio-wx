@@ -66,7 +66,7 @@ export const flowList = [{
   title: '样本采集',
   subTitle: '请参照盒内说明书或线上采样 流程，完成自取样。',
   path: '/pages/sample/gather',
-  btnText: '采样流程',
+  btnText: '取样视频',
 },
 {
   title: '样本回寄',
