@@ -2,7 +2,8 @@
   .home_view {
     width: 100%; 
     margin: 0 auto;
-    padding-bottom: 40rpx;
+    height: 100%;
+    background: #F0F0F0;
     &.overflow_auto {
       overflow: scroll;
     }
@@ -10,32 +11,28 @@
       overflow: hidden;
     }
     .bind_box {
-      margin: 24rpx 20rpx;
-      .bind-row {
-        margin-left: 32rpx;
+      margin: 20rpx 30rpx;
+      .section-card {
+        background: #FFFFFF;
+        border-radius: 10rpx;
+        padding: 40rpx 32rpx ;
+        margin-bottom: 20rpx;
       }
-      .line-icon {
-        width: 8rpx;
-        height: 28rpx;
-      }
-      .title_icon {
-        max-height: 32rpx;
-        width: 192rpx;
-        margin-left: 22rpx;
+      .section-title {
+        font-size: 32rpx;
+        color: #000000
       }
     }
-    .bind-box-1 {
-      margin: 0 0 0 30rpx;
+    .section-content {
       .sample-header {
         margin: 30rpx 0;
         .sample-title {
-          font-size:30rpx;
-          color: #000;
-          font-weight:400;
+          font-size: 30rpx;
+          color: #333333;
         }
         .sample-num {
-          color: #E0283C;
-          font-size: 28rpx;
+          font-size: 30rpx;
+          color: #F56666;
         }
         .scan-icon {
           width: 30rpx;
@@ -43,82 +40,76 @@
           margin-right: 18rpx;
         }
       }
-      .sample-input {
-        height:76rpx;
-        background:#f2f2f2;
-        border-radius:20rpx;
+      .placeholder {
+        color: #999999;
+      }
+      .sampleNo-input {
+        height: 76rpx;
+        background: #F6F6F6;
+        border-radius: 6rpx;
         color: #333333;
         font-size: 30rpx;
-        padding-left: 32rpx;
+        padding-left: 20rpx;
       }
       .sample-text {
-        color: #000;
-        font-weight: 300;
-        font-size: 24rpx;
-        width: 52%;
-        text-align: center;
+        color: #666666;
+        font-size: 28rpx;
+        flex: 1;
+        text-align: left;
+        margin-left: 30rpx;
       }
       .sample-tip {
-        height:248rpx;
-        border-radius: 20rpx;
-        border:1px solid #E5E5E5;
-        margin: 56rpx 0;
+        margin-top: 30rpx;
         .qrcode_icon {
-          width: 60rpx;
-          height: 108rpx;
-          margin: 0 20rpx;
-        }
-        .arrow_icon {
-          width: 124rpx;
-          height: 2rpx;
-          margin: 0 20rpx;
+          width: 80rpx;
+          height: 80rpx;
+          border-radius: 50%;
         }
       }
       &.bind-info {
+        margin-top: 25rpx;
         .tip-icon {
-          width: 26rpx;
-          height: 26rpx;
+          width: 28rpx;
+          height: 28rpx;
         }
         .sample-text {
-          text-align: left;
-          width: 83%;
-          padding: 36rpx 20rpx;
-          line-height: 40rpx;
-          &.sample-text1 {
-            padding: 0 0 0 20rpx;
-            width: 100%;
-            line-height: 36rpx;
-            margin-top: -6rpx;
-            font-size: 28rpx;
-          }
+          margin-top: -8rpx;
+          color: #999999;
+          margin-left: 14rpx;
         }
       }
     }
     .bind-info-form {
-      .weui-flex {
-        margin-bottom: 40rpx;
+      .bind-info-item {
+        padding: 10rpx 0;
+        border-bottom: 1px solid #F0F0F0;
+        &:nth-last-child(1) {
+          border-bottom: none;
+          padding-bottom: 0;
+          margin-bottom: -20rpx;
+        }
       }
       .label {
         width: 120rpx;
         text-align: justify;
         font-size: 30rpx;
-        overflow:hidden;
+        overflow: hidden;
         height: 20px;
-        color: #000000;
+        color: #333333;
         display: inline-block;
         line-height: 20px;
-        &:after{
-          content:"";
-          display:inline-block;
-          width:100%;
-        }
+        // &:after{
+        //   content:"";
+        //   display:inline-block;
+        //   width:100%;
+        // }
       }
       .sample-input {
-        height:80rpx;
-        border-radius:20rpx;
-        border: 1px solid #C9C9C9;
+        height: 80rpx;
+        line-height: 80rpx;
+        border: none;
+        font-size: 30rpx;
         margin-left: 20rpx;
-        background: #ffffff;
         padding-left: 20rpx;
         color: #333333;
       }
@@ -127,39 +118,46 @@
           width: 50%;
         }
         .code-text {
-          color: #E0283C;
-          font-size: 26rpx;
-          margin-left: 28rpx;
-          width: 140rpx;
+          color: #666666;
+          font-size: 30rpx;
+          width: 150rpx;
+          text-align: right;
+          &.code-text-active {
+            color: #F56666;
+          }
         }
-      }
-      .rule {
-        color: #000000;
-        font-size: 30rpx;
-        border-bottom: 1px solid #333333;
-        padding-bottom: 3rpx;
-        letter-spacing: 1.5rpx;
-        width: 60%;
       }
     }
     .sample-footer-info {
-      margin-top: 40rpx;
       .selected-icon {
-        width: 24rpx;
-        height: 24rpx;
+        width: 30rpx;
+        height: 30rpx;
+      }
+      .sample-text {
+        &.sample-text1 {
+          padding: 0 0 0 20rpx;
+          flex: 1;
+          color: #999999;
+          line-height: 36rpx;
+          margin-top: -6rpx;
+          font-size: 28rpx;
+        }
+      }
+      .rule {
+        color: #666666;
       }
     }
     .footer-btn {
       width: 70%;
-      margin: 60rpx auto;
+      margin: 50rpx auto;
       button {
-        height:80rpx;
+        height: 80rpx;
         background:#F8C1C7;
         border-radius:40rpx;
         color: #ffffff;
         font-size: 30rpx;
         &.btn {
-          background: #F36681;
+          background: #F56666;
         }
       }
     }
@@ -168,75 +166,55 @@
 <template>
   <view class="home_view {{sysScroll?'overflow_auto':'overflow_hidden'}}">
     <view class="bind_box">
-      <view class="weui-flex start bind-row">
-        <image src="https://api.s-sbio.com/images/line.png" mode="scaleToFill"
-          class="line-icon">
-        </image>
-         <image src="https://api.s-sbio.com/images/text1.png" mode="scaleToFill"
-          class="title_icon" />
-      </view>
-      <view class="bind-box-1">
-        <view class="weui-flex between sample-header">
-          <view class="sample-title">样本编号</view>
-          <view class="sample-num weui-flex start" @tap="getQRCode">
-            <image src="https://api.s-sbio.com/images/scan.png" mode="scaleToFill"
-              class="scan-icon">
-            </image>
-            扫描样本编号
+      <view class="section-card">
+        <view class="section-title">绑定样本编号</view>
+        <view class="section-content">
+          <view class="weui-flex between sample-header">
+            <view class="sample-title">样本编号</view>
+            <view class="sample-num weui-flex start" @tap="getQRCode">
+              <image src="../../images/scan.png" mode="scaleToFill" class="scan-icon"></image>
+              <text>扫描样本编号</text>
+            </view>
           </view>
-        </view>
-        <input type="text" class="sample-input" readonly value="{{barCode}}" disabled>
-        <view class="sample-tip weui-flex center">
-          <image src="https://api.s-sbio.com/images/qrcode.png" mode="scaleToFill"
-            class="qrcode_icon">
-          </image>
-          <image src="https://api.s-sbio.com/images/arrow.png" mode="widthFix"
-            class="arrow_icon">
-          </image>
-          <view class="sample-text">
-            扫描样本保存管上的二维码， 如已扫描则不重复扫描
+          <input type="text" class="sampleNo-input" readonly value="{{barCode}}" disabled>
+          <view class="sample-tip weui-flex between">
+            <image src="../../images/qrcode.png" mode="scaleToFill" class="qrcode_icon"></image>
+            <view class="sample-text">扫描样本保存管上的二维码， 如已扫描则不重复扫描</view>
           </view>
         </view>
       </view>
-      <view class="weui-flex start bind-row">
-        <image src="https://api.s-sbio.com/images/line.png" mode="scaleToFill"
-          class="line-icon">
-        </image>
-        <image src="https://api.s-sbio.com/images/text2.png" mode="scaleToFill"
-        class="title_icon" />
+      <view class="section-card">
+        <view class="section-title">填写个人信息</view>
+        <view class="section-content bind-info">
+          <view class="weui-flex start-start">
+            <image src="../../images/tip.png" mode="scaleToFill" class="tip-icon"></image>
+            <view class="sample-text">身份信息是您获取检测结果的唯一凭证，请如实填写，我们将严格保密。</view>
+          </view>
+          <view class="bind-info-form">
+            <view class="weui-flex start bind-info-item">
+              <view class="label">姓名</view>
+              <input type="text" placeholder="请输入姓名" placeholder-class="placeholder" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" value="{{form.name}}" data-name="name" @input="changeForm">
+            </view>
+            <view class="weui-flex start bind-info-item">
+              <view class="label">身份证号</view>
+              <input type="text" placeholder-class="placeholder" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" placeholder="我们会根据国家法律法规保护你的隐私" value="{{form.cardNo}}" data-name="cardNo" @input="changeForm">
+            </view>
+            <view class="weui-flex start bind-info-item">
+              <view class="label">手机号</view>
+              <input type="text" placeholder="请输入手机号" placeholder-class="placeholder" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" value="{{form.phone}}" data-name="phone" @input="changeForm">
+            </view>
+            <view class="weui-flex start code-box bind-info-item">
+              <view class="label">验证码</view>
+              <input type="text" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" value="{{form.veriCode}}" data-name="veriCode" @input="changeForm">
+              <view class="code-text {{sendAuthCode ?'':'code-text-active'}}" @tap="getCode">{{sendAuthCode?'获取验证码':auth_time+'s'}}</view>
+            </view>
+          </view>
+        </view>
       </view>
-      <view class="bind-box-1 bind-info">
-        <view class="weui-flex start">
-          <image src="https://api.s-sbio.com/images/tip.png" mode="scaleToFill"
-            class="tip-icon">
-          </image>
-          <view class="sample-text">身份信息是您获取检测结果的唯一凭证，请如实填写，我们将严格保密</view>
-        </view>
-        <view class="bind-info-form">
-          <view class="weui-flex start">
-            <view class="label">姓名</view>
-            <input type="text" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" value="{{form.name}}" data-name="name" @input="changeForm">
-          </view>
-          <view class="weui-flex start">
-            <view class="label">身份证号</view>
-            <input type="text" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" placeholder="我们会根据国家法律法规保护你的隐私" value="{{form.cardNo}}" data-name="cardNo" @input="changeForm">
-          </view>
-          <view class="weui-flex start">
-            <view class="label">手机号</view>
-            <input type="text" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" value="{{form.phone}}" data-name="phone" @input="changeForm">
-          </view>
-          <view class="weui-flex start code-box">
-            <view class="label">验证码</view>
-            <input type="text" class="sample-input weui-flex__item" @focus="onfocus" @blur="bindblur" value="{{form.veriCode}}" data-name="veriCode" @input="changeForm">
-            <view class="code-text" @tap="getCode">{{sendAuthCode?'获取验证码':auth_time+'s'}}</view>
-          </view>
-          <view class="rule" @tap="agreeRule">HPV分型基因检测知情同意书</view>
-        </view>
-        <view class="weui-flex start-start sample-footer-info" @tap="checkRead({{isRead}})">
-          <image src="https://api.s-sbio.com/images/selected.png" class="selected-icon" wx:if="{{isRead}}"/>
-          <image src="https://api.s-sbio.com/images/no-select.png" class="selected-icon" wx:else/>
-          <view class="sample-text sample-text1">本人已详细阅读HPV分型基因检测知情同意书，并同意使用电子同意的方式代替书面签名同意</view>
-        </view>
+      <view class="weui-flex start-start sample-footer-info" @tap="checkRead({{isRead}})">
+        <image src="../../images/selected.png" class="selected-icon" wx:if="{{isRead}}"/>
+        <image src="../../images/no-select.png" class="selected-icon" wx:else/>
+        <view class="sample-text sample-text1">本人已详细阅读<text class="rule" @tap.stop="agreeRule">《HPV分型基因检测知情同意书》</text>，并同意使用电子同意的方式代替书面签名同意。</view>
       </view>
     </view>
     <view class="footer-btn">

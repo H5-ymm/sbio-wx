@@ -11,7 +11,7 @@
       }
       .sample-text {
         font-size: 32rpx;
-        font-weight: 300;
+        
         color: #000000;
         margin-left: 20rpx;
         text {
@@ -22,7 +22,7 @@
     .tip-box-text {
       padding:  0 36rpx;
       font-size: 28rpx;
-      font-weight: 300;
+      
       line-height: 50rpx;
       color: #000000;
       > view {

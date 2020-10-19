@@ -202,7 +202,7 @@ export default class list extends wepy.page {
       .btn {
         width: 174rpx;
         height: 58rpx;
-        background:#F36681;
+        background: #F56666;
         border-radius: 30rpx;
         color: #fff;
         font-size: 26rpx;
@@ -235,7 +235,7 @@ export default class list extends wepy.page {
       background: #ffffff;
       .noData-text {
         color: #000000;
-        font-weight: 300;
+        
         font-size: 32rpx;
         padding: 122rpx 0;
       }

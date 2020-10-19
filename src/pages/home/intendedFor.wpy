@@ -3,36 +3,33 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
-    margin: 0 auto;
     .tip-card {
-      width: 82%;
+      width: 100%;
       margin: 0 auto;
-      height: 856rpx;
+      height: calc(100% - 100px);
       padding: 30rpx;
       .tip-row {
-        margin: 10rpx;
         .tip-icon {
-          width: 30rpx;
-          height:30rpx;
+          width: 52rpx;
+          height: 40rpx;
         }
         .tip_title {
-          font-size:34rpx;
-          margin-left: 15rpx;
-          color: #333333;
+          font-size: 34rpx;
+          margin-left: 16rpx;
+          color: #000000;
         }
       }
       .tip-content {
-        margin: 25rpx 60rpx;
-        line-height: 50rpx;
+        margin: 16rpx 60rpx 30rpx;
+        line-height: 52rpx;
         .text {
-          color: #000;
-          font-weight:300;
-          font-size: 26rpx;
+          font-size: 30rpx;
+          color: #666666;
           position: relative;
           &::before {
             content: '.';
             font-size: 70rpx;
-            color: #909090;
+            color: #999999;
             top: -24rpx;
             left: -30rpx;
             position: absolute;
@@ -47,17 +44,12 @@
         width: 100%;
         height: 80rpx;
         font-size: 30rpx;
-        border-radius: 40rpx;
-        border: 2rpx solid #F36681;
+        border-radius: 43rpx;
+        background: #F56666;
+        color: #fff;
+        border: none;
         margin-bottom: 30rpx;
-        background: #fff;
-        color: #F04D6F;
         &::after {
-          border: none;
-        }
-        &.btn-active {
-          background: #F36681;
-          color: #fff;
           border: none;
         }
       }
@@ -68,24 +60,19 @@
   <view class="home_view">
     <view class="tip-card">
       <repeat for="{{tipList}}" wx:key="index">
-        <view>
-          <view class="weui-flex start tip-row">
-            <image src="{{item.icon}}" mode="aspectFit"
-              lazy-load="false" class="tip-icon">
-            </image>
-            <view class="tip_title">{{item.title}}</view>
-          </view>
-          <view class="tip-content">
-            <repeat for="{{item.child}}" key="index" index="index" item="text">
-              <view class="text">{{text}}</view>
-            </repeat>
-          </view>
+        <view class="weui-flex start tip-row">
+          <image src="{{item.icon}}" mode="aspectFit" class="tip-icon"></image>
+          <view class="tip_title">{{item.title}}</view>
+        </view>
+        <view class="tip-content">
+          <repeat for="{{item.child}}" key="index" index="index" item="text">
+            <view class="text">{{text}}</view>
+          </repeat>
         </view>
       </repeat>
     </view>
     <view class="footer">
-      <button class="btn btn-active weui-flex center" @tap="next()">已知晓，进入下一步</button>
-      <button class="btn btn-default weui-flex center" @tap="back()">返回</button>
+      <button class="btn weui-flex center" @tap="next()">已知晓，进入下一步</button>
     </view>
   </view>
 </template>

@@ -40,7 +40,7 @@ export default class resultDetail extends wepy.component {
     line-height: 50rpx;
     .text {
       color: #000;
-      font-weight: 300;
+      
       font-size: 28rpx;
       position: relative;
       padding-left: 20rpx;

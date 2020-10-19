@@ -223,7 +223,7 @@ export default class sampleDetail extends wepy.page {
     .item {
       font-size: 28rpx;
       color: #000000;
-      font-weight: 300;
+      
       width: 28%;
       margin: 10rpx 0;
       text {

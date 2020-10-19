@@ -3,29 +3,14 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
-    margin: 0 auto;
     .tip-card {
       width: 90%;
       margin: 0 auto;
-      height: auto;
       padding: 30rpx;
-      .tip-row {
-        margin: 0;
-        &.step-row {
-          .tip_title {
-            font-size: 34rpx;
-            margin-left: 25rpx;
-          }
-        }
-        .tip-icon {
-          width: 31rpx;
-          height: 34rpx;
-        }
-        .tip_title {
-          font-size:32rpx;
-          margin-left: 15rpx;
-          color: #000000;
-        }
+      height: calc(100% - 100px);
+     .tip_title {
+        font-size: 34rpx;
+        color: #000000;
       }
       .gather-video {
         width: 100%;
@@ -37,41 +22,31 @@
         }
       }
       .tip-content {
-        margin: 36rpx 0 36rpx 46rpx;
-        line-height: 50rpx;
+        margin: 30rpx 0;
         .text {
-          color: #000;
-          font-weight:300;
+          line-height: 44rpx;
+          color: #333333;
           font-size: 28rpx;
-          position: relative;
-          &::before {
-            content: '.';
-            font-size: 70rpx;
-            color: #4F4F4F;
-            top: -22rpx;
-            left: -30rpx;
-            position: absolute;
-          }
+          margin-bottom: 20rpx;
         }
       }
     }
     .footer {
-      width: 70%;
+      width: 65%;
       margin: 0 auto;
       .btn {
         width: 100%;
         height: 80rpx;
         font-size: 30rpx;
-        border-radius: 40rpx;
-        border: 2rpx solid #F36681;
-        margin-bottom: 30rpx;
+        border-radius: 43rpx;
+        border: 2rpx solid #F56666;
         background: #fff;
         color: #F04D6F;
         &::after {
           border: none;
         }
         &.btn-active {
-          background: #F36681;
+          background: #F56666;
           color: #fff;
           border: none;
         }
@@ -83,12 +58,7 @@
   <view class="home_view sample_view">
     <view class="tip-card">
       <view>
-        <view class="weui-flex start tip-row step-row">
-          <image src="https://api.s-sbio.com/images/step.png" mode="aspectFit"
-            class="tip-icon">
-          </image>
-          <view class="tip_title">步骤说明</view>
-        </view>
+        <view class="tip_title">步骤说明</view>
         <view class="gather-video">
           <video 
             id="myVideo" 
@@ -102,12 +72,7 @@
       </view>
       <repeat for="{{gatherList}}" wx:key="index">
         <view>
-          <view class="weui-flex start tip-row">
-            <image src="{{item.icon}}" mode="aspectFit"
-              class="tip-icon">
-            </image>
-            <view class="tip_title">{{item.title}}</view>
-          </view>
+          <view class="tip_title">{{item.title}}</view>
           <view class="tip-content">
             <repeat for="{{item.child}}" key="index" index="index" item="text">
               <view class="text">{{text}}</view>

@@ -23,7 +23,7 @@
 			}
 			.order-right {
 				font-size: 26rpx;
-				font-weight: 300;
+				
 				color: #666;
 				margin-left: 48rpx;
 				&.order-right-info {
@@ -69,7 +69,7 @@
 				color: #000000;
 				padding: 10rpx 30rpx 30rpx;
 				font-size: 32rpx;
-				font-weight: 300;
+				
 				.order-time {
 					font-weight: 400;
 					font-size: 30rpx;

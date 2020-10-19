@@ -11,12 +11,13 @@ wepy.$moment = moment
 export default class extends wepy.app {
   config = {
     pages: [
+      
       'pages/home/index',  // 首页
       // 'pages/sample/send',  // 样本回寄
       // 'pages/webView/index',
       // 'pages/webView/sampleDetail',
       'pages/home/usageProcess', // 使用流程
-      'pages/home/intendedFor', // 适用人群
+      'pages/home/intendedFor',// 适用人群
       'pages/home/bindSample' // 绑定样本提交页面
       // 'pages/ruleView/HPVRule', // HPV同意须知
       // 'pages/sample/gather',  // 样本视频

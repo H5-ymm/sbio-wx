@@ -74,7 +74,7 @@
 			}
 			.sample-text {
 				font-size: 28rpx;
-				font-weight: 300;
+				
 				color: #000000;
 				margin-left: 20rpx;
 			}
@@ -96,7 +96,7 @@
 			overflow: hidden;
 			.noData-text {
 				color: #000000;
-				font-weight: 300;
+				
 				font-size: 32rpx;
 				margin: 102rpx 0;
 			}

@@ -47,7 +47,7 @@
         }
         &.logistics-finish {
           color: #000000;
-          font-weight: 300;
+          
           .status {
             color: #E0283C;
           }

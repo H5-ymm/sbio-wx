@@ -83,7 +83,7 @@
 				color: #000000;
 				padding: 20rpx 36rpx;
 				font-size: 32rpx;
-				font-weight: 300;
+				
 				.order-time1 {
 					color: #000;
 					font-weight: bold;
@@ -106,7 +106,7 @@
 			}
 			.sample-text {
 				font-size: 28rpx;
-				font-weight: 300;
+				
 				color: #000000;
 				margin-left: 20rpx;
 				text {
