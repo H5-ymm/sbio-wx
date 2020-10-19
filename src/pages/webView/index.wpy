@@ -109,7 +109,7 @@ export default class list extends wepy.page {
   }
   // 下载pdf Api
   downLoadPdf(item) {
-    $downloadFile('sample/api/selectReport', item).then(res => {
+    $downloadFile('sample/api/download', item).then(res => {
       wx.openDocument({
         filePath: res.filePath,
         showMenu: true,
@@ -158,7 +158,7 @@ export default class list extends wepy.page {
         this.noRepetitionRourte(`/pages/sample/send?sampleId=${item.sampleId}`)    
       } else if (item.status == 1) {
         this.cancelFlag(item)
-      } else if (item.status == 2) {
+      } else if (item.status == 2 || item.status == 6) {
         this.routerLogistics(item.logisticsId)
       } else {
         this.noRepetitionRourte(`/pages/webView/sampleDetail?query=${item.sampleId}`)

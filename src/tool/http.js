@@ -1,8 +1,8 @@
 import {
     wxToast
 } from '@/tool/util.js'
-// const apiUrl = 'https://testapi.s-sbio.com/'
-const apiUrl = 'https://api.s-sbio.com/'
+const apiUrl = 'https://testapi.s-sbio.com/'
+// const apiUrl = 'https://api.s-sbio.com/'
 const http = (url, params, method, sessionId) => {
   let sbioSessionId = sessionId ? sessionId : wx.getStorageSync('sessionId')
   return new Promise((resolve, reject) => {
@@ -45,7 +45,8 @@ const downloadFile = (url, params) => {
       url: `${apiUrl}${url}?sampleId=${params.sampleId}`,
       filePath: savePath,
       header: {
-        'content-type': 'application/pdf'
+        'content-type': 'application/pdf',
+        'sessionId':  wx.getStorageSync('sessionId')
       },
       success (res) {
         if (res.statusCode === 200) {  
