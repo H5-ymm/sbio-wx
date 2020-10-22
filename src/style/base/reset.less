@@ -1,37 +1,11 @@
 
 @import "fn";
-html {
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-}
-
-body {
-  line-height: 1.6;
-}
-a img {
-  border: 0;
-}
-a {
-  text-decoration: none;
-  .setTapColor();
-}
 input,textarea{
   caret-color:@weuiColorPrimary;
-  font-family:PingFangSC-Medium;
+  font-family: PingFangSC-Regular;
 }
 ::-webkit-input-placeholder{
-  color:@weuiTextColorTips;
-}
-
-html, body {
-  height: 100%;
-  -webkit-tap-highlight-color: transparent;
-}
-body{
-  font-family:PingFangSC-Medium;
-}
-ul {
-  list-style: none;
+  color: @weuiTextColorGray;
 }
 .page{
   box-sizing:border-box;
@@ -112,12 +86,12 @@ ul {
     }
 }
 @supports (top: env(safe-area-inset-top)){
-    .page{
-        padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-        &.tabbar,&.navbar,&.msg_success,&.msg_warn,&.msg_text,&.msg_text_primary,&.article{
-            padding:0;
-        }
+  .page{
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    &.tabbar,&.navbar,&.msg_success,&.msg_warn,&.msg_text,&.msg_text_primary,&.article{
+        padding:0;
     }
+  }
 }
 .text-line {
   overflow: hidden;

@@ -2,16 +2,15 @@
 	.tip-box {
     margin: 20rpx 0 40rpx;
     padding-bottom: 20rpx;
-    border-top: 14rpx solid #F6F6F6;
+    border-top: 20rpx solid #F6F6F6;
     .bind-info {
-       margin: 36rpx 36rpx 20rpx;
+      margin: 36rpx 36rpx 20rpx;
       .tip-icon {
         width: 30rpx;
         height: 30rpx;
       }
       .sample-text {
         font-size: 32rpx;
-        
         color: #000000;
         margin-left: 20rpx;
         text {
@@ -22,9 +21,8 @@
     .tip-box-text {
       padding:  0 36rpx;
       font-size: 28rpx;
-      
       line-height: 50rpx;
-      color: #000000;
+      color: #666666;
       > view {
         margin-bottom: 20rpx;
       }
@@ -34,7 +32,7 @@
 <template>
   <view class="tip-box">
     <view class="weui-flex start bind-info">
-      <image src="https://api.s-sbio.com/images/tip1.png" mode="scaleToFill" class="tip-icon">
+      <image src="https://api.s-sbio.com/images/wxImg/icon/tip.png" mode="scaleToFill" class="tip-icon">
       </image>
       <view class="sample-text">温馨提示</view>
     </view>

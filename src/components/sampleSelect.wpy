@@ -1,0 +1,59 @@
+<template>
+  <view class="order-row" wx:if="{{sampleList.length>1}}">
+    <view class="weui-flex between">
+      <view>你有{{sampleList.length}}份待回寄样本，是否一起回寄 ?</view>
+      <view class="order-time weui-flex between" @tap="selectAll">
+        <view class="order-text bold-text">{{isSingleMailing?'否':'是'}}</view>
+        <image src="https://api.s-sbio.com/images/wxImg/icon/right.png" mode="aspectFit" class="right-icon"></image>
+      </view>
+    </view>
+    <view class="tip-content" wx:if="{{!isSingleMailing&&sampleList.length>1}}">
+      <repeat for="{{sampleList}}" key="index">
+        <view class="text">{{item.productName}} - {{item.name}}</view>
+      </repeat>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/tool/http.js'
+export default class sampleSelect extends wepy.component {
+  data = {
+    sampleList: [],
+    isSingleMailing: false
+  }
+  onLoad() {
+    if (wx.getStorageSync('isSingleMailing')) {
+			this.isSingleMailing = wx.getStorageSync('isSingleMailing')
+			this.$apply()
+		}
+    this.getSampleList()
+  }
+  getSampleList() {
+    $http('sample/api/listSubmit', {}, 'Get').then(res => {
+			wx.setStorageSync('sampleList', JSON.stringify(res.data))
+			this.sampleList = res.data
+			this.$apply()
+    })
+  }
+  methods = {
+    selectAll() {
+			wx.showActionSheet({
+		  	itemList: ['是', '否'],
+				success: res => {
+					if (res.tapIndex === 0) {
+						this.isSingleMailing = false
+					} else {
+						this.isSingleMailing = true
+					}
+					wx.setStorageSync('isSingleMailing', this.isSingleMailing)
+					this.$apply()
+				},
+				fail (res) {
+					console.log(res.errMsg)
+				}
+			})
+		}
+  },
+}
+</script>

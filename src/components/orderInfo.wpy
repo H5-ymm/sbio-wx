@@ -1,0 +1,24 @@
+<template>
+  <view>
+    <view class="order-row weui-flex between">
+      <view class="label-left">邮寄物品</view>
+      <view>试纸</view>
+    </view>
+    <view class="order-row weui-flex between">
+      <view class="label-left">付费方式</view>
+      <view>到付</view>
+    </view>
+    <view class="order-row weui-flex between" wx:if="{{addressInfo&&addressInfo.skuCount>1}}">
+      <view class="label-left">样本数量</view>
+      <view>{{addressInfo.skuCount}}</view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class orderInfo extends wepy.component {
+  data = {
+    addressInfo: {}
+  }
+}
+</script>

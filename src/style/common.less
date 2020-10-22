@@ -1,7 +1,5 @@
 @import "./weui.less";
-
 page {
-  font-size: 32rpx;
   height: 100%;
   font-family: PingFangSC-Regular;
 }
@@ -12,7 +10,7 @@ page {
   display: none;
 }
 .page_title {
-  font-size: 36rpx;
+  font-size: 34rpx;
 }
 .page_subTitle {
   font-size: 28rpx;
@@ -23,7 +21,23 @@ button {
   }
   &:active {
     width: 100%;
-    height: 40px;
+    height: 80rpx;
     opacity: 0.5;
+  }
+}
+.footer-btn {
+  width: 70%;
+  margin: 32rpx auto;
+  button {
+    height: 80rpx;
+    background: #ededed;
+    border-radius:43rpx;
+    color: #666666;
+    font-size: 30rpx;
+    border: none;
+    &.btn {
+      color: #ffffff;
+      background: #f56666;
+    }
   }
 }

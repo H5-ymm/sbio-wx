@@ -1,138 +1,96 @@
 <style lang="less">
-  .selectAddress {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    position: absolute;
-    bottom: 0;
-    z-index: 20;
-    .selectAddress-content {
-      height: 60%;
-      background: #ffffff;
-      position: absolute;
-      bottom: 0;
-      z-index: 30;
-      left: 0;
-      width: 100%;
-      animation: find .3s linear;
-      .box {
-        height: 100%;
-        width: 100%;
-        text-align: center;
-        font-size: 36rpx;
-        overflow: hidden;
-        color: #808080;
-        >.box-content {
-          height: calc(100% - 60px);
-          > .weui-flex__auto {
-            height: 100%;
-          }
-          
-        }
-      }
-      .city-title {
-        color: #000000;
-        font-size: 36rpx;
-        padding: 40rpx 0 20rpx;
-      }
-      .city-subTitle {
-        border-top: 1px solid #D8D8D8;
-        border-bottom: 1px solid #D8D8D8;
-        padding: 20rpx 0;
-      }
-      .box-content {
-        overflow: hidden;
-      }
-      .time-col-1 {
-        background: #f5f5f5;
-        color: rgba(0, 0, 0, .85);
-        text-align: center;
-        line-height: 60rpx;
-        overflow: hidden;
-        width: 25%;
-        .item {
-          height: 100rpx;
-          // margin: 33rpx 20rpx;
-          font-size: 36rpx;
-          padding: 15rpx 0;
-          line-height: 0;
-          .date {
-            // width: 100%;
-            margin: 0 6rpx;
-          }
-          &.item-active {
-            // background:#E0E0E0;
-            background: #ffffff;
-            // border-radius:16rpx;
-            color: #E0283C;
-          }
-        }
-      }
-      .city-list {
-        // padding: 45rpx 0 20rpx;
-        overflow: auto;
-        line-height: 90rpx;
-        color: rgba(0, 0, 0, .85);
-        .active {
-          color: #E0283C;
-        }
-      }
-      .time-col-2 {
-        padding-top: 45rpx;
-        height: 100%; 
-        .city-list {
-          height: 90%;
-        }
-      }
-    }
-    .box-btn {
-      margin: 20rpx 30rpx;
-      .btn {
-        height:80rpx;
-        border-radius:40rpx;
-        border:1px solid #979797;
-        margin: 0 30rpx;
-        color: #666666;
-        background: #ffffff;
-        font-size: 30rpx;
-        &.btn1 {
-          color: #ffffff;
-          background: #F36681;
-          border: 1px solid #F36681;
-        }
-      }
-    }
-  }
-  @keyframes find {
-    0% {
-      bottom: -100rpx;
-    }
-    50% {
-      bottom: -50rpx;
-    }
-    100% {
-      bottom: 0;
-    }
-  }
-  .mask {
+  @import "/../style/dialog.less";
+  .sbio-dialog__mask {
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+  }
+  .sbio-dialog__container {
+    position: fixed;
+    bottom: 0;
     width: 100%;
+    height: 900rpx;
+    background: #ffffff;
+    transform: translateY(400%);
+    z-index: 12;
+    border-radius: 30rpx 30rpx 0 0;
+  }
+  .sbio-dialog__box {
     height: 100%;
-    background:rgba(68,68,68,0.62);
-    z-index: 22;
+    width: 100%;
+    text-align: center;
+    font-size: 36rpx;
+    overflow: hidden;
+    >.box-content {
+      height: calc(100% - 130px);
+      >.weui-flex__auto {
+        height: 100%;
+      }
+    }
+  }
+  .box-content {
+    overflow: hidden;
+    border-bottom: 1px solid #F0F0F0;
+    .time-col-1 {
+      background: #f5f5f5;
+      color: #333333;
+      text-align: center;
+      line-height: 60rpx;
+      overflow: hidden;
+      width: 10%;
+      .item {
+        height: 100rpx;
+        font-size: 32rpx;
+        padding: 15rpx 0;
+        line-height: 0;
+        .date {
+          margin-left: 30rpx;
+        }
+        &.item-active {
+          background: #ffffff;
+          color: #F56666;
+        }
+      }
+    }
+    .city-list {
+      overflow: auto;
+      line-height: 90rpx;
+      font-size: 32rpx;
+      color: #333333;
+      .active {
+        color: #F56666;
+      }
+    }
+    .time-col-2 {
+      padding-top: 45rpx;
+      height: 100%; 
+      .city-list {
+        height: 96%;
+      }
+    }
   }
 </style>
 <template>
-  <view class="selectAddress" hidden="{{isShow}}">
-    <view class="mask"></view>
-    <view class="selectAddress-content">
-      <view class="box">
+  <view class="sbio-dialog {{!isShow?'sbio-dialog--show':''}}" hidden="{{isShow}}">
+    <!-- 如果想点击弹窗外不隐藏，取消bindtap点击事件即可 -->
+    <view class="sbio-dialog__mask" @tap="cancel"></view>
+    <view class="sbio-dialog__container" animation="{{animationData}}">
+      <view class="sbio-dialog__box">
+        <view class="sbio-dialog__title">
+          选择上门时间
+          <view class="cancel-box" @tap="cancel">
+            <image class="cancel-icon" src="https://api.s-sbio.com/images/wxImg/icon/cancel.png"></image>
+          </view>
+        </view>
         <view class="weui-flex center box-content">
           <view class="weui-flex__auto time-col-1">
             <view class="city-list">
-              <repeat for="{{typeList}}" key="index" index="index" item="item">
+              <repeat for="{{typeList}}" key="index" item="item">
                 <view @tap="selectType({{index}}, {{item}})" class="item weui-flex center wrap {{index==activeIndex?'item-active': '' }}">
                   <text>{{item.name}}</text>
                   <view class="date">{{item.date}}</view>
@@ -142,15 +100,14 @@
           </view>
           <view class="weui-flex__auto time-col-2">
             <view class="city-list">
-              <repeat for="{{array}}" key="index" index="index" item="item">
+              <repeat for="{{array}}" key="index" item="item">
                 <view @tap="selectTime({{index}}, {{item}})" class="{{timeIndex==index ? 'active': '' }}">{{item}}</view>
               </repeat>
             </view>
           </view>
         </view>
-        <view class="box-btn weui-flex center">
-           <button class="weui-flex__item btn weui-flex center" @tap="cancel">取消</button>
-           <button class="weui-flex__item btn btn1 weui-flex center" @tap="save">确定</button>
+        <view class="footer-btn weui-flex center">
+          <button class="weui-flex__item btn weui-flex center" @tap="save">确定</button>
         </view>
       </view>
     </view>
@@ -165,6 +122,10 @@ export default class selectTime extends wepy.component {
     isShow: {
       type: Boolean,
       default: true
+    },
+    timeList: {
+      type: Array,
+      default: []
     }
   }
   data = {
@@ -177,51 +138,94 @@ export default class selectTime extends wepy.component {
     timeIndex: 0,
     nowTime: '',
     date: '',
-    timeText: ''
+    timeText: '',
+    animationData: {}
   }
-  onLoad() {
-    this.array = this.getTimeList()
-    this.nowTime = $moment().format('HH:mm')
-    if (Number(this.splitArr(this.nowTime)) >= 19 && Number(this.splitArr(this.nowTime), 1) > 0) {
-      this.typeList = [{
-        name: '明天',
-        date: $moment().add(1, 'days').format("YYYY-MM-DD")
-      }]
-      this.date = '08:00-09:00'
-      this.timeText = '明天'
-      this.changeTime('明天')
-    } else {
-      this.typeList = [{
-        name: '今天',
-        date: $moment().format("YYYY-MM-DD")
-      },{
-        name: '明天',
-        date: $moment().add(1, 'days').format("YYYY-MM-DD")
-      }]
-      let hour = $moment().format('HH')
-      this.date = this.add0(Number(hour)+ 1) + ':00' + '-' + this.add0(Number(hour)+ 2) + ':00'
-      this.timeText = '今天'
-      this.changeTime('今天')
+  watch = {
+    timeList(val) {
+      this.nowTime = $moment().format('HH:mm')
+      if (Number(this.splitArr(this.nowTime)) >= 19 && Number(this.splitArr(this.nowTime), 1) > 0) {
+        if (val && val.length) {
+          this.typeList = [{
+            name: '明天',
+            date: val[1].date
+          }]
+        } else {
+          this.typeList = [{
+            name: '明天',
+            date: $moment().add(1, 'days').format("MM月DD日")
+          }]
+        }
+        this.timeText = '明天'
+        this.changeTime('明天')
+      } else {
+        if (val && val.length) {
+          this.array = this.getTimeList(val[0].workingTime)
+          this.typeList = [{
+            name: '今天',
+            date: $moment(val[0].date).format("MM月DD日")
+            },{
+            name: '明天',
+            date: $moment(val[1].date).format("MM月DD日")
+          }]
+          this.timeText = '今天'
+          this.changeTime('今天')
+        } else {
+          this.typeList = [{
+            name: '明天',
+            date: $moment().add(1, 'days').format("MM月DD日")
+          }]
+          let hour = $moment().format('HH')
+          this.date = this.add0(Number(hour)+ 1) + ':00' + '-' + this.add0(Number(hour)+ 2) + ':00'
+          this.timeText = '明天'
+          this.changeTime('明天')
+        }
+      }
+    },
+    isShow(val) {
+      this.animationData = null
+      if (!val) {
+        this.setAnimation(0)
+      }
     }
+  }
+  setAnimation(translate) {
+    this.animationData = wx.createAnimation({
+      duration: 1000,
+      timingFunction: 'ease',
+      delay: 0
+    })
+    this.animationData.translateY(translate).step()
     this.$apply()
   }
+  // 添加0
   add0(num) {
     return num < 10 ? '0' + num : num
   }
-  getTimeList() {
+  // 获取时间数组
+  getTimeList(workingTime) {
+    let startNum = 8
+    let endNum = 20
     let str
     let arr = []
-    for (let i = 8 ; i < 20 ; i ++) {
+    if (workingTime) {
+      let list = workingTime.split('-')
+      startNum = Number(this.splitArr(list[0]))
+      endNum = Number(this.splitArr(list[1]))
+    }
+    for (let i = startNum ; i < endNum ; i ++) {
       str = this.add0(i) + ':00-' + this.add0(i+1) + ':00'
       arr.push(str)
     }
     return arr
   }
+  // 分割数组方法
   splitArr(str, index) {
     let i = index || 0
     return Number(str.split(':')[i])
   }
-  getNewTimeList() {
+  // 切换当天时间更新数组
+  getNewTimeList(array) {
     let arr = []
     this.array.forEach((item, index) => {
       let str = item.split('-')
@@ -234,15 +238,17 @@ export default class selectTime extends wepy.component {
     })
     return arr
   }
+  // 切换选择时间的日期更新时间数组
   changeTime(text) { 
     if (text == '今天') {
       this.array = this.getNewTimeList()
     } else {
-      this.array = this.getTimeList()
+      this.array = this.getTimeList(this.timeList[this.activeIndex].workingTime)
     }
     this.date = this.array[0]
     this.$apply()
   }
+  // 获取最新日期
   getNewDate(timeText, item) {
     let time = $moment().format('YYYY-MM-DD')
     let str = item.split('-')[0]
@@ -254,22 +260,27 @@ export default class selectTime extends wepy.component {
   }
   methods = {
     save() {
+      this.setAnimation('400%')
       this.$emit('save', this.option)
     },
     cancel() {
+      this.setAnimation('400%')
       this.$emit('cancel')
     },
+    // 切换预约时间
     selectType(index, item) {
-     this.timeIndex = 0
-     this.activeIndex = index
-     this.timeText = item.name
-     this.changeTime(item.name)
+      this.timeIndex = 0
+      this.activeIndex = index
+      this.timeText = item.name
+      this.changeTime(item.name)
     },
+    // 选择时间
     selectTime(index, item) {
       this.timeIndex = index
       this.date = item
       this.$apply()    
     },
+    // 确定按钮保存
     save() {
       let date = this.getNewDate(this.timeText, this.date)
       let params = {

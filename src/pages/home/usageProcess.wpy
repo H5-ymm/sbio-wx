@@ -13,47 +13,54 @@
       margin-bottom: 30rpx;
     }
     .flow-card {
-      width: 92%;
+      width: 80%;
       margin: 0 auto;
-      height: 856rpx;
+      height: 550rpx;
       background: #FFFFFF;
       border-radius: 10rpx;
-      padding: 40rpx 32rpx ;
       margin-bottom: 20rpx;
+      padding: 50rpx 40rpx;
       .card-row {
         position: relative;
-        height: 33%;
+        height: 36%;
         &::after {
-          width:4rpx;
-          height:182rpx;
-          background: linear-gradient(180deg,rgba(255,208,202,1) 0%,rgba(255,240,238,1) 100%);
-          border-radius:4rpx;
+          width: 6rpx;
+          height: 78%;
+          background: #EF787C;
           content: '';
           position: absolute;
-          bottom: 10%;
-          left: 20rpx;
-        } 
+          bottom: 0;
+          left: 19rpx;
+        }
         &:nth-last-of-type(1) {
           &::after {
             z-index: -1;
             display: none;
           }
         }
+        &.card-row1 {
+            &::after {
+            background: #FFEEEE;
+          }
+        }
         .card-1 {
-          width: 41rpx;
-          height: 41rpx;
-          border: 2rpx solid #F04D6F;
+          width: 44rpx;
+          height: 44rpx;
           border-radius: 50%;
-          font-size: 26rpx;
-          font-weight: 500;
-          margin-top: 6rpx;
-          color: #F04D6F;
+          font-size: 28rpx;
+          color: #ffffff;
+          background: #F56666;
+          &.card-1-disabled {
+            color: #999999;
+            background: #F6F4F5;
+          }
         }
         .card-2 {
-          width: 62%;
-          margin: 0 20rpx;
+          width: 60%;
+          margin: -4rpx 0 0 40rpx;
           .page_title {
             margin-bottom: 16rpx;
+            color: #000000;
           }
           .page_subTitle {
             color: #666666;
@@ -63,11 +70,12 @@
           width: 162rpx;
           height: 60rpx;
           background: #F56666;
-          border-radius: 36rpx;
+          border-radius: 35rpx;
           color: #fff;
           font-size: 28rpx;
           &.card-disabled-3 {
             background: #EDEDED;
+            color: #666666;
           }
           &:active {
             opacity: 0.5;
@@ -79,13 +87,11 @@
 </style>
 <template>
    <view class="home_view">
-      <view class="header weui-flex start">
-        温馨提示：请按流程操作解锁每一步哦！
-      </view>
+      <view class="header weui-flex start">温馨提示：请按流程操作解锁每一步哦！</view>
       <view class="flow-card">
         <repeat for="{{flowList}}" wx:key="index">
-          <view class="weui-flex start-start card-row" style="background:{{item.background}}" >
-            <view class="card-1 weui-flex center">{{index+1}}</view>
+          <view class="weui-flex start-start card-row {{!submitFlag&&index==1?'card-row1':''}}" style="background:{{item.background}}" >
+            <view class="card-1 weui-flex center {{!submitFlag&&index==2?'card-1-disabled':''}}">{{index+1}}</view>
             <view class="card-2">
               <view class="page_title">{{item.title}}</view>
               <view class="page_subTitle">{{item.subTitle}}</view>
@@ -130,51 +136,35 @@ export default class usageProcess extends wepy.page {
         this.submitFlag = wx.getStorageSync('submitFlag')
         this.$apply()
       } else {
-        this.$parent.getSession().then(res => {
-          this.sessionId = res.sessionId
-          this.isShow = !res.authFlag ? true : false
-          this.$apply()
-          // 不需要授权
-          if (!res.authFlag) {
-            this.getSubmitFlag(res.sessionId)
-          }         
-        })
+        this.getSession()
       }
     }
   }
+  // 监听页面的隐藏
   onHide() {
     this.isShow = true
     this.$apply()
   }
+  // 监听页面的卸载
+  // 当前处于A页面，点击返回按钮时，则将是A页面卸载
   onUnload() {
     this.isShow = true
     this.$apply()
   }
   getSession(code_ticket) {
-    wx.login({
-      success: res => {
-        if (res.code) {
-          $http('user/api/wechat/getSession', { code: res.code, type: 0 }, 'Get').then(res => {
-            this.sessionId = res.data.sessionId
-            wx.setStorageSync('sessionId', res.data.sessionId)
-            wx.setStorageSync('authFlag', !res.data.authFlag ? true : false)
-            if (!res.data.authFlag) {
-              this.isShow = true
-              this.getSubmitFlag(res.data.sessionId)
-              if (code_ticket) {
-                this.getCodeTicket(code_ticket, res.data.sessionId)
-              }
-            } else {
-              this.isShow = false
-            }
-            this.$apply()    
-          }).catch(error => {
-            console.log(error)
-          })
-        } else {
-          console.log('获取失败！' + res.errMsg)
+    this.$parent.getSession().then(res => {
+      this.sessionId = res.sessionId
+      this.isShow = !res.authFlag ? true : false
+      this.$apply()
+      // 不需要授权
+      if (!res.authFlag) {
+        this.getSubmitFlag(res.sessionId)
+        if (code_ticket) {
+          this.getCodeTicket(code_ticket, res.sessionId)
         }
       }
+    }).catch(error => {
+      console.log(error)
     })
   }
   // 获取一物一码的codeTicket
@@ -217,7 +207,7 @@ export default class usageProcess extends wepy.page {
       let fn = (item) => {
         wxNavigateTo(item.path)
       }
-      debounce(fn(item), 1000, true)
+      debounce(fn(item), 500, true)
     }
   }
 }

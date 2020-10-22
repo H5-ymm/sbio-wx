@@ -1,0 +1,47 @@
+
+.sbio-dialog {
+  transition: all 0.3s ease;
+}
+.sbio-dialog__container {
+  position: fixed;
+  bottom: 0;
+  background: #ffffff;
+  z-index: 12;
+  border-radius: 30rpx 30rpx 0 0;
+}
+.sbio-dialog__title {
+  height: 105rpx;
+  text-align: center;
+  font-size: 32rpx;
+  color: #333333;
+  line-height: 105rpx;
+  border-bottom: 1px solid #F0F0F0;
+  position: relative;
+  .cancel-box {
+    width: 105rpx;
+    height: 105rpx;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-align: center;
+    z-index: 666;
+  }
+  .cancel-icon {
+    width: 32rpx;
+    height: 32rpx;
+    margin: 38rpx auto;
+  }
+}
+.sbio-dialog__mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+}
+.sbio-dialog--show .sbio-dialog__mask {
+  display: block;
+}

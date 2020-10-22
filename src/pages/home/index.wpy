@@ -1,52 +1,46 @@
 <style lang="less">
-  page {
-    overflow: hidden;
-  }
   .home_view {
-    // height: 100%;
     overflow: hidden;
     position: relative;
     &.home_box {
-      padding-top: 80rpx;
-    }
-    .homeBg {
-      max-width: 100%;
-      margin: 0 auto;
-      position: absolute;
-      bottom: 180rpx;
-      left: 0;
+      padding-top: 40rpx;
     }
   }
   .row {
-    width: 90%;
-    margin: 0 auto 40rpx;
-    height: 230rpx;
-    border-radius: 20rpx;
+    margin: 48rpx 36rpx;
+    padding: 30rpx 36rpx;
+    border-radius: 0px 115rpx 115rpx 0;
    .col-1 {
-      width: 22%;
-      text-align: center;
+     color: #000000;
+     line-height: 50rpx;
+     width: 78%;
+     .page_title {
+      font-size: 36rpx;
+     }
+     .page_subTitle {
+       color: #666666;
+     }
    }
    .col-2 {
-    color: #141414;
-    line-height: 66rpx;
+      flex: 1;
+      text-align: center;
+    }
+    .row-icon {
+      width: 169rpx;
+      height: 169rpx;
+    }
   }
-   .row-icon {
-     width: 82rpx;
-     height: 82rpx;
-     margin: 0 auto;
-   }
- }
 </style>
 <template>
   <view class="home_view home_box">
     <repeat for="{{menus}}" wx:key="index">
       <view class="weui-flex start row" style="background:{{item.background}}" @tap="routeView({{item}})">
         <view class="col-1">
-          <image src="{{item.icon}}" mode="aspectFit" class="row-icon"/>
-        </view>
-        <view class="col-2">
           <view class="page_title">{{item.title}}</view>
           <view class="page_subTitle">{{item.subTitle}}</view>
+        </view>
+        <view class="col-2 weui-flex center">
+          <image src="{{item.icon}}" mode="aspectFit" class="row-icon"/>   
         </view>
       </view>
     </repeat>
@@ -69,15 +63,6 @@ export default class home extends wepy.page {
     navigationBarTitleText: '硕世健康',
     enablePullDownRefresh: true
   }
-  onPullDownRefresh() {
-    this.$parent.getSession().then(res => {
-      this.sessionId = res.sessionId
-      if (!res.authFlag) {
-        this.getSubmitFlag(res.sessionId)
-      }
-      this.$apply()
-    })
-  }
   // 是否有回寄样本
   getSubmitFlag(sessionId) {
     $http('sample/api/listSubmit', {}, 'Get', sessionId).then(res => {
@@ -99,6 +84,10 @@ export default class home extends wepy.page {
   }
   // 获取sessionId
   onShow() {
+    this.init()
+  }
+  // 数据初始化
+  init() {
     this.$parent.getSession().then(res => {
       this.sessionId = res.sessionId
      if (!res.authFlag) {
@@ -107,13 +96,15 @@ export default class home extends wepy.page {
       this.$apply()
     })
   }
+  // 跳转页面方法
   viewNavigate(item) {
     let fn = (item) => {
       wxNavigateTo(item.path)
     }
-    debounce(fn(item), 1000, true)
+    debounce(fn(item), 500, true)
   }
   methods = {
+    // 点击卡片跳转页面
     routeView(item) {
       this.routerInfo = item
       if (!this.sessionId) {
@@ -127,6 +118,10 @@ export default class home extends wepy.page {
         this.viewNavigate(item)
       }
     }
+  }
+  // 下拉刷新
+  onPullDownRefresh() {
+    this.init()
   }
 }
 </script>

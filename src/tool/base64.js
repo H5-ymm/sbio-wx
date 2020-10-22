@@ -1,6 +1,7 @@
-var _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+/* eslint-disable camelcase */
+var _keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
 const encode = input => {
-    var output = "";
+    var output = ''
     var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
     var i = 0;
     input = _utf8_encode(input);
@@ -24,13 +25,13 @@ const encode = input => {
     return output;
   }
   const _utf8_encode = (string) => {
-    string = string.replace(/\r\n/g,"\n");
+    string = string.replace(/\r\n/g, '\n')
     var utftext = "";
     for (var n = 0; n < string.length; n++) {
         var c = string.charCodeAt(n);
         if (c < 128) {
             utftext += String.fromCharCode(c);
-        } else if((c > 127) && (c < 2048)) {
+        } else if ((c > 127) && (c < 2048)) {
             utftext += String.fromCharCode((c >> 6) | 192);
             utftext += String.fromCharCode((c & 63) | 128);
         } else {
@@ -38,16 +39,15 @@ const encode = input => {
             utftext += String.fromCharCode(((c >> 6) & 63) | 128);
             utftext += String.fromCharCode((c & 63) | 128);
         }
-
     }
-    return utftext;
+    return utftext
   }
    const decode = (e) => {
-      var t = "";
+      var t = '';
       var n, r, i;
       var s, o, u, a;
       var f = 0;
-      e = e.replace(/[^A-Za-z0-9+/=]/g, "");
+      e = e.replace(/[^A-Za-z0-9+/=]/g, '');
       while (f < e.length) {
         s = _keyStr.indexOf(e.charAt(f++));
         o = _keyStr.indexOf(e.charAt(f++));
@@ -57,10 +57,10 @@ const encode = input => {
         r = (o & 15) << 4 | u >> 2;
         i = (u & 3) << 6 | a;
         t = t + String.fromCharCode(n);
-        if (u != 64) {
+        if (u !== 64) {
           t = t + String.fromCharCode(r)
         }
-        if (a != 64) {
+        if (a !== 64) {
           t = t + String.fromCharCode(i)
         }
       }
@@ -68,7 +68,7 @@ const encode = input => {
       return t
     }
     const _utf8_decode = function (e) {
-      var t = "";
+      var t = '';
       var n = 0;
       var r = 0;
       var c2 = 0;
@@ -91,7 +91,7 @@ const encode = input => {
     }
     return t
   }
-  module.exports =  {
+  module.exports = {
     encode: encode,
     decode: decode
   }

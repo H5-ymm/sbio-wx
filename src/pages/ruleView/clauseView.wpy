@@ -1,31 +1,5 @@
 <style lang="less">
-  .clauseView {
-    margin: 36rpx;
-    color: #333333;
-    padding-bottom: 30rpx;
-    .title {
-      font-size: 36rpx;
-      color: #000000;
-      font-weight: bold;
-      text-align: center;
-    }
-    .content {
-      font-size: 30rpx;
-      margin: 40rpx 0;
-    }
-    .col-1 {
-      font-size: 32rpx;
-      margin-top: 20rpx;
-      line-height: 50rpx;
-    }
-    .col-2 {
-      line-height: 40rpx;
-      margin-top: 10rpx;
-    }
-    .col-3 {
-      line-height: 50rpx;
-    }
-  }
+@import "../../style/rule.less";
 </style>
 <template>
   <view class="clauseView">
@@ -33,7 +7,7 @@
     <view class="content">
       <view class="col-1">1、本条款的缔约主体是您与寄件地的顺丰速运有限公司的子公司、分公司或关联公司（以下简称顺丰）。请您认真阅读本条款，您使用顺丰服务表明您已充分阅读、理解并接受本条款的全部内容。</view>
       <view class="col-1">2、本条款履行过程中如发生争议，双方应友好协商解决。如协商不成的，应向寄件地有管辖权的人民法院提起诉讼。</view>
-      <view class="col-1">3、您同意遵守顺丰官方网站所公示的隐私政策（https://www.sf-express.com/cn/sc/Privacy_Policy/） 及其不时修订的内容，同意顺丰按照法律法规和隐私政策的规定处理您提供的运单信息。</view>
+      <view class="col-1">3、您同意遵守顺丰官方网站所公示的隐私政策<view class="link">(https://www.sf-express.com/cn/sc/Privacy_Policy/)</view>及其不时修订的内容，同意顺丰按照法律法规和隐私政策的规定处理您提供的运单信息。</view>
       <view class="col-1">4、保价与赔偿<text>\n</text>
        顺丰是按托寄物的重量收费，并非按托寄物的价值收费，本着公平合理的原则，双方遵守以下赔偿约定：</view>
       <view class="col-2">4.1 因顺丰原因造成托寄物灭失、破损、短少的，顺丰将免除本次运费，并按以下标准赔偿，但不承担您可能获得的收益、实际用途、商业机会等任何间接损失。</view>

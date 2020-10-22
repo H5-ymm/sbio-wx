@@ -18,6 +18,11 @@ var statusList = [
     label: '报告已完成',
     value: 3,
     btnText: '查看报告'
+  },
+  {
+    label: '样本已签收',
+    value: 6,
+    btnText: '查看详情'
   }
 ]
 statusText = function(val) {

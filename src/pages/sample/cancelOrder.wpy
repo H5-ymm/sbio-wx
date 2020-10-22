@@ -1,125 +1,43 @@
 <style lang="less">
+@import "../../style/header.less";
 @import "../../style/order.less";
-  .send_view {
-		height: 100%;
-		.send-header {
-			margin: 36rpx;
-			height: 312rpx;
-			background:#fff;
-			box-shadow: 0px 4rpx 20rpx 0px rgba(188,188,188,0.37);
-			border-radius: 20rpx;
-			position: relative;
-			.waterdrop1 {
-				width: 36rpx;
-				height: 48rpx;
-				position: absolute;
-				top: 20rpx;
-				left: 20rpx;
-			}
-			.waterdrop2 {
-				width: 42rpx;
-				height: 56rpx;
-				position: absolute;
-				bottom: 20rpx;
-				right: 20rpx;
-			}
-			.car-icon {
-				height: 130rpx;
-        width: 160rpx;
-        &.cancel-icon {
-          margin-left: -50rpx;
-          margin-right: 60rpx;
-        }
-			}
-			.send-tip {
-				line-height: 70rpx;
-        color: #000000;
-				text {
-					font-size: 36rpx;
-					margin-right: 30rpx;
-					font-weight: 400;
-				}
-				.tip-text {
-					font-weight:300;
-					font-size: 30rpx;
-				}
-			}
-		}
-	  .footer-btn {
-      width: 70%;
-      margin: 60rpx auto 132rpx;
-      button {
-        height:80rpx;
-        background: #F36681;
-        border-radius:40rpx;
-        color: #ffffff;
-        font-size: 30rpx;
-      }
-		}
-  }
 </style>
 <template>
   <view class="send_view">
-		<view class="send_content">
-			<view class="send-header weui-flex center">
-				<image src="https://api.s-sbio.com/images/sample/orderCancel.png" mode="aspectFit"
-					class="car-icon cancel-icon">
-				</image>
+	  <view class="page_content">
+			<view class="send-header order-row">
+				<image src="https://api.s-sbio.com/images/wxImg/sample/orderCancel.png" class="car-icon cancel-icon"></image>
 				<view class="send-tip">
 					<view><text>订单已取消</text></view>
 					<view class="tip-text">如需回寄请重新下单</view>
 				</view>
-				<image src="https://api.s-sbio.com/images/sample/waterdrop3.png" mode="aspectFit"
-					class="waterdrop1">
-				</image>
-				<image src="https://api.s-sbio.com/images/sample/waterdrop4.png" mode="aspectFit"
-					class="waterdrop2">
-				</image>
 			</view>
+			<!-- 寄件地址 -->
+			<sendAddress :addressInfo.sync="addressInfo"></sendAddress>
+			<!-- 收件地址 -->
+			<recipients></recipients>
+			<!-- 订单样本信息 -->
+			<orderInfo :addressInfo.sync="addressInfo"></orderInfo>
 		</view>
-    	<view class="order-header weui-flex between">
-			<view class="order-col1 weui-flex between">
-				<view class="order-left  weui-flex center order-left-reduce">寄</view>
-				<view class="order-right order-right-info weui-flex__item">
-          <view><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
-					<view>{{addressInfo.startStationAddress}}</view>
-				</view>
-			</view>
+		<view class="footer-btn">
+			<button class="weui-flex center btn" @tap="order">重新下单</button>
 		</view>
-		<view class="order-header weui-flex between order-header1">
-			<view class="order-col1 weui-flex between">
-				<view class="order-left  weui-flex center order-left-reduce">收</view>
-				<view class="order-right">
-					<view class="order-address-name">{{recipientsInfo.contactName}}</view>
-					<view>{{recipientsInfo.address}}</view>
-				</view>
-			</view>
-		</view>
-		<view class="order_content">
-			<view class="order-row weui-flex between">
-				<view>邮寄物品</view>
-				<view>试纸</view>
-			</view>
-			<view class="order-row weui-flex between">
-				<view>付费方式</view>
-				<view>到付</view>
-			</view>
-      <view class="order-row weui-flex between" wx:if="{{addressInfo.skuCount>1}}">
-				<view>样本数量</view>
-				<view>{{addressInfo.skuCount}}</view>
-			</view>
- 		</view>
-    <view class="footer-btn">
-      <button class="weui-flex center btn" @tap="order">重新下单</button>
-    </view>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
+import sendAddress from '@/components/sendAddress'
+import recipients from '@/components/recipients'
+import orderInfo from '@/components/orderInfo'
 import { wxNavigateTo } from '@/tool/util'
 import { debounce } from "@/tool/debounce.js"
 export default class cancelOrder extends wepy.page {
-  data = {
+	components = {
+		sendAddress: sendAddress,
+		recipients: recipients,
+		orderInfo: orderInfo
+  }
+	data = {
 		addressInfo: {},
 		recipientsInfo: {}
   }
@@ -137,7 +55,7 @@ export default class cancelOrder extends wepy.page {
 			let fn = (query) => {
         wxNavigateTo('/pages/sample/orderDetail?query=' + query)
       }
-      debounce(fn(query), 1000, true)
+      debounce(fn(query), 500, true)
     }
   }
 }

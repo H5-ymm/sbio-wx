@@ -6,7 +6,7 @@
     .tip-card {
       width: 100%;
       margin: 0 auto;
-      height: calc(100% - 100px);
+      height: calc(100% - 130px);
       padding: 30rpx;
       .tip-row {
         .tip-icon {
@@ -25,32 +25,15 @@
         .text {
           font-size: 30rpx;
           color: #666666;
-          position: relative;
-          &::before {
-            content: '.';
-            font-size: 70rpx;
-            color: #999999;
-            top: -24rpx;
-            left: -30rpx;
-            position: absolute;
-          }
-        }
-      }
-    }
-    .footer {
-      width: 70%;
-      margin: 0 auto;
-      .btn {
-        width: 100%;
-        height: 80rpx;
-        font-size: 30rpx;
-        border-radius: 43rpx;
-        background: #F56666;
-        color: #fff;
-        border: none;
-        margin-bottom: 30rpx;
-        &::after {
-          border: none;
+          // position: relative;
+          // &::before {
+          //   content: '.';
+          //   font-size: 70rpx;
+          //   color: #999999;
+          //   top: -24rpx;
+          //   left: -30rpx;
+          //   position: absolute;
+          // }
         }
       }
     }
@@ -71,7 +54,7 @@
         </view>
       </repeat>
     </view>
-    <view class="footer">
+    <view class="footer-btn">
       <button class="btn weui-flex center" @tap="next()">已知晓，进入下一步</button>
     </view>
   </view>
@@ -89,16 +72,11 @@ export default class intendedFor extends wepy.page {
     navigationBarTitleText: '适用人群'
   }
   methods = {
-    back() {
-      wx.navigateBack({
-        delta: 1
-      })
-    },
     next() {
       let fn = () => {
         wxNavigateTo('/pages/home/bindSample')
       }
-      debounce(fn(), 1000, true)
+      debounce(fn(), 500, true)
     }
   }
 }

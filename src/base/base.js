@@ -1,32 +1,32 @@
 
   // 首页菜单
-  export const  menus = [{
+  export const menus = [{
     title: '绑定样本',
     subTitle: '足不出户，轻松自测',
-    icon: 'https://api.s-sbio.com/images/icon1.png',
+    icon: 'https://api.s-sbio.com/images/wxImg/home/icon1.png',
     path: '/pages/home/usageProcess',
-    background: '#FEF2F2'
+    background: '#F7FCF9'
   },
   {
     title: '样本回寄',
     subTitle: '在线预约顺丰，上门取件免费寄送',
-    icon: 'https://api.s-sbio.com/images/icon2.png',
+    icon: 'https://api.s-sbio.com/images/wxImg/home/icon2.png',
     path: '/pages/sample/send',
-    background: '#F5EFFC'
+    background: '#FFF9F9'
   },
   {
     title: '查看报告',
     subTitle: '在线查看报告，报告解读专业指导',
-    icon: 'https://api.s-sbio.com/images/icon3.png',
+    icon: 'https://api.s-sbio.com/images/wxImg/home/icon3.png',
     path: '/pages/webView/index',
-    background: '#EDF7FF'
+    background: '#F8FAFF'
   }]
   // 提示列表
-  export const tipList =  [{
+  export const tipList = [{
     title: '请确认您是否适合HPV检测',
-    icon: '../../images/personal.png',
+    icon: 'https://api.s-sbio.com/images/wxImg/icon/personal.png',
     child: [
-      '仅供有过性生活的成年女性使用', 
+      '仅供有过性生活的成年女性使用',
       '处于妊娠期的女性不能使用',
       '哺乳期女性请避开产褥期使用',
       '做过全子宫切除的女性不能使用',
@@ -35,9 +35,9 @@
   },
   {
     title: '注意事项',
-    icon: '../../images/notes.png',
+    icon: 'https://api.s-sbio.com/images/wxImg/icon/notes.png',
     child: [
-      '洗澡后可以取样，不影响检测结果', 
+      '洗澡后可以取样，不影响检测结果',
       '取样前3天请勿进行阴道冲洗',
       '取样前24小时内避免性生活',
       '私处用药者，请在停药3天后使用',
@@ -65,13 +65,13 @@ export const flowList = [{
   title: '样本采集',
   subTitle: '请参照盒内说明书或线上采样 流程，完成自取样。',
   path: '/pages/sample/gather',
-  btnText: '取样视频',
+  btnText: '取样视频'
 },
 {
   title: '样本回寄',
   subTitle: '在线预约顺丰，上门取件免费寄送',
   path: '/pages/sample/send',
-  btnText: '预约快递',
+  btnText: '预约快递'
 }]
 
 export const recipientsInfo = {

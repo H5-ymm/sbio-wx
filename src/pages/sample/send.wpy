@@ -1,111 +1,36 @@
 <style lang="less">
+  @import "../../style/header.less";
+	@import "../../style/order.less";
+	@import "../../style/noData.less";
   .send_view {
-		height: 100%;
-		.send-header {
-			margin: 36rpx;
-			height: 312rpx;
-			background:#fff;
-			box-shadow: 0px 4rpx 20rpx 0px rgba(188,188,188,0.37);
-			border-radius: 20rpx;
-			position: relative;
-			.waterdrop1 {
-				width: 36rpx;
-				height: 48rpx;
-				position: absolute;
-				bottom: 20rpx;
-				left: 20rpx;
-			}
-			.waterdrop2 {
-				width: 61rpx;
-				height: 68rpx;
-				position: absolute;
-				top: 20rpx;
-				right: 20rpx;
-			}
-			.car-icon {
-				height: 130rpx;
-				width: 160rpx;
-			}
-			.send-tip {
-				line-height: 60rpx;
-				color: #000000;
-				text {
-					font-size: 36rpx;
-					margin-right: 30rpx;
-					font-weight: 400;
-				}
-				.tip-text {
-					font-weight:300;
-					font-size: 30rpx;
-				}
-			}
+		.send_content {
+			height: 100%;
 		}
-		.send-goods {
-			color: #000000;
-			padding: 42rpx 36rpx;
-			border-bottom: 1px solid #E4E4E4;
-			&.send-goods1{
-				border-bottom: none;
-				.subTitle {
-					text-align: right;
-					line-height: 50rpx;
+	  .bg-icon {
+			height: 183rpx;
+			width: 213rpx;
+			margin: 0 auto;
+		}
+		.order-row {
+			.label-margin {
+				margin-right: 48rpx;
+			}
+			.weui-flex__item {
+				view {
+					margin-bottom: 10rpx;
 				}
-			}
-			.title {
-        font-size: 32rpx;
-			}
-			.subTitle {
-	      font-size: 28rpx;
-				font-weight:300;
-				line-height: 40rpx;
-			}
-			.send-goods-col1 {
-				width: 36%;
-			}
-			.send-goods-col2 {
-				width: 64%;
 			}
 		}
 		.bind-info {
-			margin: 36rpx 36rpx 62rpx;
+			margin: 20rpx 36rpx 62rpx;
 			.tip-icon {
-				width: 26rpx;
-				height: 26rpx;
+				width: 30rpx;
+				height: 30rpx;
 			}
 			.sample-text {
 				font-size: 28rpx;
-				
-				color: #000000;
-				margin-left: 20rpx;
-			}
-		}
-	  .footer-btn {
-      width: 70%;
-      margin: 60rpx auto 132rpx;
-      button {
-        height: 80rpx;
-        background: #F36681;
-        border-radius:40rpx;
-        color: #ffffff;
-        font-size: 30rpx;
-      }
-		}
-		.noData-box {
-			text-align: center;
-			height: 100%;
-			overflow: hidden;
-			.noData-text {
-				color: #000000;
-				
-				font-size: 32rpx;
-				margin: 102rpx 0;
-			}
-			.noData-icon {
-				width: 90%;
-				height: 90%;
-			}
-			.footer-btn {
-				margin: 0 auto;
+				color: #666666;
+				margin-left: 10rpx;
 			}
 		}
   }
@@ -113,50 +38,42 @@
 <template>
   <view class="send_view">
 		<view class="send_content" wx:if="{{submitFlag&&loading}}">
-			<view class="send-header weui-flex around">
-				<image src="https://api.s-sbio.com/images/sample/car.png" mode="aspectFit"
-					class="car-icon">
-				</image>
-				<view class="send-tip">
-					<view><text>顺丰包邮</text> <text>保密发货</text></view>
-					<view class="tip-text">建议取样后24小时内回寄</view>
+		  <view class="page_content">
+				<view class="send-header order_content">
+					<image src="https://api.s-sbio.com/images/wxImg/sample/car.png" mode="aspectFit"
+						class="bg-icon">
+					</image>
+					<view class="send-tip">
+						<view><text>顺丰包邮,</text> <text>  保密发货</text></view>
+						<view class="tip-text">建议取样后24小时内回寄</view>
+					</view>
 				</view>
-				<image src="https://api.s-sbio.com/images/sample/waterdrop1.png" mode="aspectFit"
-					class="waterdrop1">
-				</image>
-				<image src="https://api.s-sbio.com/images/sample/waterdrop2.png" mode="aspectFit"
-					class="waterdrop2">
-				</image>
-			</view>
-			<view class="send-goods weui-flex start-start">
-				<view class="send-goods-col1 title">邮寄物品</view>
-				<view class="send-goods-col2 subTitle">请将样本保存管放到样本回寄盒中，并装入快递盒进行回寄</view>
-			</view>
-			<view class="send-goods send-goods1 weui-flex start-start">
-				<view class="weui-flex__auto title">收件信息</view>
-				<view class="subTitle weui-flex__auto">
-					<view>{{recipientsInfo.contactName}}</view>
-					<view>{{recipientsInfo.contactPhone}}</view>
-					<view>{{recipientsInfo.address}}</view>
+				<view class="order-row weui-flex start-start order-header">
+					<view class="label-left label-margin">邮寄物品</view>
+					<view class="weui-flex__item">请将样本保存管放到样本回寄盒中，并装入快递盒进行回寄</view>
 				</view>
-			</view>
-			<view class="weui-flex start bind-info">
-				<image src="https://api.s-sbio.com/images/tip.png" mode="scaleToFill"
-					class="tip-icon">
-				</image>
-				<view class="sample-text">如果顺丰不可到，其他快递请邮费自理</view>
+				<view class="order-row weui-flex start-start">
+					<view class="label-left label-margin">收件信息</view>
+					<view class="weui-flex__item">
+						<view>{{recipientsInfo.contactName}}</view>
+						<view>{{recipientsInfo.contactPhone}}</view>
+						<view>{{recipientsInfo.address}}</view>
+					</view>
+				</view>
+				<view class="weui-flex start bind-info">
+					<image src="https://api.s-sbio.com/images/wxImg/icon/tip.png" mode="scaleToFill" class="tip-icon"></image>
+					<view class="sample-text">如果顺丰不可到，其他快递请邮费自理</view>
+				</view>
 			</view>
 			<view class="footer-btn">
-				<button class="weui-flex center" @tap="order">预约顺丰上门取件</button>
+				<button class="weui-flex center btn" @tap="order">预约顺丰上门取件</button>
 			</view>
 		</view>
-		<view wx:if="{{!loading&&!submitFlag}}" class="noData-box">
+		<view wx:if="{{!submitFlag&&!loading}}" class="noData-box">
+			<image src="https://api.s-sbio.com/images/wxImg/sample/noData.png" mode="widthFix" class="noData-icon"></image>
 			<view class="noData-text">完成样本绑定及采集后，才能预约快递哦！</view>
-			<image src="https://api.s-sbio.com/images/sample/noData.png" mode="widthFix"
-				class="noData-icon">
-			</image>
 			<view class="footer-btn" @tap="bindSample">
-        <button class="weui-flex center">去绑定</button>
+        <button class="weui-flex center btn">去绑定</button>
       </view>
 		</view>
 		<popup :isShow.sync="isShow" @bindWx="bindWx"></popup>
@@ -246,13 +163,13 @@ export default class send extends wepy.page {
 			let fun = () => {
         wxNavigateTo('/pages/sample/orderDetail')
 			}
-			debounce(fun(), 1000, true)   
+			debounce(fun(), 500, true)   
     },
 		bindSample: () => {
 			let fun = () => {
         wxNavigateTo('/pages/home/usageProcess')
 			}
-			debounce(fun(), 1000, true)  
+			debounce(fun(), 500, true)  
 		}
   }
 }

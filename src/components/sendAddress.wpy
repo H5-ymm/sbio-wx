@@ -1,0 +1,19 @@
+<template>
+  <view class="order-header weui-flex between order-row">
+    <view class="order-col1 weui-flex between">
+      <view class="order-left  weui-flex center">寄</view>
+      <view class="order-right weui-flex__item">
+        <view class="order-contactName"><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
+        <view class="order-address">{{addressInfo.startStationAddress}}</view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class sendAddress extends wepy.component {
+  props = {
+    addressInfo: {}
+  }
+}
+</script>

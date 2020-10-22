@@ -7,12 +7,12 @@
   line-height: 100rpx;
   width: 100%;
 	margin: 0 auto;
-	border-bottom: 2rpx solid #f7f7f7;
+	border-bottom: 2rpx solid #E5E5E5;
   .tab-line {
     position: absolute;
     left: 22%;
     bottom: 0;
-    background: #F36681;
+    background:  #F56666;
     height: 4rpx;
     width: 40rpx;
     transition: 0.7s;

@@ -1,59 +1,17 @@
 <style lang="less">
+ @import "../../style/form.less";
   .home_view {
     height: 100%;
     width: 100%;
-    margin: 0 auto;
     overflow: hidden;
-    .bind-info-form {
-      margin: 36rpx 50rpx;
-      >.weui-flex {
-        margin-bottom: 40rpx;
-      }
-      .label {
-        width: 120rpx;
-        text-align: justify;
-        font-size: 30rpx;
-        overflow:hidden;
-        height: 20px;
-        color: #000000;
-        display: inline-block;
-        line-height: 20px;
-        &:after{
-          content:"";
-          display:inline-block;
-          width:100%;
-        }
-      }
-      .placeholder {
-        color: #999999;
-      }
-      .sample-input {
-        height:80rpx;
-        border-radius:20rpx;
-        border: 1px solid #C9C9C9;
-        margin-left: 20rpx;
-        background: #ffffff;
-        padding: 0 30rpx;
-        color: #333333;
-        font-size: 26rpx;
-      }
-      .sample-input1 {
-        color: #333333;
-        font-size: 26rpx;
-      }
+    .page_content {
+      overflow: hidden;
+      height: calc(100% - 130px);
     }
-    .footer-btn {
-      width: 70%;
-      margin: 60rpx auto 132rpx;
-      button {
-        height:80rpx;
-        background:#F8C1C7;
-        border-radius:40rpx;
-        color: #ffffff;
-        font-size: 30rpx;
-        &.btn {
-          background: #F36681;
-        }
+    .bind-info-form {
+      margin-left: 36rpx;
+      .bind-info-item {
+        padding: 20rpx 36rpx 20rpx 0;
       }
     }
     .right-icon {
@@ -64,27 +22,29 @@
 </style>
 <template>
   <view class="home_view">
-    <view class="bind-info-form">
-      <view class="weui-flex start">
-        <view class="label">姓名</view>
-        <input type="text" class="sample-input weui-flex__item" placeholder-class="placeholder" placeholder="请输入姓名" value="{{form.startContactName}}" data-name="startContactName" @input="changeForm">
-      </view>
-      <view class="weui-flex start">
-        <view class="label">手机号</view>
-        <input type="text" class="sample-input weui-flex__item" placeholder-class="placeholder" placeholder="请输入手机号" value="{{form.startContactPhone}}" data-name="startContactPhone" @input="changeForm">
-      </view>
-       <view class="weui-flex start">
-        <view class="label">所在地区</view>
-        <view class="sample-input weui-flex__item weui-flex between" @tap="selectCity">
-          <view class="{{addressText?'sample-input1':'placeholder'}}">{{addressText?addressText:'请选择地区'}}</view>
-          <image src="https://api.s-sbio.com/images/right.png" mode="aspectFit"
-            class="right-icon">
-          </image>
+    <view class="page_content">
+      <view class="bind-info-form">
+        <view class="weui-flex start bind-info-item">
+          <view class="label">姓名</view>
+          <input type="text" class="sample-input weui-flex__item" placeholder-class="placeholder" placeholder="请输入姓名" value="{{form.startContactName}}" data-name="startContactName" @input="changeForm">
         </view>
-      </view>
-      <view class="weui-flex start">
-        <view class="label">详细地址</view>
-        <input type="text" class="sample-input weui-flex__item" placeholder-class="placeholder" placeholder="请输入详细地址、门牌号" value="{{form.startStationAddress}}" data-name="startStationAddress" @input="changeForm">
+        <view class="weui-flex start bind-info-item">
+          <view class="label">手机号</view>
+          <input type="text" class="sample-input weui-flex__item" placeholder-class="placeholder" placeholder="请输入手机号" value="{{form.startContactPhone}}" data-name="startContactPhone" @input="changeForm">
+        </view>
+        <view class="weui-flex start bind-info-item">
+          <view class="label">所在地区</view>
+          <view class="sample-input weui-flex__item weui-flex between" @tap="selectCity">
+            <view class="{{addressText?'sample-input1':'placeholder'}}">{{addressText?addressText:'请选择地区'}}</view>
+            <image src="https://api.s-sbio.com/images/wxImg/icon/right.png" mode="aspectFit"
+              class="right-icon">
+            </image>
+          </view>
+        </view>
+        <view class="weui-flex start bind-info-item">
+          <view class="label">详细地址</view>
+          <input type="text" class="sample-input weui-flex__item" placeholder-class="placeholder" placeholder="请输入详细地址、门牌号" value="{{form.startStationAddress}}" data-name="startStationAddress" @input="changeForm">
+        </view>
       </view>
     </view>
     <view class="footer-btn">
@@ -172,6 +132,7 @@ export default class address extends wepy.page {
       this.form[key] = filterSpace(e.detail.value)
       this.$apply()
     },
+    // 选择省市区
     selectCity() {
       this.isShow = !this.isShow
       this.$apply()
@@ -194,7 +155,7 @@ export default class address extends wepy.page {
         let fn = () => {
           wxNavigateTo('/pages/sample/orderDetail?query='+JSON.stringify(this.form))
         }
-        debounce(fn(), 1000, true) 
+        debounce(fn(), 500, true) 
       }
     }
   }

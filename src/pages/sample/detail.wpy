@@ -1,54 +1,10 @@
 <style lang="less">
+ @import "../../style/order.less";
   .send_view {
 		padding: 20rpx 30rpx;
 		background: #f6f6f6;
-		.order-header {
-			margin: 0;
-			.order-col1 {
-				margin: 30rpx;
-			}
-			.order-address-name {
-				font-size: 30rpx;
-			}
-	  	.order-left {
-				border-radius: 50%;
-				color: #ffffff;
-				background: linear-gradient(270deg,rgba(255,89,121,1) 0%,rgba(255,135,135,1) 100%);
-				&.order-left-reduce {
-					width: 68rpx;
-					height: 68rpx;
-					font-size: 28rpx;
-					font-weight:400;
-				}
-			}
-			.order-right {
-				font-size: 26rpx;
-				
-				color: #666;
-				margin-left: 48rpx;
-				&.order-right-info {
-					line-height: 50rpx;
-					text {
-						font-weight:400;
-						color: #000000;
-						margin-right: 20rpx;
-						font-size: 30rpx;
-						display: inline-block;
-					}
-				}
-			}
-			&.order-header1 {
-				.order-left {
-					background: #eeeeee;
-					color: #333333;
-				}
-				.order-right { 
-					color: #333333;
-					flex: 1;
-					font-size: 26rpx;
-					line-height: 50rpx;
-				}
-			}
+		&.page_auto {
+			height: auto;
 		}
 		.section {
 			background: #ffffff;
@@ -63,57 +19,18 @@
 				}
 			}
 		}
-		.order_content {
-			padding-top: 20rpx;
-			.order-row {
-				color: #000000;
-				padding: 10rpx 30rpx 30rpx;
-				font-size: 32rpx;
-				
-				.order-time {
-					font-weight: 400;
-					font-size: 30rpx;
-				}
-			}
-		}
   }
 </style>
 <template>
-  <view class="send_view">
+  <view class="send_view page_auto">
 		<timeCard @cancalOrder="cancalOrder" :timeInfo.sync="timeInfo"></timeCard>
 		<view class="section">
-			<view class="order-header weui-flex between">
-				<view class="order-col1 weui-flex between">
-					<view class="order-left weui-flex center order-left-reduce">寄</view>
-					<view class="order-right order-right-info weui-flex__item">
-						<view><text>{{addressInfo.startContactName}}</text><text>{{addressInfo.startContactPhone}}</text></view>
-						<view>{{addressInfo.startStationAddress}}</view>
-					</view>
-				</view>
-			</view>
-			<view class="order-header weui-flex between order-header1">
-				<view class="order-col1 weui-flex between">
-					<view class="order-left weui-flex center order-left-reduce">收</view>
-					<view class="order-right">
-						<view class="order-address-name">{{recipientsInfo.contactName}}</view>
-						<view>{{recipientsInfo.address}}</view>
-					</view>
-				</view>
-	  	</view>
-			<view class="order_content">
-				<view class="order-row weui-flex between">
-					<view>邮寄物品</view>
-					<view>试纸</view>
-				</view>
-				<view class="order-row weui-flex between">
-					<view>付费方式</view>
-					<view>到付</view>
-				</view>
-				<view class="order-row weui-flex between" wx:if="{{addressInfo.skuCount>1}}">
-					<view>样本数量</view>
-					<view>{{addressInfo.skuCount}}</view>
-				</view>
-			</view>
+			<!-- 寄件地址 -->
+			<sendAddress :addressInfo.sync="addressInfo"></sendAddress>
+			<!-- 收件地址 -->
+			<recipients></recipients>
+			<!-- 订单样本信息 -->
+			<orderInfo :addressInfo.sync="addressInfo"></orderInfo>
 		</view>
 		<view class="section">
 			<tipTeamplte></tipTeamplte>
@@ -122,17 +39,23 @@
 </template>
 <script>
 import wepy from 'wepy'
-import { wxReLaunch, wxToast } from '@/tool/util'
 import tipTeamplte from '@/components/tipTeamplte'
 import timeCard from '@/components/timeCard'
+import sendAddress from '@/components/sendAddress'
+import recipients from '@/components/recipients'
+import orderInfo from '@/components/orderInfo'
 import { $http } from '@/tool/http.js'
-import $moment from 'moment'
+import { wxReLaunch, wxToast } from '@/tool/util'
 import { debounce } from "@/tool/debounce.js"
+import $moment from 'moment'
 let lock = false
 export default class detail extends wepy.page {
 	components  = {
 		tipTeamplte: tipTeamplte,
-		timeCard: timeCard
+		timeCard: timeCard,
+		sendAddress: sendAddress,
+		recipients: recipients,
+		orderInfo: orderInfo
   }
   data = {
 		addressInfo: {},
@@ -213,7 +136,7 @@ export default class detail extends wepy.page {
 						lock = false
 					}, 1200)
         }
-        debounce(fn(), 1000, true) 
+        debounce(fn(), 500, true) 
 			}
     })
   }

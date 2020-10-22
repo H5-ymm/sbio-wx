@@ -16,9 +16,9 @@
     }
     .time-type {
       font-size: 28rpx;
-      color: #002A33;
+      color: #666666;
       text {
-        color: #FF627C;
+        color:#f56666;
       }
     }
     .time {
@@ -44,15 +44,15 @@
       padding-top: 20rpx;
     }
     .cancel {
-      color: rgba(0,0,0,0.85);
+      color: #666666;
       font-size: 25rpx;
       border: 1px solid #eeeeee;
       border-radius: 50rpx;
       width: 140rpx;
       height: 50rpx;
       &.cancelActive {
-        border: 1px solid #FF627C;
-        color: #FF627C;
+        border: 1px solid #f56666;
+        color: #f56666;
       }
       &:active {
         opacity: 0.5;

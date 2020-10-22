@@ -1,9 +1,9 @@
 <template>
-  <view class="order-header weui-flex between order-header1">
+  <view class="order-header weui-flex between order-row order-header1">
     <view class="order-col1 weui-flex between">
       <view class="order-left weui-flex center">收</view>
       <view class="order-right">
-        <view>{{recipientsInfo.contactName}}</view>
+        <view class="order-contactName">{{recipientsInfo.contactName}}</view>
         <view class="order-address">{{recipientsInfo.address}}</view>
       </view>
     </view>
