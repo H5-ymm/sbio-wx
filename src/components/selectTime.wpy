@@ -168,18 +168,22 @@ export default class selectTime extends wepy.component {
             name: '明天',
             date: $moment(val[1].date).format("MM月DD日")
           }]
-          this.timeText = '今天'
-          this.changeTime('今天')
+          // this.timeText = '今天'
+          // this.changeTime('今天')
         } else {
+          this.array = this.getTimeList()
           this.typeList = [{
+            name: '今天',
+            date: $moment().format("MM月DD日")
+            },{
             name: '明天',
             date: $moment().add(1, 'days').format("MM月DD日")
           }]
           let hour = $moment().format('HH')
           this.date = this.add0(Number(hour)+ 1) + ':00' + '-' + this.add0(Number(hour)+ 2) + ':00'
-          this.timeText = '明天'
-          this.changeTime('明天')
         }
+        this.timeText = '今天'
+        this.changeTime('今天')
       }
     },
     isShow(val) {
