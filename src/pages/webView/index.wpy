@@ -109,7 +109,7 @@ export default class list extends wepy.page {
   }
   // 下载pdf Api
   downLoadPdf(item) {
-    $downloadFile('sample/api/selectReport', item).then(res => {
+    $downloadFile('sample/api/download', item).then(res => {
       wx.openDocument({
         filePath: res.filePath,
         showMenu: true,
@@ -185,10 +185,10 @@ export default class list extends wepy.page {
    width: 100%;
    height: 100%;
    .report-list {
-     height: 100%;
-     overflow: auto;
+    height: 100%;
+    overflow: auto;
     .report-item {
-      margin: 30rpx 36rpx;
+      margin: 20rpx;
       background: #fff;
       font-size: 30rpx;
       border-radius: 14rpx;

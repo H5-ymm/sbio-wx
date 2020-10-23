@@ -38,9 +38,9 @@
   }
 </style>
 <template>
-  <view class="sbio-dialog {{!isShow?'sbio-dialog--show':''}}" animation="{{animationData}}" hidden="{{isShow}}">
+  <view class="sbio-dialog {{!isShow?'sbio-dialog--show':''}}" hidden="{{isShow}}">
     <view class="sbio-dialog__mask" />
-    <view class="sbio-dialog__container">
+    <view class="sbio-dialog__container" animation="{{animationData}}" >
       <view class="box">
         <image src="https://api.s-sbio.com/images/popup.png" class="bg"></image>
         <view class="box-btn">
@@ -84,7 +84,7 @@ export default class popup extends wepy.component {
   }
   setAnimation() {
     var animation = wx.createAnimation({
-      duration: 200,  //动画时长
+      duration: 200,  // 动画时长
       timingFunction: "linear", //线性
       delay: 0  //0则不延迟
     })

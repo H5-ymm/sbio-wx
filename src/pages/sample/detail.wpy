@@ -1,7 +1,7 @@
 <style lang="less">
  @import "../../style/order.less";
   .send_view {
-		padding: 20rpx 30rpx;
+		padding: 20rpx;
 		background: #f6f6f6;
 		&.page_auto {
 			height: auto;

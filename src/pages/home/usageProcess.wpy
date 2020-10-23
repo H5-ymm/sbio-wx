@@ -10,27 +10,29 @@
       font-size: 28rpx;
       color: rgba(235,93,0,0.80);
       padding-left: 30rpx;
-      margin-bottom: 30rpx;
     }
     .flow-card {
-      width: 80%;
-      margin: 0 auto;
-      height: 550rpx;
+      width: 85%;
+      margin: 20rpx auto;
+      height: 580rpx;
       background: #FFFFFF;
       border-radius: 10rpx;
       margin-bottom: 20rpx;
-      padding: 50rpx 40rpx;
+      padding: 50rpx 32rpx;
       .card-row {
         position: relative;
-        height: 36%;
+        height: 35%;
         &::after {
           width: 6rpx;
-          height: 78%;
-          background: #EF787C;
+          background: #fdc3c3;
+          height: 82%;
           content: '';
           position: absolute;
           bottom: 0;
-          left: 19rpx;
+          left: 20rpx;
+        }
+        &:nth-of-type(2) {
+          height: 42%;
         }
         &:nth-last-of-type(1) {
           &::after {
@@ -40,7 +42,7 @@
         }
         &.card-row1 {
             &::after {
-            background: #FFEEEE;
+            background: #f6f4f5;
           }
         }
         .card-1 {
@@ -50,16 +52,18 @@
           font-size: 28rpx;
           color: #ffffff;
           background: #F56666;
+          position: relative;
+          z-index: 22;
           &.card-1-disabled {
             color: #999999;
-            background: #F6F4F5;
+            background: #f6f4f5;
           }
         }
         .card-2 {
           width: 60%;
           margin: -4rpx 0 0 40rpx;
           .page_title {
-            margin-bottom: 16rpx;
+            margin-bottom: 10rpx;
             color: #000000;
           }
           .page_subTitle {

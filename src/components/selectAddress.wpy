@@ -4,10 +4,9 @@
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 715rpx;
+    height: 910rpx;
     background: #ffffff;
-    transform: translateY(300%);
-    transition: all 0.4s ease;
+    transform: translateY(200%);
     z-index: 12;
     border-radius: 30rpx 30rpx 0 0;
   }
@@ -20,7 +19,7 @@
   }
   .picker {
     width: 100%;
-    height: calc(100% - 140px);
+    height: calc(100% - 160px);
     view {
       height: 50px;
       line-height: 50px;
@@ -28,10 +27,10 @@
   }
 </style>
 <template>
- <view class="sbio-dialog {{!isShow?'sbio-dialog--show':''}}">
+ <view class="sbio-dialog {{!isShow?'sbio-dialog--show':''}}" hidden="{{isShow}}">
     <!-- 如果想点击弹窗外不隐藏，取消bindtap点击事件即可 -->
     <view class="sbio-dialog__mask" @tap="cancel"></view>
-    <view class="sbio-dialog__container">
+    <view class="sbio-dialog__container" animation="{{animationData}}">
       <view class="sbio-dialog__box">
          <view class="sbio-dialog__title">
             请选择省市区
@@ -42,17 +41,17 @@
          <picker-view indicator-style="height: 50px; line-height: 50px;" class="picker"
           value="{{value}}" @change="bindChange">
           <picker-view-column>
-            <repeat for="{{array[0]}}" key="index" item="item">
+            <repeat for="{{array[0]}}" key="index">
               <view>{{item.cityNameZh}}</view>
             </repeat>
           </picker-view-column>
           <picker-view-column>
-            <repeat for="{{array[1]}}" key="index" item="item">
+            <repeat for="{{array[1]}}" key="index">
               <view>{{item.cityNameZh}}</view>
             </repeat>
           </picker-view-column>
           <picker-view-column>
-            <repeat for="{{array[2]}}" key="index" item="item">
+            <repeat for="{{array[2]}}" key="index">
               <view>{{item.cityNameZh}}</view>
             </repeat>
           </picker-view-column>
@@ -70,14 +69,16 @@ import { $http } from '@/tool/http.js'
 import { wxToast } from '@/tool/util'
 export default class selectAddress extends wepy.component {
   props = {
-    addressCode: Array
+    addressCode: Array,
+    isShow: Boolean
   }
   data = {
     array: [],
     option: [1, 33, 34],
     optionCode: ['北京市', '市辖区', '东城区'],
     value: [0, 0, 0],
-    tempValue: [0, 0, 0]
+    tempValue: [0, 0, 0],
+    animationData: {}
   }
   getCity(cityParentId, value) {
     $http('admin/api/getCity', { cityParentId }, 'Get').then(res => {
@@ -104,6 +105,23 @@ export default class selectAddress extends wepy.component {
       this.$apply()
     })
   }
+   watch = {
+    isShow(val) {
+      this.animationData = null
+      if (!val) {
+        this.setAnimation(0)
+      }
+    }
+  }
+  setAnimation(translate) {
+    this.animationData = wx.createAnimation({
+      duration: 500,
+      timingFunction: 'linear',
+      delay: 0
+    })
+    this.animationData.translateY(translate).step()
+    this.$apply()
+  }
   onLoad() {
     let code = [0, 1, 33]
     this.getArr(code)
@@ -115,17 +133,20 @@ export default class selectAddress extends wepy.component {
       if (this.tempValue[2] == this.value [2]) {
         if (this.tempValue[0] == this.value [0]) {
           if (this.tempValue[1] != this.value[1]) {
+            this.value = [e.detail.value[0], e.detail.value[1], 0]
             this.getAreaList(this.array[1][this.value[1]].id)
           } else {
             this.getCity(this.array[1][this.value[1]].id,  this.value)
           } 
         } else {
+          this.value = [e.detail.value[0], 0, 0]
           this.getCity(this.array[0][this.value[0]].id,  this.value)
         }
       }
       this.$apply()
     },
     cancel() {
+      this.setAnimation('200%')
       this.$emit('cancel')
     },
     save() {
@@ -140,6 +161,7 @@ export default class selectAddress extends wepy.component {
           optionCode: this.optionCode,
           option: this.option
         }
+        this.setAnimation('200%')
         this.$emit('save', params)
       }
     }

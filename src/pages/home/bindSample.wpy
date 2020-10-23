@@ -4,6 +4,11 @@
     width: 100%; 
     height: 100%;
     background: #F0F0F0;
+    &.bindSample_vaiew {
+      .footer-btn {
+        margin: 30rpx auto 60rpx;
+      }
+    }
     &.overflow_auto {
       overflow: scroll;
     }
@@ -11,7 +16,7 @@
       overflow: hidden;
     }
     .bind_box {
-      margin: 20rpx 30rpx;
+      margin: 20rpx;
       height: calc(100% - 100px);
       .section-card {
         background: #FFFFFF;
@@ -102,6 +107,7 @@
       }
     }
     .sample-footer-info {
+      margin-top: 10rpx;
       .selected-icon {
         width: 30rpx;
         height: 30rpx;
@@ -132,7 +138,7 @@
   }
 </style>
 <template>
-  <view class="home_view {{sysScroll?'overflow_auto':'overflow_hidden'}}">
+  <view class="home_view bindSample_vaiew {{sysScroll?'overflow_auto':'overflow_hidden'}}">
     <view class="bind_box">
       <view class="section-card">
         <view class="section-title">绑定样本编号</view>

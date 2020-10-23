@@ -5,8 +5,8 @@
 <template>
   <view class="send_view">
 	  <view class="page_content">
-			<view class="send-header order-row">
-				<image src="https://api.s-sbio.com/images/wxImg/sample/orderCancel.png" class="car-icon cancel-icon"></image>
+			<view class="send-header order_content">
+				<image src="https://api.s-sbio.com/images/wxImg/sample/orderCancel.png" class="bg-icon"></image>
 				<view class="send-tip">
 					<view><text>订单已取消</text></view>
 					<view class="tip-text">如需回寄请重新下单</view>

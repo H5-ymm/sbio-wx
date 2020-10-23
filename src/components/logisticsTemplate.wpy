@@ -22,7 +22,7 @@
             position: absolute;
             border-left: 1px dashed #d8d8d8;
             top: 38rpx;
-            left: -42rpx;
+            left: -38rpx;
             width: 2rpx;
             z-index: 21;
             content: '';
@@ -34,7 +34,7 @@
           }
         }
         .status {
-          width: 90rpx;
+          width: 88rpx;
         }
         &:nth-last-of-type(1) {
           .logistics-detail {
@@ -54,10 +54,10 @@
         }
       }
       .logistics-icon {
-        width: 38rpx;
-        height: 38rpx;
+        width: 40rpx;
+        height: 40rpx;
         border-radius: 50%;
-        margin: -4rpx 20rpx;
+        margin: -2rpx 16rpx;
         position: relative;
         z-index: 2;
         image {

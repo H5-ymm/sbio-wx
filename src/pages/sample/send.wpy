@@ -6,11 +6,6 @@
 		.send_content {
 			height: 100%;
 		}
-	  .bg-icon {
-			height: 183rpx;
-			width: 213rpx;
-			margin: 0 auto;
-		}
 		.order-row {
 			.label-margin {
 				margin-right: 48rpx;
@@ -38,7 +33,7 @@
 <template>
   <view class="send_view">
 		<view class="send_content" wx:if="{{submitFlag&&loading}}">
-		  <view class="page_content">
+		  <view class="page_content page_box">
 				<view class="send-header order_content">
 					<image src="https://api.s-sbio.com/images/wxImg/sample/car.png" mode="aspectFit"
 						class="bg-icon">

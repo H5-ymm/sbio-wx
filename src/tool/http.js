@@ -4,7 +4,7 @@ import {
 const apiUrl = 'https://testapi.s-sbio.com/'
 // const apiUrl = 'https://api.s-sbio.com/'
 const http = (url, params, method, sessionId) => {
-  let sbioSessionId = sessionId ? sessionId : wx.getStorageSync('sessionId')
+  let sbioSessionId = sessionId || wx.getStorageSync('sessionId')
   return new Promise((resolve, reject) => {
     wx.request({
       url: `${apiUrl}${url}`, // 服务器url+参数中携带的接口具体地址
@@ -45,7 +45,8 @@ const downloadFile = (url, params) => {
       url: `${apiUrl}${url}?sampleId=${params.sampleId}`,
       filePath: savePath,
       header: {
-        'content-type': 'application/pdf'
+        'content-type': 'application/pdf',
+        'sessionId':  wx.getStorageSync('sessionId')
       },
       success (res) {
         if (res.statusCode === 200) {  

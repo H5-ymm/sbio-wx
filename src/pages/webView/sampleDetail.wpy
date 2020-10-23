@@ -154,7 +154,7 @@ export default class sampleDetail extends wepy.page {
     margin: 32rpx 0 20rpx;
   }
   .tab-item {
-    margin: 30rpx;
+    margin: 40rpx 36rpx;
   }
   .result-content {
     margin: 30rpx 0;
@@ -163,6 +163,9 @@ export default class sampleDetail extends wepy.page {
     font-weight: bold;
   }
   .result-table {
+    .result-content {
+      margin: 20rpx 0;
+    }
     .result-title {
       margin: 16rpx 0;
       position: relative;
@@ -201,11 +204,11 @@ export default class sampleDetail extends wepy.page {
     }
     .result-text-left {
       color: #000000;
-      font-size: 32rpx;
+      font-size: 30rpx;
       .question {
-        width: 26rpx;
-        height: 26rpx;
-        margin-left: 14rpx;
+        width: 28rpx;
+        height: 28rpx;
+        margin-left: 10rpx;
       }
     }
     .result-num-right {

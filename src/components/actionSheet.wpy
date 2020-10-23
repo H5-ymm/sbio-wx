@@ -1,0 +1,119 @@
+<style lang="less">
+  @import "/../style/dialog.less";
+  .sbio-dialog__container {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #ffffff;
+    transform: translateY(200%);
+    z-index: 12;
+    border-radius: 30rpx 30rpx 0 0;
+    &.sbio-dialog__container1 {
+      height: 525rpx;
+      .sbio-dialog__box {
+        height: 100%;
+        width: 100%;
+        text-align: center;
+        font-size: 36rpx;
+        overflow: hidden;
+        >.box-content {
+          height: calc(100% - 140px);
+          width: 100%;
+          overflow: hidden;
+          border-bottom: none;
+          .picker {
+            width: 100%;
+            height: 100%;
+            picker-view-column {
+              height: 100%;
+            }
+            view {
+              height: 50px;
+              line-height: 50px;
+            }
+          }
+          // .pickeActive {
+          //   border-top: 2rpx solid #ffffff;
+          //   border-bottom: 2rpx solid #f0f0f0;
+          // }
+        }
+      }
+    }
+  }
+</style>
+<template>
+  <view class="sbio-dialog {{!isShow?'sbio-dialog--show':''}}" hidden="{{isShow}}">
+    <!-- 如果想点击弹窗外不隐藏，取消bindtap点击事件即可 -->
+    <view class="sbio-dialog__mask" @tap="cancel"></view>
+    <view class="sbio-dialog__container sbio-dialog__container1" animation="{{animationData}}">
+      <view class="sbio-dialog__box">
+        <view class="sbio-dialog__title">
+          请选择
+          <view class="cancel-box" @tap="cancel">
+            <image class="cancel-icon" src="https://api.s-sbio.com/images/wxImg/icon/cancel.png"></image>
+          </view>
+        </view>
+        <view class="box-content">
+          <picker-view indicator-class="pickeActive" indicator-style="height: 50px; line-height: 50px;" class="picker" @change="bindChange">
+            <picker-view-column>
+              <repeat for="{{list}}" key="index">
+                <view>{{item}}</view>
+              </repeat>
+            </picker-view-column>
+          </picker-view>
+        </view>
+        <view class="footer-btn weui-flex center">
+          <button class="weui-flex__item btn weui-flex center" @tap="save">确定</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class actionSheet extends wepy.component {
+  props = {
+    isShow: {
+      type: Boolean,
+      default: true
+    }
+  }
+  data = {
+    list: ['是', '否'],
+    animationData: {},
+    value: []
+  }
+  watch = {
+    isShow(val) {
+      this.animationData = null
+      if (!val) {
+        this.setAnimation(0)
+      }
+    }
+  }
+  setAnimation(translate) {
+    this.animationData = wx.createAnimation({
+      duration: 500,
+      timingFunction: 'linear',
+      delay: 0
+    })
+    this.animationData.translateY(translate).step()
+    this.$apply()
+  }
+  methods = {
+    cancel() {
+      this.setAnimation('200%')
+      this.$emit('cancelActionSheet')
+    },
+    bindChange(e) {
+      this.value = e.detail.value
+      this.$apply()
+    },
+    // 确定按钮保存
+    save() {
+      this.setAnimation('400%')
+      this.$emit('seletSampleSendNum', this.value[0])
+    }
+  }
+}
+</script>
