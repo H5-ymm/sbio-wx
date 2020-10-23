@@ -142,55 +142,56 @@ export default class selectTime extends wepy.component {
     animationData: {}
   }
   watch = {
-    timeList(val) {
-      this.nowTime = $moment().format('HH:mm')
-      if (Number(this.splitArr(this.nowTime)) >= 19 && Number(this.splitArr(this.nowTime), 1) > 0) {
-        if (val && val.length) {
-          this.typeList = [{
-            name: '明天',
-            date: val[1].date
-          }]
-        } else {
-          this.typeList = [{
-            name: '明天',
-            date: $moment().add(1, 'days').format("MM月DD日")
-          }]
-        }
-        this.timeText = '明天'
-        this.changeTime('明天')
-      } else {
-        if (val && val.length) {
-          this.array = this.getTimeList(val[0].workingTime)
-          this.typeList = [{
-            name: '今天',
-            date: $moment(val[0].date).format("MM月DD日")
-            },{
-            name: '明天',
-            date: $moment(val[1].date).format("MM月DD日")
-          }]
-          // this.timeText = '今天'
-          // this.changeTime('今天')
-        } else {
-          this.array = this.getTimeList()
-          this.typeList = [{
-            name: '今天',
-            date: $moment().format("MM月DD日")
-            },{
-            name: '明天',
-            date: $moment().add(1, 'days').format("MM月DD日")
-          }]
-          let hour = $moment().format('HH')
-          this.date = this.add0(Number(hour)+ 1) + ':00' + '-' + this.add0(Number(hour)+ 2) + ':00'
-        }
-        this.timeText = '今天'
-        this.changeTime('今天')
-      }
-    },
     isShow(val) {
       this.animationData = null
       if (!val) {
         this.setAnimation(0)
+        this.byAddressTime(this.timeList)
       }
+    }
+  }
+  byAddressTime(val) {
+    this.nowTime = $moment().format('HH:mm')
+    if (Number(this.splitArr(this.nowTime)) >= 19 && Number(this.splitArr(this.nowTime), 1) > 0) {
+      if (val && val.length) {
+        this.typeList = [{
+          name: '明天',
+          date: val[1].date
+        }]
+      } else {
+        this.typeList = [{
+          name: '明天',
+          date: $moment().add(1, 'days').format("MM月DD日")
+        }]
+      }
+      this.timeText = '明天'
+      this.changeTime('明天')
+    } else {
+      if (val && val.length) {
+        this.array = this.getTimeList(val[0].workingTime)
+        this.typeList = [{
+          name: '今天',
+          date: $moment(val[0].date).format("MM月DD日")
+          },{
+          name: '明天',
+          date: $moment(val[1].date).format("MM月DD日")
+        }]
+        // this.timeText = '今天'
+        // this.changeTime('今天')
+      } else {
+        this.array = this.getTimeList()
+        this.typeList = [{
+          name: '今天',
+          date: $moment().format("MM月DD日")
+          },{
+          name: '明天',
+          date: $moment().add(1, 'days').format("MM月DD日")
+        }]
+        let hour = $moment().format('HH')
+        this.date = this.add0(Number(hour)+ 1) + ':00' + '-' + this.add0(Number(hour)+ 2) + ':00'
+      }
+      this.timeText = '今天'
+      this.changeTime('今天')
     }
   }
   setAnimation(translate) {
@@ -247,7 +248,11 @@ export default class selectTime extends wepy.component {
     if (text == '今天') {
       this.array = this.getNewTimeList()
     } else {
-      this.array = this.getTimeList(this.timeList[this.activeIndex].workingTime)
+      if (this.timeList.length) {
+        this.array = this.getTimeList(this.timeList[this.activeIndex].workingTime)
+      } else {
+        this.array = this.getTimeList()
+      }
     }
     this.date = this.array[0]
     this.$apply()
