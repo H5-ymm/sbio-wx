@@ -140,16 +140,11 @@ export default class usageProcess extends wepy.page {
         this.submitFlag = wx.getStorageSync('submitFlag')
         this.$apply()
       } else {
+        this.submitFlag = false
         this.getSession()
       }
     }
   }
-  // 监听页面的隐藏
-  onHide() {
-    this.isShow = true
-    this.$apply()
-  }
-  // 监听页面的卸载
   // 当前处于A页面，点击返回按钮时，则将是A页面卸载
   onUnload() {
     this.isShow = true

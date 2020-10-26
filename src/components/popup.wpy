@@ -6,6 +6,7 @@
     width: 646rpx;
     height: 924rpx;
     left: 7%;
+    transform: translateY(200%);
     background: #ffffff;
     z-index: 12;
     border-radius: 30rpx;
@@ -39,7 +40,7 @@
 </style>
 <template>
   <view class="sbio-dialog {{!isShow?'sbio-dialog--show':''}}" hidden="{{isShow}}">
-    <view class="sbio-dialog__mask" />
+    <view class="sbio-dialog__mask"/>
     <view class="sbio-dialog__container" animation="{{animationData}}" >
       <view class="box">
         <image src="https://api.s-sbio.com/images/popup.png" class="bg"></image>
@@ -66,8 +67,11 @@ export default class popup extends wepy.component {
   }
   watch = {
     isShow(val) {
-      if (val) {
-        this.setAnimation()
+      this.animationData = null
+      if (!val) {
+        this.setAnimation(0)
+      } else {
+        this.setAnimation('200%')
       }
     }
   }
@@ -82,27 +86,21 @@ export default class popup extends wepy.component {
       wx.setStorageSync('authFlag', true)
     })
   }
-  setAnimation() {
-    var animation = wx.createAnimation({
-      duration: 200,  // 动画时长
-      timingFunction: "linear", //线性
-      delay: 0  //0则不延迟
+  setAnimation(translate) {
+    this.animationData = wx.createAnimation({
+      duration: 500,
+      timingFunction: 'linear',
+      delay: 0
     })
-    this.animation = animation;
-    // 第3步：执行第一组动画
-    animation.opacity(0).translateY('400%').step();
-    // 第4步：导出动画对象赋给数据对象储存
-    this.animationData = animation.export()
-    // 第5步：设置定时器到指定时候后，执行第二组动画
-    setTimeout(function () {
-      this.animationData.opacity(1).translateY(0).step();
-    }.bind(this), 200)
+    this.animationData.translateY(translate).step()
+    this.$apply()
   }
   methods = {
     bindgetuserinfo(e) {
       if (e.detail.errMsg.indexOf('getUserInfo:fail') > -1) {
         wxToast('拒绝授权，小程序功能将无法使用！')
       } else {
+        this.setAnimation('200%')
         let params = {
           sessionId: wx.getStorageSync('sessionId'),
           encryptedData: e.detail.encryptedData,

@@ -16,6 +16,9 @@
         text-align: center;
         font-size: 36rpx;
         overflow: hidden;
+        .sbio-dialog__title {
+          border-bottom: none;
+        }
         >.box-content {
           height: calc(100% - 140px);
           width: 100%;
@@ -24,8 +27,10 @@
           .picker {
             width: 100%;
             height: 100%;
+            background: #ffffff;
             picker-view-column {
               height: 100%;
+              background: #ffffff;
             }
             view {
               height: 50px;
@@ -33,8 +38,8 @@
             }
           }
           // .pickeActive {
-          //   border-top: 2rpx solid #ffffff;
-          //   border-bottom: 2rpx solid #f0f0f0;
+          //   border-top: 1px solid #f0f0f0;
+          //   border-bottom: 1px solid #f0f0f0;
           // }
         }
       }
@@ -54,7 +59,7 @@
           </view>
         </view>
         <view class="box-content">
-          <picker-view indicator-class="pickeActive" indicator-style="height: 50px; line-height: 50px;" class="picker" @change="bindChange">
+          <picker-view indicator-class="pickeActive" indicator-style="height:50px;line-height: 50px;" class="picker" @change="bindChange">
             <picker-view-column>
               <repeat for="{{list}}" key="index">
                 <view>{{item}}</view>

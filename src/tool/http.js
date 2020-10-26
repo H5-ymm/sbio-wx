@@ -1,6 +1,4 @@
-import {
-    wxToast
-} from '@/tool/util.js'
+import { wxToast } from '@/tool/util.js'
 const apiUrl = 'https://testapi.s-sbio.com/'
 // const apiUrl = 'https://api.s-sbio.com/'
 const http = (url, params, method, sessionId) => {
@@ -13,7 +11,7 @@ const http = (url, params, method, sessionId) => {
         sessionId: sbioSessionId
       },
       method: method || 'POST',
-      success: function (res) {
+      success: res => {
         // 接口访问正常返回数据
         if (res.statusCode === 200) {
           if (res.data.code === 0) {
@@ -30,7 +28,7 @@ const http = (url, params, method, sessionId) => {
           wxToast('请求失败')
         }
       },
-      fail: function (error) {
+      fail: error => {
         wxToast('网络失败')
         reject(error);
       }
@@ -48,15 +46,15 @@ const downloadFile = (url, params) => {
         'content-type': 'application/pdf',
         'sessionId':  wx.getStorageSync('sessionId')
       },
-      success (res) {
-        if (res.statusCode === 200) {  
+      success: res => {
+        if (res.statusCode === 200) {
           resolve(res)
         } else {
           wxToast('下载失败')
           reject(error)
         }
       },
-      fail: function (error) {
+      fail: error => {
         wxToast('网络失败')
         reject(error)
       }
